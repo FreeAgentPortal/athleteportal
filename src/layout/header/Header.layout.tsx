@@ -1,13 +1,12 @@
-import { useLayoutStore } from "@/state/ui/layout";
-import styles from "./Header.module.scss";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { Avatar, Breadcrumb, Tooltip } from "antd";
-import Link from "next/link";
-import { useUser, logout } from "@/state/auth";
-import { BiLogOutCircle } from "react-icons/bi";
-import { ReactNode } from "react";
-import Notifications from "./components/Notifications.component";
-import useFetchData from "@/state/useFetchData";
+import styles from './Header.module.scss';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { Avatar, Breadcrumb, Tooltip } from 'antd';
+import Link from 'next/link';
+import { useUser, logout } from '@/state/auth';
+import { BiLogOutCircle } from 'react-icons/bi';
+import { ReactNode } from 'react';
+import Notifications from './components/Notifications.component';
+import { useLayoutStore } from '@/state/layout';
 
 type Props = {
   pages?: Array<{ title: string; link?: string; icon?: ReactNode }>;
@@ -16,11 +15,6 @@ type Props = {
 const Header = (props: Props) => {
   const toggleSideBar = useLayoutStore((state) => state.toggleSideBar);
   const { data: loggedInData } = useUser();
-  const { data: selectedProfile } = useFetchData({
-    url: `/ministry/${loggedInData.user?.ministry?._id}`,
-    key: "selectedProfile",
-    enabled: !!loggedInData?.user?.ministry?._id,
-  });
   return (
     <div className={styles.header}>
       <div className={styles.headerLeft}>
@@ -41,10 +35,7 @@ const Header = (props: Props) => {
             return last ? (
               <span>{route.title}</span>
             ) : (
-              <Link
-                href={route.path as string}
-                className={`${routes[routes.length - 1].title === route.title && styles.active}`}
-              >
+              <Link href={route.path as string} className={`${routes[routes.length - 1].title === route.title && styles.active}`}>
                 {route.title}
               </Link>
             );
@@ -53,7 +44,7 @@ const Header = (props: Props) => {
             props.pages?.map((page) => {
               return {
                 title: page?.title,
-                path: page?.link || "",
+                path: page?.link || '',
 
                 // element: <Link href={page?.link || ""}>{page?.title}</Link>,
               };
@@ -68,7 +59,6 @@ const Header = (props: Props) => {
             <div className={styles.user}>
               <Avatar src={loggedInData?.user?.profileImageUrl} className={styles.avatar} />
               <div className={styles.userInfo}>
-                <h1>{selectedProfile?.ministry?.name} </h1>
                 <p>
                   {loggedInData?.user?.firstName} {loggedInData?.user?.lastName}
                 </p>

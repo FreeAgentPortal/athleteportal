@@ -1,18 +1,17 @@
 "use client";
 import React from "react";
 import BlockedMessage from "@/components/blockedMessage/BlockedMessage.component";
-import { useUser } from "@/state/auth";
-import { useLayoutStore } from "@/state/ui/layout";
-import { ControlNavItem } from "@/types/navigation";
+import { useUser } from "@/state/auth"; 
 import { FEATURES, hasFeature } from "@/utils/hasFeature";
 import Auth from "@/views/auth/Auth.view";
 import { ReactNode } from "react";
 import { AiFillControl } from "react-icons/ai";
-import Control from "../control/Control.layout";
+import Control, { ControlNavItem } from "../control/Control.layout";
 import Header from "../header/Header.layout";
 import SideBar from "../sideBar/SideBar.layout";
 import styles from "./Page.module.scss";
 import NextTopLoader from "nextjs-toploader";
+import { useLayoutStore } from "@/state/layout";
 
 //make a type with children as a prop
 type Props = {

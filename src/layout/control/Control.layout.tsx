@@ -1,11 +1,17 @@
-import styles from "./Control.module.scss";
-import { useState } from "react";
-import { ControlNavItem } from "@/types/navigation";
-import { Tooltip } from "antd";
+import styles from './Control.module.scss';
+import { ReactNode, useState } from 'react';
+import { Tooltip } from 'antd';
 
 type Props = {
   navigation: Array<ControlNavItem>;
 };
+export interface ControlNavItem {
+  title: string;
+  icon: ReactNode;
+  children: ReactNode;
+  hideIf?: boolean;
+  disabled?: boolean;
+}
 
 const Control = (props: Props) => {
   const [currentControlPage, setCurrentControlPage] = useState<ControlNavItem>(props.navigation[0]);

@@ -4,9 +4,9 @@ import { navigation } from "@/data/navigation";
 import { Button } from "antd";
 import Link from "next/link";
 import Image from "next/image";
-import { RxHamburgerMenu } from "react-icons/rx";
-import { useLayoutStore } from "@/state/ui/layout";
+import { RxHamburgerMenu } from "react-icons/rx"; 
 import { useUser } from "@/state/auth";
+import { useLayoutStore } from "@/state/layout";
 
 //make a type with children as a prop
 type Props = {

@@ -11,10 +11,10 @@ import { logout } from '../state/auth';
  * @version - 1.0.0
  */
 export default (error: any) => {
-  const { addAlert } = useInterfaceStore((state: any) => state);
+  // const { addAlert } = useInterfaceStore((state: any) => state);
   const messageTxt = error.response && error.response.data.message ? error.response.data.message : error.message;
   if (messageTxt === 'Not authorized, token failed') {
-    logout();
+    // logout();
   }
-  return addAlert({ message: messageTxt, type: 'error' }); 
+  // return addAlert({ message: messageTxt, type: 'error' }); 
 };

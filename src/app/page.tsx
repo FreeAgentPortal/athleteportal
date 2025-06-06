@@ -1,8 +1,10 @@
-import styles from "./page.module.scss";
+import PageLayout from '@/layout/page/Page.layout';
+import styles from './page.module.scss';
 
 export default function Home() {
   return (
-    <div className={styles.page}> 
-    </div>
+    <PageLayout pages={[]}>
+      <></>
+    </PageLayout>
   );
 }

@@ -4,8 +4,6 @@ import setAuthToken from '@/utils/setAuthToken';
 import { useInterfaceStore } from './interface';
 import errorHandler from '@/utils/errorHandler';
 
-const { addAlert } = useInterfaceStore((state: any) => state);
-
 // make a react query hook to get the user data from the server
 const fetchUserData = async (token?: string) => {
   const { data } = await axios.post('/auth/me', {
@@ -32,7 +30,7 @@ export const useUser = (token?: string, onSuccess?: () => void, onError?: () => 
       errorMessage: 'An error occurred while fetching user data',
     },
     // cacheTime: Infinity,
-    enabled: !!token, 
+    enabled: !!token,
   });
   if (query.isError) {
     localStorage.removeItem('token');
@@ -48,12 +46,13 @@ export const useUser = (token?: string, onSuccess?: () => void, onError?: () => 
 };
 
 export const useUpdateUser = () => {
+  const { addAlert } = useInterfaceStore((state: any) => state);
   const queryClient = useQueryClient();
 
   const mutate = useMutation({
     mutationFn: (data: any) => updateUser(data),
     onSuccess: (data: any) => {
-      addAlert({});
+      // addAlert({});
       queryClient.invalidateQueries({ queryKey: ['user'] });
       queryClient.invalidateQueries({ queryKey: ['userDetails'] });
     },
