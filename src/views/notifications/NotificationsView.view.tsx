@@ -1,41 +1,43 @@
-"use client";
-import Container from "@/layout/container/Container.layout";
-import styles from "./NotificationsView.module.scss";
-import Link from "next/link";
-import { Badge, Button, Empty, Skeleton } from "antd";
-import { AiFillDelete, AiFillExclamationCircle } from "react-icons/ai";
-import { FiExternalLink } from "react-icons/fi";
-import Error from "@/components/error/Error.component";
-import { useState } from "react";
-import getNotificationLink from "@/utils/getNotificationLink";
-import NotificationItem from "@/components/notificationItem/NotificationItem.component";
-import NotificationType from "@/types/NotificationType";
-import useFetchData from "@/state/useFetchData";
-import useUpdateData from "@/state/useUpdateData";
+'use client';
+import Container from '@/layout/container/Container.layout';
+import styles from './NotificationsView.module.scss';
+import Link from 'next/link';
+import { Badge, Button, Empty, Skeleton } from 'antd';
+import { AiFillDelete, AiFillExclamationCircle } from 'react-icons/ai';
+import { FiExternalLink } from 'react-icons/fi';
+import Error from '@/components/error/Error.component';
+import { useState } from 'react';
+import getNotificationLink from '@/utils/getNotificationLink';
+import NotificationItem from '@/components/notificationItem/NotificationItem.component';
+import NotificationType from '@/types/NotificationType';
+import useApiHook from '@/hooks/useApi';
 
 const NotificationsView = () => {
-  const { data } = useFetchData({
+  const { data } = useApiHook({
     url: `/notification`,
-    key: "notifications",
+    key: 'notifications',
+    method: 'GET',
   });
 
-  const { mutate: updateNotification } = useUpdateData({
-    queriesToInvalidate: ["notifications"],
-  });
+  const { mutate: updateNotification } = useApiHook({
+    queriesToInvalidate: ['notifications'],
+    key: 'notifications',
+    method: 'POST',
+  }) as any;
   return (
     <Container
       title={
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <span
             style={{
-              display: "flex",
-              alignItems: "center",
-              flex: "1",
+              display: 'flex',
+              alignItems: 'center',
+              flex: '1',
             }}
           >
             Notifications
           </span>
-          <Button type="primary" onClick={() => updateNotification({ url: "" })}>
+          <Button type="primary" onClick={() => updateNotification({ url: '' })}>
             Mark all Read
           </Button>
         </div>
