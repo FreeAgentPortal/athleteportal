@@ -61,7 +61,7 @@
   }
 
   .sideBar {
-    background: linear-gradient(180deg, var(--primary-dark) 0%, rgba(0, 0, 0, 0.989) 100%);
+    background: var(--color-bg-gradient);
     height: 100%;
     z-index: 1000;
     grid-area: sidebar;

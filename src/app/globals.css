@@ -1,15 +1,30 @@
 :root {
-  /* === Color Palette === */
+  /* === Core Color Palette === */
   --color-black: #0a0a0a;
   --color-silver: #c0c0c0;
-  --color-metallic-blue: #7acdf2; /* subtle metallic baby blue */
+  --color-silver-dark: #979595;
+  --color-metallic-blue: #7acdf2;
   --color-metallic-blue-dark: #4ba7d6;
   --color-metallic-blue-light: #b3e6fc;
 
   --color-bg-dark: var(--color-black);
   --color-bg-gradient: linear-gradient(120deg, var(--color-black) 0%, var(--color-metallic-blue-dark) 100%);
-  --color-text-primary: var(--color-silver);
+  --color-text-primary: var(--color-black);
   --color-accent: var(--color-metallic-blue);
+
+  /* === Semantic Aliases === */
+  --primary: var(--color-metallic-blue-dark);
+  --primary-light: var(--color-metallic-blue-light);
+  --primary-dark: var(--color-black);
+
+  --secondary: var(--color-silver);
+  --secondary-dark: var(--color-silver-dark);
+
+  --text-color: var(--color-text-primary);
+  --bg-color: var(--color-bg-dark);
+  --bg-gradient: var(--color-bg-gradient);
+
+  --accent: var(--color-accent);
 
   /* === Font Families === */
   --font-family-primary: 'Roboto', sans-serif;
@@ -45,7 +60,6 @@
   --shadow-default: 0 2px 6px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
-
 * {
   box-sizing: border-box;
   margin: 0;

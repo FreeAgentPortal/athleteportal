@@ -1,9 +1,9 @@
-import { getAbsoluteUrl } from "@/utils/getAbsoluteUrl";
-import { Button } from "antd";
-import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { getAbsoluteUrl } from '@/utils/getAbsoluteUrl';
+import { Button } from 'antd';
+import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 
-import styles from "./Auth.module.scss";
+import styles from './Auth.module.scss';
 
 type Props = {
   fullUrl?: string;
@@ -18,38 +18,29 @@ const Auth = (props: Props) => {
         <div className={styles.header}>
           <div className={styles.logoContainer}>
             <Image
-              // src="https://api.shepherdcms.org/images/ShepherdsCMSLogo.png"
-              src="/images/ShepherdsCMSLogo.png"
+              src="/images/logo.png"
               width={160}
               height={100}
               style={{
-                objectFit: "contain",
+                objectFit: 'contain',
               }}
               alt="logo"
             />
+            {process.env.SERVICE_NAME}
           </div>
         </div>
         <p className={styles.text}>
           <span>Welcome</span>
           <br />
-          <span style={{ fontSize: "14px" }}>
-            Please click the button below to authenticate and access the dashboard
-          </span>
+          <span style={{ fontSize: '14px' }}>Please click the button below to authenticate and access the dashboard</span>
         </p>
-        <a
-          href={
-            process.env.ENV !== "development"
-              ? `https://auth.shepherdcms.org/?redirect=${getAbsoluteUrl() + pathname}`
-              : `http://localhost:3003?redirect=${getAbsoluteUrl() + pathname}`
-          }
-          className={styles.buttonLink}
-        >
+        <a href={`${process.env.AUTH_URL!}?redirect=${getAbsoluteUrl() + pathname}`} className={styles.buttonLink}>
           <Button
             className={styles.button}
             type="primary"
             size="large"
-            loading={typeof window === "undefined" || !!window.localStorage.getItem("token")}
-            disabled={typeof window === "undefined" || !!window.localStorage.getItem("token")}
+            loading={typeof window === 'undefined' || !!window.localStorage.getItem('token')}
+            disabled={typeof window === 'undefined' || !!window.localStorage.getItem('token')}
           >
             Login
           </Button>
@@ -59,8 +50,8 @@ const Auth = (props: Props) => {
         <svg id="wave" viewBox="0 0 1440 490" version="1.1" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="sw-gradient-0" x1="0" x2="0" y1="1" y2="0">
-              <stop stopColor="rgb(60, 98, 85)" offset="0%"></stop>
-              <stop stopColor="rgb(138, 176, 154)" offset="100%"></stop>
+              <stop stopColor="var(--color-black)" offset="0%"></stop>
+              <stop stopColor="var(--color-metallic-blue-dark)" offset="100%"></stop>
             </linearGradient>
           </defs>
           <path
@@ -79,14 +70,10 @@ Auth.getInitialProps = async ({ req }: any) => {
   let fullUrl;
   if (req) {
     // Server side rendering
-    fullUrl = req.protocol + "://" + req.get("host") + req.originalUrl;
+    fullUrl = req.protocol + '://' + req.get('host') + req.originalUrl;
   } else {
     // Client side rendering
-    fullUrl =
-      window.location.protocol +
-      "//" +
-      window.location.hostname +
-      (window.location.port ? ":" + window.location.port : "");
+    fullUrl = window.location.protocol + '//' + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
   }
   return { fullUrl: fullUrl };
 };
