@@ -1,14 +1,14 @@
-"use client";
-import React from "react";
-import styles from "./Support.module.scss";
-import SearchWrapper from "@/layout/searchWrapper/SearchWrapper.layout";
-import { useRouter } from "next/navigation";
-import { AiOutlinePlus } from "react-icons/ai";
-import { useUser } from "@/state/auth";
-import useApiHook from "@/state/useApi";
-import { Button, Form, Modal, Table, Tag, Tooltip } from "antd";
-import { MdOpenInNew } from "react-icons/md";
-import SupportForm from "./components/SupportForm.component";
+'use client';
+import React from 'react';
+import styles from './Support.module.scss';
+import SearchWrapper from '@/layout/searchWrapper/SearchWrapper.layout';
+import { useRouter } from 'next/navigation';
+import { AiOutlinePlus } from 'react-icons/ai';
+import { useUser } from '@/state/auth';
+import useApiHook from '@/state/useApi';
+import { Button, Form, Modal, Table, Tag, Tooltip } from 'antd';
+import { MdOpenInNew } from 'react-icons/md';
+import SupportForm from './components/SupportForm.component';
 
 const SupportTable = () => {
   const router = useRouter();
@@ -18,18 +18,18 @@ const SupportTable = () => {
     isLoading: loading,
     isFetching,
   } = useApiHook({
-    url: "/support/ticket",
-    key: "tickets",
-    filter: `requester;${loggedInData?.user?._id}`,
-    enabled: !!loggedInData?.user?._id,
-    method: "GET",
+    url: '/support/ticket',
+    key: 'tickets',
+    filter: `requester;${loggedInData?._id}`,
+    enabled: !!loggedInData?._id,
+    method: 'GET',
   }) as any;
 
   const { mutate: createTicket } = useApiHook({
-    url: "/support/ticket",
-    key: "createTicket",
-    method: "POST",
-    queriesToInvalidate: ["tickets"],
+    url: '/support/ticket',
+    key: 'createTicket',
+    method: 'POST',
+    queriesToInvalidate: ['tickets'],
   }) as any;
 
   const [form] = Form.useForm();
@@ -38,11 +38,11 @@ const SupportTable = () => {
     <SearchWrapper
       buttons={[
         {
-          toolTip: "Create new Support request",
+          toolTip: 'Create new Support request',
           icon: <AiOutlinePlus className={styles.icon} />,
           onClick: () => {
             Modal.info({
-              title: "Create new Support request",
+              title: 'Create new Support request',
               content: <SupportForm form={form} />,
               onOk() {
                 form
@@ -53,17 +53,17 @@ const SupportTable = () => {
                     });
                   })
                   .catch((info) => {
-                    console.log("Validate Failed:", info);
+                    console.log('Validate Failed:', info);
                   });
               },
             });
           },
-          type: "primary",
+          type: 'primary',
         },
       ]}
       placeholder="Search for ministries"
       total={data?.payload?.totalCount}
-      queryKey={"ministryList"}
+      queryKey={'ministryList'}
       isFetching={isFetching}
     >
       <div className={styles.contentContainer}>
@@ -75,46 +75,46 @@ const SupportTable = () => {
           rowKey={(record: any) => record._id}
           columns={[
             {
-              title: "Subject",
-              dataIndex: "subject",
-              key: "subject",
+              title: 'Subject',
+              dataIndex: 'subject',
+              key: 'subject',
             },
             {
-              title: "Group",
-              dataIndex: "groups",
-              key: "group",
+              title: 'Group',
+              dataIndex: 'groups',
+              key: 'group',
               render: (text: string, record: any) => {
                 // group is an array of objects, so we need to return the name of the group
-                return record.groups?.map((group: any) => group.name).join(", ");
+                return record.groups?.map((group: any) => group.name).join(', ');
               },
             },
             {
-              title: "Status",
-              dataIndex: "status",
-              key: "status",
+              title: 'Status',
+              dataIndex: 'status',
+              key: 'status',
               render: (text: string, record: any) => {
                 // use a switch statement to return the correct status, with a badge
                 switch (record.status) {
-                  case "open":
+                  case 'open':
                     return (
                       <Tooltip title="awaiting response from support">
                         <Tag color="red">Open</Tag>
                       </Tooltip>
                     );
-                  case "New":
+                  case 'New':
                     return (
                       <Tooltip title="has yet to be reviewed by support">
                         <Tag color="gold">New</Tag>
                       </Tooltip>
                     );
-                  case "solved":
-                  case "closed":
+                  case 'solved':
+                  case 'closed':
                     return (
                       <Tooltip title="This ticket has been resolved">
                         <Tag color="gray">Closed</Tag>
                       </Tooltip>
                     );
-                  case "pending":
+                  case 'pending':
                     return (
                       <Tooltip title="awaiting response from user">
                         <Tag color="blue">Pending</Tag>
@@ -130,14 +130,14 @@ const SupportTable = () => {
               },
             },
             {
-              title: "Priority",
-              dataIndex: "priority",
-              key: "priority",
+              title: 'Priority',
+              dataIndex: 'priority',
+              key: 'priority',
             },
             {
-              title: "Actions",
-              dataIndex: "actions",
-              key: "actions",
+              title: 'Actions',
+              dataIndex: 'actions',
+              key: 'actions',
               render: (text: string, record: any) => {
                 return (
                   <div>

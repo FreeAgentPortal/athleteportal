@@ -1,18 +1,18 @@
-"use client";
-import React from "react";
-import { useUser } from "@/state/auth";
-import useApiHook from "@/state/useApi";
-import { Card, Empty } from "antd";
-import Error from "@/components/error/Error.component";
+'use client';
+import React from 'react';
+import { useUser } from '@/state/auth';
+import useApiHook from '@/state/useApi';
+import { Card, Empty } from 'antd';
+import Error from '@/components/error/Error.component';
 
 const SolvedTickets = () => {
   const { data: loggedInData } = useUser();
   const { data, isLoading, isError, error, isFetching } = useApiHook({
-    url: "/support/ticket",
-    key: "solvedTickets",
-    filter: `user;${loggedInData?.user?._id}|status;solved`,
-    enabled: !!loggedInData?.user?._id,
-    method: "GET",
+    url: '/support/ticket',
+    key: 'solvedTickets',
+    filter: `user;${loggedInData?._id}|status;solved`,
+    enabled: !!loggedInData?._id,
+    method: 'GET',
   }) as any;
   return (
     <Card>

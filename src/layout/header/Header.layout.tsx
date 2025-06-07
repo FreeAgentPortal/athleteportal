@@ -57,12 +57,10 @@ const Header = (props: Props) => {
         <div className={styles.headerRight}>
           <div className={styles.userContainer}>
             <div className={styles.user}>
-              <Avatar src={loggedInData?.user?.profileImageUrl} className={styles.avatar} />
               <div className={styles.userInfo}>
-                <p>
-                  {loggedInData?.user?.firstName} {loggedInData?.user?.lastName}
-                </p>
+                <p>{loggedInData?.fullName}</p>
               </div>
+              <Avatar src={loggedInData?.profileImageUrl ?? '/images/no-photo.png'} className={styles.avatar} />
             </div>
             <Notifications />
             <Tooltip title="Logout">

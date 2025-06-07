@@ -1,18 +1,18 @@
-"use client";
-import React from "react";
-import styles from "./SupportDetails.module.scss";
-import { useParams } from "next/navigation";
-import useApiHook from "@/state/useApi";
-import Loader from "@/components/loader/Loader.component";
-import Error from "@/components/error/Error.component";
-import { Button, Divider, Form, Tag } from "antd";
-import { useUser } from "@/state/auth";
-import TinyEditor from "@/components/tinyEditor/TinyEditor.component";
-import parse from "html-react-parser";
-import { timeDifference } from "@/utils/timeDifference";
-import { useMessages } from "@/state/useInfiniteMessages";
-import { useSocketStore } from "@/state/socket";
-import { useQueryClient } from "@tanstack/react-query";
+'use client';
+import React from 'react';
+import styles from './SupportDetails.module.scss';
+import { useParams } from 'next/navigation';
+import useApiHook from '@/state/useApi';
+import Loader from '@/components/loader/Loader.component';
+import Error from '@/components/error/Error.component';
+import { Button, Divider, Form, Tag } from 'antd';
+import { useUser } from '@/state/auth';
+import TinyEditor from '@/components/tinyEditor/TinyEditor.component';
+import parse from 'html-react-parser';
+import { timeDifference } from '@/utils/timeDifference';
+import { useMessages } from '@/state/useInfiniteMessages';
+import { useSocketStore } from '@/state/socket';
+import { useQueryClient } from '@tanstack/react-query';
 
 const SupportDetails = () => {
   const [form] = Form.useForm();
@@ -26,16 +26,16 @@ const SupportDetails = () => {
 
   const { data, isLoading, isError, error } = useApiHook({
     url: `/support/ticket/${id}`,
-    key: "ticket",
+    key: 'ticket',
     enabled: !!id,
-    method: "GET",
+    method: 'GET',
   }) as any;
 
   const { data: messagesData, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(id as any);
   const { mutate: sendMessage } = useApiHook({
     url: `/support/ticket/${id}/message`,
-    key: "message",
-    method: "POST",
+    key: 'message',
+    method: 'POST',
     // queriesToInvalidate: ["messages"],
   }) as any;
 
@@ -52,11 +52,11 @@ const SupportDetails = () => {
   React.useEffect(() => {
     const container = containerRef.current;
     if (container) {
-      container.addEventListener("scroll", handleScroll);
+      container.addEventListener('scroll', handleScroll);
     }
     return () => {
       if (container) {
-        container.removeEventListener("scroll", handleScroll);
+        container.removeEventListener('scroll', handleScroll);
       }
     };
   }, [hasNextPage, isFetchingNextPage]);
@@ -68,10 +68,10 @@ const SupportDetails = () => {
     // clear the form after sending the message
     form.resetFields();
     // emit socket event to notify the support team of a new message
-    socket.emit("sendNewMessage", {
+    socket.emit('sendNewMessage', {
       roomId: `support-${id}`,
       user: loggedInData?.user,
-      message: form.getFieldValue("message"),
+      message: form.getFieldValue('message'),
     });
     // navigate to the bottom of the chat window
     const chatContainer = document.querySelector(`.${styles.chatContainer}`);
@@ -81,12 +81,12 @@ const SupportDetails = () => {
   React.useEffect(() => {
     if (socket) {
       // join the room of the support ticket
-      socket.emit("join", {
+      socket.emit('join', {
         roomId: `support-${id}`,
         user: loggedInData?.user,
       });
-      socket.on("newMessage", () => {
-        queryClient.invalidateQueries({ queryKey: ["messages", `${id}`] });
+      socket.on('newMessage', () => {
+        queryClient.invalidateQueries({ queryKey: ['messages', `${id}`] });
         // scroll to bottom of chat window
         const chatContainer = document.querySelector(`.${styles.chatContainer}`);
         setTimeout(() => chatContainer?.scrollTo(0, chatContainer.scrollHeight), 1000);
@@ -150,15 +150,13 @@ const SupportDetails = () => {
               key={message._id}
               className={`${styles.chat} ${
                 // if the message is from the user, align it to the right
-                message?.user?.toString() === loggedInData?.user?._id.toString() ? styles.rightChat : null
+                message?.user?.toString() === loggedInData?._id.toString() ? styles.rightChat : null
               }`}
             >
               <div
                 className={`${styles.chatBubble} ${
                   // if the message is from the user, align it to the right
-                  message?.user?.toString() === loggedInData?.user?._id.toString()
-                    ? styles.chatBubbleRight
-                    : styles.leftBubble
+                  message?.user?.toString() === loggedInData?._id.toString() ? styles.chatBubbleRight : styles.leftBubble
                 }`}
               >
                 <div className={styles.message}>
@@ -170,9 +168,7 @@ const SupportDetails = () => {
               <div
                 className={`${styles.chatTime} ${
                   // if the message is from the user, align it to the right
-                  message?.user?.toString() === loggedInData?.user?._id.toString()
-                    ? styles.chatTimeRight
-                    : styles.chatTimeLeft
+                  message?.user?.toString() === loggedInData?._id.toString() ? styles.chatTimeRight : styles.chatTimeLeft
                 }`}
               >
                 {timeDifference(new Date().getTime(), new Date(message.createdAt).getTime())}

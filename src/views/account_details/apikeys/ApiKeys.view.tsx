@@ -4,7 +4,7 @@ import styles from './ApiKeys.module.scss';
 import { useUser } from '@/state/auth';
 import useFetchData from '@/state/useFetchData';
 import SearchWrapper from '@/layout/searchWrapper/SearchWrapper.layout';
-import { Button, DatePicker, Form, Input, Modal, Table } from 'antd'; 
+import { Button, DatePicker, Form, Input, Modal, Table } from 'antd';
 import { FaPlus, FaTrash } from 'react-icons/fa';
 import useRemoveData from '@/state/useRemoveData';
 import moment from 'moment';
@@ -19,8 +19,8 @@ const ApiKeys = () => {
   const { data, isLoading, isError, error, isFetching } = useFetchData({
     url: '/apikey',
     key: 'keys',
-    filter: `user;${loggedInData?.user?._id}`,
-    enabled: !!loggedInData?.user?._id,
+    filter: `user;${loggedInData?._id}`,
+    enabled: !!loggedInData?._id,
   });
 
   const { mutate: remove } = useRemoveData({
@@ -41,8 +41,7 @@ const ApiKeys = () => {
   const handleDelete = (id: string) => {
     Modal.confirm({
       title: 'Are you sure you want to delete this Key?',
-      content:
-        'This action cannot be undone, and could break your integrations that rely on this key.. you can always create a new one.',
+      content: 'This action cannot be undone, and could break your integrations that rely on this key.. you can always create a new one.',
       onOk() {
         remove({ url: `/apikey/${id}` });
       },
@@ -57,15 +56,11 @@ const ApiKeys = () => {
       <Modal
         title="Create API Key"
         open={open}
-        // dont show cancel button 
+        // dont show cancel button
         cancelButtonProps={{ style: { display: 'none' } }}
         onOk={() => setOpen(false)}
       >
-        <p>
-          For security purposes we can only show you this API Key once, please
-          ensure you copy it and store it in a safe location, you will not be
-          able to see it again
-        </p>
+        <p>For security purposes we can only show you this API Key once, please ensure you copy it and store it in a safe location, you will not be able to see it again</p>
         <CopyField data={key} />
       </Modal>
       <SearchWrapper
@@ -81,34 +76,19 @@ const ApiKeys = () => {
                 title: 'API Key',
                 content: (
                   <Form form={form} layout="vertical">
-                    <Form.Item
-                      name="name"
-                      label="API Key Name"
-                      tooltip="A name to help you understand what the Api Key is for, i.e., API Key"
-                    >
+                    <Form.Item name="name" label="API Key Name" tooltip="A name to help you understand what the Api Key is for, i.e., API Key">
                       <Input />
                     </Form.Item>
-                    <Form.Item
-                      label="Expires On"
-                      tooltip="The date the API Key should expire, after which it will no longer be valid"
-                      name="expiresAt"
-                    >
+                    <Form.Item label="Expires On" tooltip="The date the API Key should expire, after which it will no longer be valid" name="expiresAt">
                       <DatePicker
                         // dont allow dates before today
                         // dont allow dates more than 1 year from today
                         disabledDate={(current) => {
-                          return (
-                            current &&
-                            (current < moment().startOf('day') ||
-                              current > moment().add(1, 'year').endOf('day'))
-                          );
+                          return current && (current < moment().startOf('day') || current > moment().add(1, 'year').endOf('day'));
                         }}
                       />
                       {/* subtext under form item */}
-                      <div style={{ color: 'gray', fontSize: '12px' }}>
-                        API Keys are valid for 1 year from the date of creation,
-                        by default.
-                      </div>
+                      <div style={{ color: 'gray', fontSize: '12px' }}>API Keys are valid for 1 year from the date of creation, by default.</div>
                     </Form.Item>
                   </Form>
                 ),

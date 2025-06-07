@@ -21,7 +21,7 @@ const SideBar = (props: Props) => {
   return (
     <div className={`${styles.container} ${props.large ? "" : styles.small}`}>
       <div className={styles.logoContainer}>
-        {sideBarOpen && (
+        {!sideBarOpen && (
           <div
             className={styles.hamburger}
             onClick={() => {
@@ -31,7 +31,7 @@ const SideBar = (props: Props) => {
             <RxHamburgerMenu />
           </div>
         )}
-        <Image
+        {/* <Image
           src="/images/logo.png"
           width={30}
           height={50}
@@ -40,7 +40,7 @@ const SideBar = (props: Props) => {
             objectFit: "contain",
           }}
           alt="logo"
-        />
+        /> */}
 
         <Image
           src={"/images/logo.png"}
@@ -52,7 +52,7 @@ const SideBar = (props: Props) => {
           }}
           alt="logo"
         />
-        <p className={styles.productName}>Athlete</p>
+        <p className={`${styles.productName} ${sideBarOpen ? styles.open : ""}`}>Athlete</p>
       </div>
 
       {Object.values(

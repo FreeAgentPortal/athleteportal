@@ -11,7 +11,7 @@ const fetchUserData = async (token?: string) => {
       Authorization: `Bearer ${token}`,
     },
   });
-  return data;
+  return data.payload;
 };
 
 const updateUser = async (data: any) => {
