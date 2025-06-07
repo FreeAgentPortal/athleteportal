@@ -2,7 +2,7 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 import { v4 as uuidv4 } from 'uuid';
-import { AlertMessage } from '@/types/AlertMessageType';
+import { AlertMessage } from '@/layout/alertCenter/AlertMessageType';
 
 interface InterfaceState {
   alerts: AlertMessage[];

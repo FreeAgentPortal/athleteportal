@@ -90,6 +90,7 @@ const PageLayout = (props: Props) => {
                     <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
                   ) : (
                     <>
+                      <div style={{ position: 'relative' }}>
                       <NextTopLoader
                         color="var(--primary)"
                         initialPosition={0.08}
@@ -100,8 +101,8 @@ const PageLayout = (props: Props) => {
                         easing="ease"
                         speed={200}
                         shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
+                        showForHashAnchor
                       />
-                      <div style={{ position: 'relative' }}>
                         <AlertCenter />
                         {props.children}
                       </div>
