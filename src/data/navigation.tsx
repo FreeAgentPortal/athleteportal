@@ -24,38 +24,7 @@ export const navigation = (options?: any) => {
       },
       hidden: options?.user ? false : true,
     },
-    ministries: {
-      title: "Ministry Details",
-      links: {
-        ministries: {
-          title: "Ministries",
-          link: "/ministries",
-          icon: <BsBox />,
-        },
-        events: {
-          title: "Events",
-          link: "/events",
-          icon: <BsBroadcastPin />,
-        },
-      },
-      hidden: options?.user ? false : true,
-    },
-    members: {
-      title: "Members",
-      links: {
-        members: {
-          title: "Members",
-          link: "/members",
-          icon: <BsFillPeopleFill />,
-        },
-        families: {
-          title: "Families",
-          link: "/families",
-          icon: <BsFillPeopleFill />,
-        },
-      },
-      hidden: options?.user ? false : true,
-    },
+    
     account_details: {
       title: "Account Details",
       links: {
