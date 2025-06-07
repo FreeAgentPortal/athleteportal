@@ -13,6 +13,7 @@ import styles from './Page.module.scss';
 import NextTopLoader from 'nextjs-toploader';
 import { useLayoutStore } from '@/state/layout';
 import AlertCenter from '../alertCenter/AlertCenter.layout';
+import { LoaderProvider } from '../progressBar/LoaderProvider.component';
 
 //make a type with children as a prop
 type Props = {
@@ -90,8 +91,7 @@ const PageLayout = (props: Props) => {
                     <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
                   ) : (
                     <>
-                      <div style={{ position: 'relative' }}>
-                      <NextTopLoader
+                      {/* <NextTopLoader
                         color="var(--primary)"
                         initialPosition={0.08}
                         crawlSpeed={200}
@@ -102,10 +102,9 @@ const PageLayout = (props: Props) => {
                         speed={200}
                         shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
                         showForHashAnchor
-                      />
-                        <AlertCenter />
-                        {props.children}
-                      </div>
+                      /> */}
+                      <AlertCenter />
+                      <LoaderProvider>{props.children}</LoaderProvider>
                     </>
                   )}
                 </div>
