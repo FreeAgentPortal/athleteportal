@@ -1,17 +1,18 @@
-"use client";
-import React from "react";
-import BlockedMessage from "@/components/blockedMessage/BlockedMessage.component";
-import { useUser } from "@/state/auth"; 
-import { FEATURES, hasFeature } from "@/utils/hasFeature";
-import Auth from "@/views/auth/Auth.view";
-import { ReactNode } from "react";
-import { AiFillControl } from "react-icons/ai";
-import Control, { ControlNavItem } from "../control/Control.layout";
-import Header from "../header/Header.layout";
-import SideBar from "../sideBar/SideBar.layout";
-import styles from "./Page.module.scss";
-import NextTopLoader from "nextjs-toploader";
-import { useLayoutStore } from "@/state/layout";
+'use client';
+import React from 'react';
+import BlockedMessage from '@/components/blockedMessage/BlockedMessage.component';
+import { useUser } from '@/state/auth';
+import { FEATURES, hasFeature } from '@/utils/hasFeature';
+import Auth from '@/views/auth/Auth.view';
+import { ReactNode } from 'react';
+import { AiFillControl } from 'react-icons/ai';
+import Control, { ControlNavItem } from '../control/Control.layout';
+import Header from '../header/Header.layout';
+import SideBar from '../sideBar/SideBar.layout';
+import styles from './Page.module.scss';
+import NextTopLoader from 'nextjs-toploader';
+import { useLayoutStore } from '@/state/layout';
+import AlertCenter from '../alertCenter/AlertCenter.layout';
 
 //make a type with children as a prop
 type Props = {
@@ -37,42 +38,36 @@ const PageLayout = (props: Props) => {
   const toggleControlLayout = useLayoutStore((state) => state.toggleControlLayout);
 
   const { data: loggedInData } = useUser();
-  const getPageBlockData: () => boolean | "blacklist" | "feature" | "verification" = () => {
+  const getPageBlockData: () => boolean | 'blacklist' | 'feature' | 'verification' = () => {
     if (!props.enableBlockCheck) return false;
     if (loggedInData.user.isBlacklisted) {
-      return "blacklist";
+      return 'blacklist';
     }
 
     if (!loggedInData.user.isEmailVerified) {
-      return "verification";
+      return 'verification';
     }
 
     if (props.neededFeature) {
       if (!hasFeature(loggedInData.user, props.neededFeature)) {
-        return "feature";
+        return 'feature';
       }
     }
 
     return false as boolean;
-  }; 
+  };
 
   return (
     <>
-      <div
-        className={`${styles.container} ${props.largeSideBar ? "" : styles.small} ${
-          sideBarOpen && styles.sideBarActive
-        }`}
-      >
+      <div className={`${styles.container} ${props.largeSideBar ? '' : styles.small} ${sideBarOpen && styles.sideBarActive}`}>
         {loggedInData ? (
           <>
             <Header pages={props.pages} />
-            <div className={styles.sideBar}>
-              {props.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}
-            </div>
+            <div className={styles.sideBar}>{props.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>
             <div
-              className={`${styles.content} ${
-                controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive
-              } ${props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive}`}
+              className={`${styles.content} ${controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive} ${
+                props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive
+              }`}
               style={{
                 backgroundColor: props.backgroundColor,
               }}
@@ -96,7 +91,7 @@ const PageLayout = (props: Props) => {
                   ) : (
                     <>
                       <NextTopLoader
-                        color="var(--primary-light)"
+                        color="var(--primary)"
                         initialPosition={0.08}
                         crawlSpeed={200}
                         height={3}
@@ -104,9 +99,12 @@ const PageLayout = (props: Props) => {
                         showSpinner={false}
                         easing="ease"
                         speed={200}
-                        shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary-light)"
+                        shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
                       />
-                      <div style={{ position: "relative" }}>{props.children}</div>
+                      <div style={{ position: 'relative' }}>
+                        <AlertCenter />
+                        {props.children}
+                      </div>
                     </>
                   )}
                 </div>

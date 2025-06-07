@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import UserType from '@/types/UserType';
+import UserType from '@/types/User';
 
 interface UserState {
   user: UserType | null;

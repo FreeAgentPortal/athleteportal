@@ -32,7 +32,7 @@ const SideBar = (props: Props) => {
           </div>
         )}
         <Image
-          src="/images/ShepherdsCMSLogo.png"
+          src="/images/logo.png"
           width={30}
           height={50}
           className={styles.logo + " " + styles.saltLogo}
@@ -43,7 +43,7 @@ const SideBar = (props: Props) => {
         />
 
         <Image
-          src={"/images/ShepherdsCMSLogo.png"}
+          src={"/images/logo.png"}
           width={75}
           height={50}
           className={styles.logo + " " + styles.truthcastingLogo}
@@ -52,7 +52,7 @@ const SideBar = (props: Props) => {
           }}
           alt="logo"
         />
-        <p className={styles.productName}>Shepherds CMS</p>
+        <p className={styles.productName}>Athlete</p>
       </div>
 
       {Object.values(

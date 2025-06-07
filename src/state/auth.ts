@@ -47,54 +47,7 @@ export const useUser = (token?: string, onSuccess?: () => void, onError?: () => 
   return query;
 };
 
-export const useUpdateUser = () => {
-  const { addAlert } = useInterfaceStore((state: any) => state);
-  const queryClient = useQueryClient();
-
-  const mutate = useMutation({
-    mutationFn: (data: any) => updateUser(data),
-    onSuccess: (data: any) => {
-      // addAlert({});
-      queryClient.invalidateQueries({ queryKey: ['user'] });
-      queryClient.invalidateQueries({ queryKey: ['userDetails'] });
-    },
-    onError: (error: Error) => {
-      console.log(error);
-      errorHandler(error);
-    },
-  });
-
-  return mutate;
-};
-
-/**
- * @description - fetch user details, in full
- * @param id - user id
- * @returns
- */
-export const fetchUserDetails = async (id: string) => {
-  const { data } = await axios.get(`/user/me`);
-  return data;
-};
-
-export const useUserDetails = (id: string) => {
-  const query = useQuery({
-    queryKey: ['userDetails', id],
-    queryFn: () => fetchUserDetails(id),
-    staleTime: Infinity,
-    enabled: !!id,
-    meta: {
-      errorMessage: 'An error occurred while fetching user details',
-    },
-  });
-
-  return query;
-};
-
 export const logout = () => {
   localStorage.removeItem('token');
-  window.location.href =
-    process.env.ENV !== 'development'
-      ? `https://auth.shepherdcms.org?logout=true&redirect=https://portal.shepherdcms.org`
-      : `http://localhost:3003?logout=true&redirect=http://${window.location.hostname}:${window.location.port}`;
+  window.location.href = `${process.env.AUTH_URL}?logout=true&redirect=http://${window.location.hostname}:${window.location.port}`;
 };
