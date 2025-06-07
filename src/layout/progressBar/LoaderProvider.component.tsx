@@ -1,9 +1,10 @@
 'use client';
-// LoaderProvider.tsx
+
 import React, { createContext, useState, useRef, useEffect } from 'react';
 import ProgressBar from './ProgressBar.component';
 import { LoaderContext } from './useLoader';
-import { Router } from 'next/router';
+import { usePathname } from 'next/navigation';
+import { onRouteChange } from './route-events';
 
 const LoaderContextInternal = createContext<LoaderContext | null>(null);
 
@@ -13,8 +14,9 @@ type Props = {
 
 export const LoaderProvider = ({ children }: Props) => {
   const [progress, setProgress] = useState(0);
-  const [active, setActive] = useState(true);
+  const [active, setActive] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pathname = usePathname();
 
   const start = () => {
     setProgress(0);
@@ -34,15 +36,10 @@ export const LoaderProvider = ({ children }: Props) => {
       setProgress(0);
     }, 300);
   };
+
   useEffect(() => {
-    Router.events.on('routeChangeStart', start);
-    Router.events.on('routeChangeComplete', done);
-    Router.events.on('routeChangeError', done);
-    return () => {
-      Router.events.off('routeChangeStart', start);
-      Router.events.off('routeChangeComplete', done);
-      Router.events.off('routeChangeError', done);
-    };
+    const cleanup = onRouteChange(start, done);
+    return cleanup;
   }, []);
 
   return (
