@@ -22,10 +22,20 @@
 - Favor composition and reuse; avoid duplicating styling logic or component structure.
 
 ## 🎯 Project Structure Awareness
-- Components are in `/src/components/<camelCaseComponentName>/<component>.component.tsx`
+- Global Components are in `/src/components/<camelCaseComponentName>/<component>.component.tsx`
   > Each component is also responsible for its own style sheet: `./<componentName>.module.scss`
-- Pages are in `/src/views/`
-  > Pages are layouts for different views 
+  > If a component is only used in one location by another component it should be placed in an adjacent folder `components` for that resource
+- `/app` is our `router` in NextJS 15, these files i.e. `page.tsx` should remain server only components so `metadata` is generated at the server level for increased SEO functionality, all client code (any code that uses hooks etc) should be placed in the `/src/views/` folder
+- Pages are in `/src/views/` This is where the Client react information lives
+  > Pages are layouts for different views around the app
+  > Pages are managed in their own folder and are responsible for their own `scss` modules
+- Pages Structure:
+  ```
+  /{folderName}/
+    /{subviews/components/etc}/ <— (If the view has sub components or views that help make up the view, they go here)
+    {fileName}.view.tsx <— client code of the view
+    {fileName}.module.scss <— `scss` specific styling for this component
+  ```
 - Styles are managed using **SCSS Modules** (e.g., `Component.module.scss`)
   > Global styles are managed in the `@/src/styles` folder, you should always reference these files when generating styling
   > Shared styles and breakpoints come from `@/styles/globals.scss`
