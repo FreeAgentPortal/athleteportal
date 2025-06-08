@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Support.module.scss';
 import SearchWrapper from '@/layout/searchWrapper/SearchWrapper.layout';
 import { useRouter } from 'next/navigation';
@@ -33,34 +33,43 @@ const SupportTable = () => {
   }) as any;
 
   const [form] = Form.useForm();
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+
+  const handleCreate = () => {
+    form
+      .validateFields()
+      .then((values) => {
+        createTicket({
+          formData: values,
+        });
+        setCreateModalOpen(false);
+      })
+      .catch((info) => {
+        console.log('Validate Failed:', info);
+      });
+  };
 
   return (
-    <SearchWrapper
-      buttons={[
-        {
-          toolTip: 'Create new Support request',
-          icon: <AiOutlinePlus className={styles.icon} />,
-          onClick: () => {
-            Modal.info({
-              title: 'Create new Support request',
-              content: <SupportForm form={form} />,
-              onOk() {
-                form
-                  .validateFields()
-                  .then((values) => {
-                    createTicket({
-                      formData: values,
-                    });
-                  })
-                  .catch((info) => {
-                    console.log('Validate Failed:', info);
-                  });
-              },
-            });
+    <>
+      <Modal
+        open={createModalOpen}
+        title="Create new Support request"
+        onOk={handleCreate}
+        onCancel={() => setCreateModalOpen(false)}
+      >
+        <SupportForm form={form} />
+      </Modal>
+      <SearchWrapper
+        buttons={[
+          {
+            toolTip: 'Create new Support request',
+            icon: <AiOutlinePlus className={styles.icon} />,
+            onClick: () => {
+              setCreateModalOpen(true);
+            },
+            type: 'primary',
           },
-          type: 'primary',
-        },
-      ]}
+        ]}
       placeholder="Search for ministries"
       total={data?.payload?.totalCount}
       queryKey={'ministryList'}
@@ -158,6 +167,7 @@ const SupportTable = () => {
         />
       </div>
     </SearchWrapper>
+    </>
   );
 };
 
