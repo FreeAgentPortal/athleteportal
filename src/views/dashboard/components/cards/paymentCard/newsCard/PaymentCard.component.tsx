@@ -4,14 +4,19 @@ import { Table, Button, Skeleton } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import Error from '@/components/error/Error.component';
 import Link from 'next/link';
+import useApiHook from '@/hooks/useApi';
 
-type Props = {
-  hook: any;
-};
-
-const PaymentCard = (props: Props) => {
-  const { data: paymentData, error, isLoading, isError } = props.hook();
-
+const PaymentCard = () => {
+  const {
+    data: paymentData,
+    error,
+    isLoading,
+    isError,
+  } = useApiHook({
+    key: 'payment-details',
+    method: 'GET',
+    url: `/`,
+  }) as any;
   interface DataType {
     amount: number;
     date: string;
@@ -52,15 +57,9 @@ const PaymentCard = (props: Props) => {
             currency: 'USD',
           }).format(paymentData?.data?.nextPaymentAmount)}
         </h1>
-        <p>
-          {DateTimeFormat.format(new Date(paymentData?.data?.nextPaymentDate))}
-        </p>
+        <p>{DateTimeFormat.format(new Date(paymentData?.data?.nextPaymentDate))}</p>
 
-        <ResponsiveContainer
-          width="99%"
-          aspect={4}
-          className={styles.barChartContainer}
-        >
+        <ResponsiveContainer width="99%" aspect={4} className={styles.barChartContainer}>
           <BarChart
             data={paymentData?.receipts.map((r: any) => {
               return { amount: r.amount.toFixed(2) };

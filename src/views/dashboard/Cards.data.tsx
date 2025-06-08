@@ -1,5 +1,5 @@
-import AbsenteeMembers from "./components/cards/absenteeMembers/AbsenteeMembers.component";
-import MinistryAttendance from "./components/cards/ministryAttendance/MinistryAttendance.component";
+import NewsCard from './components/cards/newsCard/NewsCard.component';
+import PaymentCard from './components/cards/paymentCard/newsCard/PaymentCard.component';
 
 export interface Card {
   title: string;
@@ -8,17 +8,15 @@ export interface Card {
   hideIf?: boolean;
 }
 
-export default [
+export default [ 
   {
-    title: "Ministry Attendance",
-    component: <MinistryAttendance />,
-    gridKey: "ministry-attendance",
-    hideIf: false,
+    title: 'Related News',
+    component: <NewsCard />,
+    gridKey: 'news',
   },
   {
-    title: "Absentee Members",
-    component: <AbsenteeMembers />,
-    gridKey: "absentee-members",
-    hideIf: false,
+    title: 'Payment',
+    component: <PaymentCard />,
+    gridKey: 'payment-card',
   },
 ] as Card[];
