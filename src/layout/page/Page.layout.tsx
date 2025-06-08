@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import BlockedMessage from '@/components/blockedMessage/BlockedMessage.component';
 import { useUser } from '@/state/auth';
 import { FEATURES, hasFeature } from '@/utils/hasFeature';
@@ -112,7 +112,9 @@ const PageLayout = (props: Props) => {
             </div>
           </>
         ) : (
-          <Auth />
+          <Suspense>
+            <Auth />
+          </Suspense>
         )}
       </div>
     </>

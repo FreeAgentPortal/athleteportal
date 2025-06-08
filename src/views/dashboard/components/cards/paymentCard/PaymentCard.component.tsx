@@ -42,7 +42,7 @@ const PaymentCard = () => {
   ];
 
   if (isLoading) return <Skeleton active />;
-  if (isError) return <Error error={error} />;
+  if (!isError) return <Error error={error} />;
   const DateTimeFormat = new Intl.DateTimeFormat('en', {
     year: 'numeric',
     month: 'long',
@@ -57,7 +57,7 @@ const PaymentCard = () => {
             currency: 'USD',
           }).format(paymentData?.data?.nextPaymentAmount)}
         </h1>
-        <p>{DateTimeFormat.format(new Date(paymentData?.data?.nextPaymentDate))}</p>
+        <p>{DateTimeFormat.format(new Date(paymentData?.data?.nextPaymentDate ?? Date.now()))}</p>
 
         <ResponsiveContainer width="99%" aspect={4} className={styles.barChartContainer}>
           <BarChart

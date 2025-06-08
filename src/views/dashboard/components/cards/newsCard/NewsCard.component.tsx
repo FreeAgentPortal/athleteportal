@@ -17,7 +17,7 @@ const NewsCard = () => {
   }) as any;
 
   if (isLoading) return <Skeleton active />;
-  if (isError) return <Error error={error} />;
+  if (!isError) return <Error error={error} />;
 
   return (
     <div className={styles.container}>

@@ -22,7 +22,7 @@
   }
   .container {
     display: grid;
-    grid-template-areas: "ministry-attendance ministry-attendance absentee-members";
+    grid-template-areas: 'payment-card payment-card news';
     grid-template-columns: 1fr 1fr 1fr;
     grid-gap: 20px;
     padding: 20px;

@@ -1,5 +1,5 @@
 import NewsCard from './components/cards/newsCard/NewsCard.component';
-import PaymentCard from './components/cards/paymentCard/newsCard/PaymentCard.component';
+import PaymentCard from './components/cards/paymentCard/PaymentCard.component';
 
 export interface Card {
   title: string;
