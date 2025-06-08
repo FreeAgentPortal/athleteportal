@@ -91,7 +91,7 @@ const PageLayout = (props: Props) => {
                     <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
                   ) : (
                     <>
-                      {/* <NextTopLoader
+                      <NextTopLoader
                         color="var(--primary)"
                         initialPosition={0.08}
                         crawlSpeed={200}
@@ -102,7 +102,7 @@ const PageLayout = (props: Props) => {
                         speed={200}
                         shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
                         showForHashAnchor
-                      /> */}
+                      />
                       <AlertCenter />
                       <LoaderProvider>{props.children}</LoaderProvider>
                     </>

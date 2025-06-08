@@ -35,7 +35,6 @@
       "borderRadius": 12
     },
     "Modal": {
-      "colorBgElevated": "#0a0a0a",
       "borderRadius": 12,
       "colorText": "#c0c0c0"
     },
@@ -51,7 +50,6 @@
     },
     "Menu": {
       "colorItemText": "#c0c0c0",
-      "colorItemBg": "#0a0a0a",
       "colorItemBgHover": "#1c1c1c",
       "colorItemBgSelected": "#4ba7d6",
       "colorItemTextSelected": "#ffffff",
