@@ -1,12 +1,12 @@
-import React from "react";
-import styles from "./SideBar.module.scss";
-import { navigation } from "@/data/navigation";
-import { Button } from "antd";
-import Link from "next/link";
-import Image from "next/image";
-import { RxHamburgerMenu } from "react-icons/rx"; 
-import { useUser } from "@/state/auth";
-import { useLayoutStore } from "@/state/layout";
+import React from 'react';
+import styles from './SideBar.module.scss';
+import { navigation } from '@/data/navigation';
+import { Button } from 'antd';
+import Link from 'next/link';
+import Image from 'next/image';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import { useUser } from '@/state/auth';
+import { useLayoutStore } from '@/state/layout';
 
 //make a type with children as a prop
 type Props = {
@@ -19,9 +19,9 @@ const SideBar = (props: Props) => {
   const { data: loggedInData } = useUser();
 
   return (
-    <div className={`${styles.container} ${props.large ? "" : styles.small}`}>
+    <div className={`${styles.container} ${props.large ? '' : styles.small}`}>
       <div className={styles.logoContainer}>
-        {!sideBarOpen && (
+        {sideBarOpen && (
           <div
             className={styles.hamburger}
             onClick={() => {
@@ -43,16 +43,20 @@ const SideBar = (props: Props) => {
         /> */}
 
         <Image
-          src={"/images/logo.png"}
+          src={'/images/logo.png'}
           width={75}
           height={50}
-          className={styles.logo + " " + styles.truthcastingLogo}
+          className={styles.logo + ' ' + styles.truthcastingLogo}
           style={{
-            objectFit: "contain",
+            objectFit: 'contain',
           }}
           alt="logo"
         />
-        <p className={`${styles.productName} ${sideBarOpen ? styles.open : ""}`}>Athlete</p>
+        <p
+          className={`${styles.productName}`}
+        >
+          Athlete
+        </p>
       </div>
 
       {Object.values(
@@ -74,9 +78,7 @@ const SideBar = (props: Props) => {
                         <Link
                           key={indx + subItem.title}
                           href={subItem.link}
-                          className={`${styles.link} ${props.page.title === subItem.title && styles.active} ${
-                            subItem.pulse && styles.pulse
-                          }`}
+                          className={`${styles.link} ${props.page.title === subItem.title && styles.active} ${subItem.pulse && styles.pulse}`}
                           onClick={() => toggleSideBar()}
                         >
                           <span className={styles.icon}>{subItem.icon}</span>

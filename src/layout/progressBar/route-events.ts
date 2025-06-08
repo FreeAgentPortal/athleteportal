@@ -2,6 +2,9 @@
 import Router from 'next/router';
 
 export function onRouteChange(start: () => void, done: () => void) {
+ Router.events.on('routeChangeError', () => {
+    console.log(`routeChangestart`)
+  });
   Router.events.on('routeChangeStart', start);
   Router.events.on('routeChangeComplete', done);
   Router.events.on('routeChangeError', done);

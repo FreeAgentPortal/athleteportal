@@ -38,6 +38,7 @@ export const LoaderProvider = ({ children }: Props) => {
   };
 
   useEffect(() => {
+    console.log(`fired off`);
     const cleanup = onRouteChange(start, done);
     return cleanup;
   }, []);

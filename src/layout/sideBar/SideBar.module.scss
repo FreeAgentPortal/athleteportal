@@ -18,6 +18,12 @@
           display: none;
         }
       }
+      .productName{
+        display: none;
+      }
+      .hamburger{
+        display: block;
+      }
     }
     .group {
       .header {
@@ -60,6 +66,7 @@
   overflow-x: hidden;
   padding-bottom: 15px;
 
+  
   .logoContainer {
     height: 80px;
     display: flex;

@@ -1,4 +1,3 @@
-import { getAbsoluteUrl } from '@/utils/getAbsoluteUrl';
 import { Button } from 'antd';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
@@ -34,14 +33,8 @@ const Auth = (props: Props) => {
           <br />
           <span style={{ fontSize: '14px' }}>Please click the button below to authenticate and access the dashboard</span>
         </p>
-        <a href={`${process.env.AUTH_URL!}?redirect=${getAbsoluteUrl() + pathname}`} className={styles.buttonLink}>
-          <Button
-            className={styles.button}
-            type="primary"
-            size="large"
-            loading={typeof window === 'undefined' || !!window.localStorage.getItem('token')}
-            disabled={typeof window === 'undefined' || !!window.localStorage.getItem('token')}
-          >
+        <a href={`${process.env.AUTH_URL!}?redirect=${location.origin + pathname}`} className={styles.buttonLink}>
+          <Button className={styles.button} type="primary" size="large" loading={!!window.localStorage.getItem('token')} disabled={!!window.localStorage.getItem('token')}>
             Login
           </Button>
         </a>
