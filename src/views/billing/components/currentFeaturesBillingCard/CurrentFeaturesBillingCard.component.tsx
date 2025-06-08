@@ -70,7 +70,7 @@ const CurrentFeaturesBillingCard = () => {
             currency: 'USD',
           }).format(loggedInData?.credits || '0')}
         </Descriptions.Item>
-        <Descriptions.Item label="Discount being used">{loggedInData?.user.discount ? loggedInData?.user.discount : 'N/A'}</Descriptions.Item>
+        <Descriptions.Item label="Discount being used">{loggedInData?.user?.discount ? loggedInData?.user?.discount : 'N/A'}</Descriptions.Item>
       </Descriptions>
     </div>
   );

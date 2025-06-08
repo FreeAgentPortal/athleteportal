@@ -1,11 +1,11 @@
-import Error from "@/components/error/Error.component";
-import { useUser } from "@/state/auth";
-import { Button, Descriptions, Empty, Skeleton } from "antd";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import EditPaymentInfoModal from "../editPaymentInfoModal/EditPaymentInfoModal.component";
-import styles from "./PaymentInformationCard.module.scss";
-import useFetchData from "@/state/useFetchData";
+import Error from '@/components/error/Error.component';
+import { useUser } from '@/state/auth';
+import { Button, Descriptions, Empty, Skeleton } from 'antd';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import EditPaymentInfoModal from '../editPaymentInfoModal/EditPaymentInfoModal.component';
+import styles from './PaymentInformationCard.module.scss';
+import useApiHook from '@/hooks/useApi';
 
 /**
  * @description - This component displays the user's current billing information, & the user can edit their payment credentials CC & ACH.
@@ -25,11 +25,12 @@ const PaymentInformationCard = () => {
     error,
     isLoading,
     isError,
-  } = useFetchData({
+  } = useApiHook({
     url: `/billing/${userDetails?.user?._id}`,
-    key: "billingData",
+    key: 'billingData',
     enabled: !!userDetails?.user?._id,
-  });
+    method: 'GET',
+  }) as any;
   const [editPaymentModalOpen, setEditPaymentModalOpen] = useState(false);
 
   if (isLoading) return <Skeleton active />;
@@ -41,14 +42,11 @@ const PaymentInformationCard = () => {
 
       <div className={styles.buttonContainer}>
         <Button type="dashed" onClick={() => setEditPaymentModalOpen(true)}>
-          {billingData?._doc?.success === false ? "Add Payment Information" : "Edit Payment Information"}
+          {billingData?._doc?.success === false ? 'Add Payment Information' : 'Edit Payment Information'}
         </Button>
       </div>
       {billingData?._doc?.success === false ? (
-        <Empty
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
-          description="You currently do not have any payment information on file."
-        />
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description="You currently do not have any payment information on file." />
       ) : (
         <div>
           <div className={styles.container}>
@@ -60,10 +58,9 @@ const PaymentInformationCard = () => {
               <Descriptions.Item label="Email">{billingData?._doc?.billingEmail}</Descriptions.Item>
               <Descriptions.Item label="Phone #">{billingData?._doc?.billingInfo[0]?.phoneNumber}</Descriptions.Item>
               <Descriptions.Item label="Address">
-                {billingData?._doc?.billingInfo[0]?.address + "," || "N/A"}{" "}
-                {billingData?._doc?.billingInfo[0]?.city + "," || "N/A"}{" "}
-                {billingData?._doc?.billingInfo[0]?.state + ", " || "N/A"}
-                {billingData?._doc?.billingInfo[0]?.zip || "N/A"}
+                {billingData?._doc?.billingInfo[0]?.address + ',' || 'N/A'} {billingData?._doc?.billingInfo[0]?.city + ',' || 'N/A'}{' '}
+                {billingData?._doc?.billingInfo[0]?.state + ', ' || 'N/A'}
+                {billingData?._doc?.billingInfo[0]?.zip || 'N/A'}
               </Descriptions.Item>
             </Descriptions>
           </div>
@@ -83,7 +80,7 @@ const PaymentInformationCard = () => {
                 <Descriptions.Item label="Credit Card Expiration Date">
                   {
                     // we need to format the expiration date to MM/YYYY
-                    billingData?._doc?.ccexp?.substring(0, 2) + "/" + billingData?._doc?.ccexp?.substring(2, 6)
+                    billingData?._doc?.ccexp?.substring(0, 2) + '/' + billingData?._doc?.ccexp?.substring(2, 6)
                   }
                 </Descriptions.Item>
               </Descriptions>
