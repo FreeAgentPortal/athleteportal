@@ -5,7 +5,7 @@ import SearchWrapper from '@/layout/searchWrapper/SearchWrapper.layout';
 import { useRouter } from 'next/navigation';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { useUser } from '@/state/auth';
-import useApiHook from '@/state/useApi';
+import useApiHook from '@/hooks/useApi';
 import { Button, Form, Modal, Table, Tag, Tooltip } from 'antd';
 import { MdOpenInNew } from 'react-icons/md';
 import SupportForm from './components/SupportForm.component';

@@ -1,4 +1,4 @@
-import { useSearchStore } from "@/state/search/search";
+import { useSearchStore } from "@/state/search";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge, Button, Dropdown, Input, Pagination, Skeleton, Space, Tooltip } from "antd";
 import { useEffect, useState } from "react";

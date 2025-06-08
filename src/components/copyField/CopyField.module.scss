@@ -1,8 +1,8 @@
 @import "@/styles/globals.scss";
 .container {
-  background-color: $quaternary-lighter;
+  background-color: var(--primary);
   padding: 10px;
-  color: $primary-color;
+  color: var(--text-color);
   border-radius: 5px;
   display: flex;
 

@@ -2,33 +2,34 @@
 import React from 'react';
 import styles from './ApiKeys.module.scss';
 import { useUser } from '@/state/auth';
-import useFetchData from '@/state/useFetchData';
 import SearchWrapper from '@/layout/searchWrapper/SearchWrapper.layout';
 import { Button, DatePicker, Form, Input, Modal, Table } from 'antd';
 import { FaPlus, FaTrash } from 'react-icons/fa';
-import useRemoveData from '@/state/useRemoveData';
 import moment from 'moment';
-import usePostData from '@/state/usePostData';
 import CopyField from '@/components/copyField/CopyField.component';
+import useApiHook from '@/hooks/useApi';
 
 const ApiKeys = () => {
   const [form] = Form.useForm();
   const [open, setOpen] = React.useState(false);
   const [key, setKey] = React.useState('');
   const { data: loggedInData } = useUser();
-  const { data, isLoading, isError, error, isFetching } = useFetchData({
+  const { data, isLoading, isError, error, isFetching } = useApiHook({
     url: '/apikey',
+    method: "GET",
     key: 'keys',
     filter: `user;${loggedInData?._id}`,
     enabled: !!loggedInData?._id,
-  });
+  }) as any;
 
-  const { mutate: remove } = useRemoveData({
+  const { mutate: remove } = useApiHook({
     queriesToInvalidate: ['keys'],
     successMessage: 'key removed successfully',
-  });
+    key: 'remove',
+    method: "DELETE"
+  }) as any;
 
-  const { mutate: create } = usePostData({
+  const { mutate: create } = useApiHook({
     queriesToInvalidate: ['keys'],
     url: '/apikey',
     key: 'createKey',
@@ -36,7 +37,8 @@ const ApiKeys = () => {
       setKey(data.payload.key);
       setOpen(true);
     },
-  });
+    method: "POST"
+  }) as any;
 
   const handleDelete = (id: string) => {
     Modal.confirm({

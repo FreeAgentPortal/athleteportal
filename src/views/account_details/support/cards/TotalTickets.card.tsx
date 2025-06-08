@@ -1,7 +1,7 @@
 'use client';
 import React, { CSSProperties } from 'react';
 import { useUser } from '@/state/auth';
-import useApiHook from '@/state/useApi';
+import useApiHook from '@/hooks/useApi';
 import { Card, Empty } from 'antd';
 import Error from '@/components/error/Error.component';
 
