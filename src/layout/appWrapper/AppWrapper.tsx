@@ -5,7 +5,7 @@ import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 import { useUser } from '@/state/auth';
 import { useSocketStore } from '@/state/socket';
-import BillingSetupModal from '@/components/billingSetupModal/BillingSetupModal.component';
+import BillingSetupModal from '@/layout/billingSetupModal/BillingSetupModal.component';
 
 type Props = {
   children: React.ReactNode;
@@ -53,7 +53,7 @@ const AppWrapper = (props: Props) => {
   return (
     <>
       {props.children}
-      {!userIsLoading && loggedInData?.user?.needsBillingSetup && (
+      {!userIsLoading && loggedInData?.needsBillingSetup && (
         <BillingSetupModal open={true} />
       )}
     </>
