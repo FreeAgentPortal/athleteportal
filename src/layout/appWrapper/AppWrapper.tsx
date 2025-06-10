@@ -5,7 +5,9 @@ import React, { useEffect } from 'react';
 import io from 'socket.io-client';
 import { useUser } from '@/state/auth';
 import { useSocketStore } from '@/state/socket';
-import BillingSetupModal from '@/layout/billingSetupModal/BillingSetupModal.component';
+import PageLayout from '../page/Page.layout';
+import BillingSetup from '../billingSetup/BillingSetup.layout';
+import { navigation } from '@/data/navigation';
 
 type Props = {
   children: React.ReactNode;
@@ -52,9 +54,12 @@ const AppWrapper = (props: Props) => {
   }, [socket]);
   return (
     <>
-      {props.children}
-      {!userIsLoading && loggedInData?.needsBillingSetup && (
-        <BillingSetupModal open={true} />
+      {!userIsLoading && loggedInData?.needsBillingSetup ? (
+        <PageLayout pages={[navigation().billing.links.account_center]}>
+          <BillingSetup />
+        </PageLayout>
+      ) : (
+        <>{props.children}</>
       )}
     </>
   );

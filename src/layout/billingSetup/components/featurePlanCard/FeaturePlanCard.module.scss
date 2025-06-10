@@ -12,6 +12,8 @@
   transition: border-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
   max-width: 300px;
+  min-width: 300px;
+  position: relative;
 
   &:hover {
     transform: scale(1.02);
@@ -58,15 +60,40 @@
 
 .priceRow {
   display: flex;
-  justify-content: center;
   align-items: baseline;
-  gap: 0.25rem;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-xs);
+}
+
+.discountRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  margin-top: 0.25rem;
+
+  .originalPrice {
+    font-size: var(--font-size-sm);
+    color: var(--secondary-dark);
+    text-decoration: line-through;
+  }
+}
+
+.discountBadge {
+  background: var(--accent);
+  color: #000;
+  font-size: var(--font-size-xs);
+  padding: 0.25rem 0.5rem;
+  border-radius: var(--radius-sm);
+  font-weight: var(--font-weight-bold);
+  box-shadow: var(--shadow-default);
 }
 
 .price {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--accent);
+  flex: 1;
 }
 
 .billingCycle {
@@ -79,6 +106,13 @@
   border-color: #c0c0c0;
   background: linear-gradient(135deg, #e0e0e0, #a0a0a0);
   color: #2c2c2c;
+
+  .name {
+    color: var(--color-black);
+  }
+  .price {
+    color: var(--color-black);
+  }
 }
 
 .gold {
@@ -87,7 +121,7 @@
   color: #4b3d02;
 
   .name {
-    color: var(--color-black)
+    color: var(--color-black);
   }
   .price {
     color: var(--secondary-dark);
@@ -110,6 +144,30 @@
   border-color: #b9f2ff;
   background: linear-gradient(135deg, #e0ffff, #b9f2ff);
   color: #084c61;
+}
+.mostPopular {
+  border: 2px solid var(--accent);
+  background-color: var(--primary-light);
+  position: relative;
+  transition: transform 0.3s ease;
+  transform: scale(1.2);
+  z-index: 2;
+  border: 2px solid var(--accent);
+  box-shadow: 4px 4px 20px rgba(2, 97, 175, 0.856);
+}
+
+.popularBadge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: var(--accent);
+  color: white;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  z-index: 2;
+  box-shadow: var(--shadow-default);
 }
 
 /* === Mobile === */

@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
-import { FeaturePlan } from '@/layout/billingSetupModal/components/featurePlanCard/FeaturePlanCard.component';
+import { FeaturePlan } from '@/layout/billingSetup/components/featurePlanCard/FeaturePlanCard.component';
 
 interface PlansState {
   selectedPlans: FeaturePlan[];
@@ -12,9 +12,7 @@ export const usePlansStore = create<PlansState>((set) => ({
   togglePlan: (plan: FeaturePlan) =>
     set((state) => {
       const exists = state.selectedPlans.find((p) => p._id === plan._id);
-      return exists
-        ? { selectedPlans: state.selectedPlans.filter((p) => p._id !== plan._id) }
-        : { selectedPlans: [...state.selectedPlans, plan] };
+      return exists ? { selectedPlans: state.selectedPlans.filter((p) => p._id !== plan._id) } : { selectedPlans: [...state.selectedPlans, plan] };
     }),
 }));
 

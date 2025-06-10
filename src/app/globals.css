@@ -23,7 +23,6 @@
   --text-color: var(--color-text-primary);
   --bg-color: var(--color-bg-dark);
   --bg-gradient: var(--color-bg-gradient);
-
   --accent: var(--color-accent);
 
   /* === Font Families === */
@@ -59,6 +58,7 @@
   /* === Shadows === */
   --shadow-default: 0 2px 6px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.3);
+  --shadow-default: 4px 4px 20px #4ba1c9e5;
 }
 * {
   box-sizing: border-box;

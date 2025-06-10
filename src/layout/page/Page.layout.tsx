@@ -18,7 +18,7 @@ import { LoaderProvider } from '../progressBar/LoaderProvider.component';
 //make a type with children as a prop
 type Props = {
   children: React.ReactNode;
-  pages: Array<{ title: string; link?: string; icon?: ReactNode }>;
+  pages?: Array<{ title: string; link?: string; icon?: ReactNode; onClick?: () => {} }>;
   largeSideBar?: boolean;
   backgroundColor?: string;
   hideControlLayout?: boolean;
@@ -32,6 +32,7 @@ type Props = {
     url?: string;
     image?: string;
   };
+  sidebarHidden?: boolean;
 };
 const PageLayout = (props: Props) => {
   const sideBarOpen = useLayoutStore((state) => state.sideBarOpen);
@@ -64,7 +65,7 @@ const PageLayout = (props: Props) => {
         {loggedInData ? (
           <>
             <Header pages={props.pages} />
-            <div className={styles.sideBar}>{props.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>
+            {!props.sidebarHidden && <div className={styles.sideBar}>{props?.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>}
             <div
               className={`${styles.content} ${controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive} ${
                 props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive
