@@ -3,7 +3,7 @@ import { Button } from 'antd';
 import styles from './FeatureSelect.module.scss';
 import { useUser } from '@/state/auth';
 import useApiHook from '@/hooks/useApi';
-import { useState } from 'react';
+import { usePlansStore } from '@/state/plans';
 import FeaturePlanCard, { FeaturePlan } from './components/featurePlanCard/FeaturePlanCard.component';
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 const FeatureSelect = ({ onContinue }: Props) => {
   const { data: loggedInUser } = useUser();
 
-  const { data: plansRequest, isLoading } = useApiHook({
+  const { data: plansRequest } = useApiHook({
     url: `/auth/plan`,
     key: 'plan-select',
     method: 'GET',
@@ -21,7 +21,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
     filter: `availableTo;{"$in":"${Object.keys(loggedInUser.profileRefs).join(',')}"}`,
   }) as any;
 
-  const [selectedPlan, setSelectedPlan] = useState<string>('');
+  const { selectedPlans, selectPlan } = usePlansStore();
 
   const plans: FeaturePlan[] =
     plansRequest?.payload?.data || plansRequest?.payload || plansRequest?.data || [];
@@ -32,11 +32,11 @@ const FeatureSelect = ({ onContinue }: Props) => {
         <FeaturePlanCard
           key={plan._id}
           plan={plan}
-          selected={selectedPlan === plan._id}
-          onSelect={() => setSelectedPlan(plan._id)}
+          selected={selectedPlans.some((p) => p._id === plan._id)}
+          onSelect={() => selectPlan(plan)}
         />
       ))}
-      <Button type="primary" onClick={onContinue} disabled={!selectedPlan}>
+      <Button type="primary" onClick={onContinue} disabled={selectedPlans.length === 0}>
         Continue
       </Button>
     </div>
