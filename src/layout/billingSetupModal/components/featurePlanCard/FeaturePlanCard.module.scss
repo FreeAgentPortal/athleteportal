@@ -1,35 +1,132 @@
 @use '@/styles/globals.scss' as *;
 
 .container {
-  border: 1px solid var(--primary);
+  background: var(--bg-gradient);
   border-radius: var(--radius-md);
-  padding: 15px;
+  border: 2px solid transparent;
+  padding: var(--spacing-sm);
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  width: 100%;
+  align-items: center;
+  box-shadow: var(--shadow-default);
+  transition: border-color 0.3s ease, transform 0.3s ease;
   cursor: pointer;
-  transition: $simple-animation;
+  max-width: 300px;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 
   &.active {
-    background-color: var(--primary-light);
-    box-shadow: var(--shadow-default);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--accent);
+  }
+}
+
+.imageWrapper {
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--spacing-sm);
+
+  .image {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.content {
+  text-align: center;
+  width: 100%;
+}
+
+.name {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-xs);
+  color: var(--primary);
+}
+
+.description {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-dark);
+  margin-bottom: var(--spacing-sm);
+  background-color: var(--color-black);
+  border-radius: var(--radius-md);
+  padding: 2%;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.price {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--accent);
+}
+
+.billingCycle {
+  font-size: var(--font-size-sm);
+  color: var(--secondary-dark);
+}
+
+/* === Tier Styling === */
+.silver {
+  border-color: #c0c0c0;
+  background: linear-gradient(135deg, #e0e0e0, #a0a0a0);
+  color: #2c2c2c;
+}
+
+.gold {
+  border-color: #d4af37;
+  background: linear-gradient(135deg, #fff3b0, #d4af37);
+  color: #4b3d02;
+
+  .name {
+    color: var(--color-black)
+  }
+  .price {
+    color: var(--secondary-dark);
+  }
+}
+
+.platinum {
+  border-color: #e5e4e2;
+  background: linear-gradient(135deg, #ffffff, #cfd8dc);
+  color: #2f2f2f;
+}
+
+.bronze {
+  border-color: #cd7f32;
+  background: linear-gradient(135deg, #f1c197, #cd7f32);
+  color: #3f2b1c;
+}
+
+.diamond {
+  border-color: #b9f2ff;
+  background: linear-gradient(135deg, #e0ffff, #b9f2ff);
+  color: #084c61;
+}
+
+/* === Mobile === */
+@media screen and (max-width: 480px) {
+  .container {
+    padding: var(--spacing-xs);
   }
 
   .name {
     font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
-    color: var(--primary-dark);
   }
 
   .description {
-    font-size: var(--font-size-sm);
-    color: var(--secondary-dark);
+    font-size: var(--font-size-xs);
   }
 
   .price {
-    margin-top: 5px;
-    font-weight: var(--font-weight-medium);
-    color: var(--primary-dark);
+    font-size: var(--font-size-md);
   }
 }
