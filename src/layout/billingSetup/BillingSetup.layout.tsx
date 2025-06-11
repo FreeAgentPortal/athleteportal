@@ -4,14 +4,27 @@ import { AnimatePresence, motion } from 'framer-motion';
 import styles from './BillingSetup.module.scss';
 import PaymentInformationForm from '@/views/billing/components/paymentInformation/PaymentInformation.component';
 import FeatureSelect from './FeatureSelect.component';
+import { usePaymentStore } from '@/state/payment';
+import { usePlansStore } from '@/state/plans';
+import useApiHook from '@/hooks/useApi';
+import PaymentWrapper from './PaymentWrapper.view';
+import Final from './Final.view';
 
 const BillingSetup = () => {
-  const [step, setStep] = useState<'features' | 'payment'>('features');
+  const [step, setStep] = useState<'features' | 'payment' | 'final'>('features');
+  const { paymentFormValues } = usePaymentStore();
+  const { billingCycle, selectedPlans } = usePlansStore();
+  const { mutate: updateBilling } = useApiHook({
+    key: 'billing',
+    method: 'POST',
+  }) as any;
 
   const renderStep = () => {
     switch (step) {
+      case 'final':
+        return <Final onPrevious={() => setStep('payment')} />;
       case 'payment':
-        return <PaymentInformationForm />;
+        return <PaymentWrapper onContinue={() => setStep('final')} onPrevious={() => setStep('features')} />;
       default:
         return <FeatureSelect onContinue={() => setStep('payment')} />;
     }

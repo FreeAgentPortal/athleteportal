@@ -1,4 +1,4 @@
-import { Form, Input, Select, Button, message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import styles from '@/styles/Form.module.scss';
 import { useEffect, useState } from 'react';
 import { states } from '@/data/states';
@@ -8,9 +8,7 @@ import { usePaymentStore } from '@/state/payment';
 const CardForm = () => {
   const [form] = Form.useForm();
   const [country, setCountry] = useState(countries[0]);
-  const { signUpPaymentFormValues, setCurrentForm, setSignUpPaymentFormValues } = usePaymentStore((state) => state);
-
-  // const { data: featuresData } = useAllFeatures();
+  const { paymentFormValues, setCurrentForm, setPaymentFormValues } = usePaymentStore((state) => state);
 
   const onFinish = async (values: any) => {
     // set the payment form values
@@ -20,10 +18,10 @@ const CardForm = () => {
       message.error('Please fill out all required fields');
       return;
     }
-    setSignUpPaymentFormValues(values);
+    setPaymentFormValues(values);
   };
   useEffect(() => {
-    form.setFieldsValue(signUpPaymentFormValues);
+    form.setFieldsValue(paymentFormValues);
     setCurrentForm(form);
   }, []);
 

@@ -86,3 +86,16 @@
   background: repeating-linear-gradient(135deg, var(--secondary-dark), var(--secondary-dark) 2px, transparent 2px, transparent 4px);
   z-index: 0;
 }
+
+.buttonContainer {
+  display: flex;
+  gap: 20px;
+}
+.summary {
+  margin: 1rem 0;
+  text-align: left;
+  p {
+    margin-bottom: 0.5rem;
+  }
+}
+ 

@@ -5,14 +5,13 @@ import { useUser } from '@/state/auth';
 import useApiHook from '@/hooks/useApi';
 import { usePlansStore } from '@/state/plans';
 import FeaturePlanCard, { FeaturePlan } from './components/featurePlanCard/FeaturePlanCard.component';
-import { useState } from 'react';
+
 
 type Props = {
   onContinue: () => void;
 };
 
 const FeatureSelect = ({ onContinue }: Props) => {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('yearly');
   const { data: loggedInUser } = useUser();
 
   const { data: plansRequest } = useApiHook({
@@ -23,7 +22,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
     filter: `availableTo;{"$in":"${Object.keys(loggedInUser.profileRefs).join(',')}"}`,
   }) as any;
 
-  const { selectedPlans, togglePlan } = usePlansStore();
+  const { selectedPlans, togglePlan, billingCycle, setBillingCycle } = usePlansStore();
 
   const plans: FeaturePlan[] = plansRequest?.payload?.data || plansRequest?.payload || plansRequest?.data || [];
   const centerMostPopularPlan = (plans: FeaturePlan[]) => {

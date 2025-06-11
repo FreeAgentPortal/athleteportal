@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { mountStoreDevtool } from 'simple-zustand-devtools';
 type PaymentState = {
   paymentMethod: any;
-  signUpPaymentFormValues: any;
+  paymentFormValues: any;
   currentForm: any;
   transactionData: any;
   transactionMethod: any;
@@ -12,13 +12,13 @@ type PaymentState = {
   setTransactionMethod: (method: string) => void;
   setTransactionDataValues: (values: any) => void;
   setCurrentForm: (form: any) => void;
-  setSignUpPaymentFormValues: (values: any) => void;
+  setPaymentFormValues: (values: any) => void;
   setPaymentMethod: (method: string) => void;
 };
 
 export const usePaymentStore = create<PaymentState>((set: any, get: any) => ({
   paymentMethod: '',
-  signUpPaymentFormValues: {},
+  paymentFormValues: {},
   currentForm: undefined,
   transactionData: {},
   transactionMethod: '',
@@ -34,8 +34,8 @@ export const usePaymentStore = create<PaymentState>((set: any, get: any) => ({
     set({ currentForm: form });
   },
   setPaymentMethod: (method) => set({ paymentMethod: method }),
-  setSignUpPaymentFormValues: (values: any) => {
-    set({ signUpPaymentFormValues: values });
+  setPaymentFormValues: (values: any) => {
+    set({ paymentFormValues: values });
   },
 }));
 

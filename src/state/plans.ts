@@ -7,18 +7,23 @@ export const ALLOW_MULTIPLE_PLAN_SELECT = false;
 
 interface PlansState {
   selectedPlans: FeaturePlan[];
+  billingCycle: string;
+  setBillingCycle: (data: string) => void;
   togglePlan: (plan: FeaturePlan) => void;
 }
 
 export const usePlansStore = create<PlansState>((set) => ({
   selectedPlans: [],
+  billingCycle: 'yearly',
+
+  setBillingCycle: (data: string) => {
+    set({ billingCycle: data });
+  },
   togglePlan: (plan: FeaturePlan) =>
     set((state) => {
       const exists = state.selectedPlans.find((p) => p._id === plan._id);
       if (ALLOW_MULTIPLE_PLAN_SELECT) {
-        return exists
-          ? { selectedPlans: state.selectedPlans.filter((p) => p._id !== plan._id) }
-          : { selectedPlans: [...state.selectedPlans, plan] };
+        return exists ? { selectedPlans: state.selectedPlans.filter((p) => p._id !== plan._id) } : { selectedPlans: [...state.selectedPlans, plan] };
       }
 
       // Single plan selection mode
