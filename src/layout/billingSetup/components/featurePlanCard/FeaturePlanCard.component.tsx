@@ -53,6 +53,11 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
 
   return (
     <div className={`${styles.container} ${selected ? styles.active : ''} ${tierClass} ${popularClass}`} onClick={handleSelect}>
+      {selected && (
+        <div className={styles.checkmarkOverlay}>
+          <div className={styles.checkmark}>✔</div>
+        </div>
+      )}
       {plan.mostPopular && <div className={styles.popularBadge}>Most Popular</div>}
       <div className={styles.imageWrapper}>
         <img src={plan.imageUrl || '/images/placeholder-logo.png'} alt={`${plan.name} icon`} className={styles.image} />
@@ -60,17 +65,17 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
       <div className={styles.content}>
         <h3 className={styles.name}>{plan.name}</h3>
         <p className={styles.description}>{plan.description}</p>
-          {hasDiscount && (
-            <div className={styles.discountRow}>
-              <span className={styles.originalPrice}>
-                {Intl.NumberFormat('en-US', {
-                  style: 'currency',
-                  currency: 'USD',
-                }).format(originalYearlyPrice)}
-              </span>
-              <span className={styles.discountBadge}>Save {plan.yearlyDiscount}%</span>
-            </div>
-          )}
+        {hasDiscount && (
+          <div className={styles.discountRow}>
+            <span className={styles.originalPrice}>
+              {Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD',
+              }).format(originalYearlyPrice)}
+            </span>
+            <span className={styles.discountBadge}>Save {plan.yearlyDiscount}%</span>
+          </div>
+        )}
         <div className={styles.priceRow}>
           <span className={styles.price}>
             {Intl.NumberFormat('en-US', {

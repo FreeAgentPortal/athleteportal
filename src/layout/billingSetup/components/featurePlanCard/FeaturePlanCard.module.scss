@@ -20,11 +20,31 @@
   }
 
   &.active {
-    box-shadow: var(--shadow-hover);
-    border-color: var(--accent);
+    background: var(--primary-light);
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
   }
 }
+.checkmarkOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(122, 205, 242, 0.15); // translucent accent overlay
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
 
+.checkmark {
+  font-size: 3rem;
+  color: #1db33e;
+  font-weight: var(--font-weight-bold);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .imageWrapper {
   width: 80px;
   height: 80px;
@@ -154,6 +174,10 @@
   z-index: 2;
   border: 2px solid var(--accent);
   box-shadow: 4px 4px 20px rgba(2, 97, 175, 0.856);
+
+  &:hover {
+    transform: scale(1.25);
+  }
 }
 
 .popularBadge {

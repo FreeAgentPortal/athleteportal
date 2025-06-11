@@ -26,7 +26,6 @@
     },
     "Input": { 
       "colorBorder": "#4ba7d6",
-      "colorText": "#c0c0c0",
       "fontFamily": "'Roboto', sans-serif"
     },
     "Card": {
