@@ -4,12 +4,16 @@ import { usePaymentStore } from '@/state/payment';
 import { usePlansStore } from '@/state/plans';
 import useApiHook from '@/hooks/useApi';
 import { Button } from 'antd';
+import FeaturePlanCard from './components/featurePlanCard/FeaturePlanCard.component';
+import PaymentSummary from './components/paymentSummary/PaymentSummary.component';
+import { useUser } from '@/state/auth';
 
 type Props = {
   onPrevious(): void;
 };
 const Final = ({ onPrevious }: Props) => {
-  const { paymentFormValues } = usePaymentStore();
+  const { paymentFormValues, paymentMethod } = usePaymentStore();
+  const { data: loggedInUser } = useUser();
   const { billingCycle, selectedPlans } = usePlansStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -29,9 +33,8 @@ const Final = ({ onPrevious }: Props) => {
     setError(null);
     try {
       await updateBilling({
-        payment: paymentFormValues,
-        billingCycle,
-        selectedPlans,
+        url: `/payment/${loggedInUser?.profileRefs.athlete}`,
+        formData: { paymentFormValues, billingCycle, selectedPlans },
       });
     } catch (err: any) {
       setError(err?.message ?? 'An unexpected error occurred.');
@@ -47,14 +50,15 @@ const Final = ({ onPrevious }: Props) => {
 
       {/* Display current selected plan and payment info */}
       <div className={styles.summary}>
-        <p>
-          <strong>Selected Plan:</strong> {selectedPlans?.join(', ')}
-        </p>
-        <p>
-          <strong>Billing Cycle:</strong> {billingCycle}
-        </p>
-        {/* You can expand payment summary here if desired */}
+        <strong>Selected Plan:</strong>{' '}
+        {selectedPlans?.map((plan) => (
+          <FeaturePlanCard plan={plan} selected billingCycle={billingCycle} />
+        ))}
       </div>
+      <p>
+        <strong>Billing Cycle:</strong> {billingCycle}
+      </p>
+      <PaymentSummary {...paymentFormValues} type={paymentMethod} />
 
       {error && <div className={styles.error}>{error}</div>}
 

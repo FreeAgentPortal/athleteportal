@@ -1,8 +1,7 @@
-import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import axios from '@/utils/axios';
 import setAuthToken from '@/utils/setAuthToken';
-import { useInterfaceStore } from './interface';
-import errorHandler from '@/utils/errorHandler';
+import User from '@/types/User';
 
 // make a react query hook to get the user data from the server
 const fetchUserData = async (token?: string) => {
@@ -19,7 +18,7 @@ const updateUser = async (data: any) => {
   return userData;
 };
 
-export const useUser = (token?: string, onSuccess?: () => void, onError?: () => void) => {
+export const useUser = (token?: string, onSuccess?: () => void, onError?: () => void): UseQueryResult<User, Error> => {
   if (typeof window !== 'undefined' && !token) {
     token = localStorage.getItem('token') as string;
   }
