@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { CryptoService } from '@/utils/CryptoService';
 import { useSearchStore as store } from '@/state/search';
 import { useInterfaceStore } from '@/state/interface';
+import { message } from 'antd';
 
 const fetchData = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any, options?: any) => {
   const secret = process.env.ENCRYPTION_KEY!;
@@ -132,8 +133,9 @@ const useApiHook = (options: {
       }
     },
     onError: (error: any) => {
-      console.log(error);
-      addAlert({ message: error.message, type: 'error' });
+      const messageTxt = error.response && error.response.data.message ? error.response.data.message : error.message;
+
+      addAlert({ message: messageTxt, type: 'error' });
       if (onErrorCallback) {
         onErrorCallback(error);
       }

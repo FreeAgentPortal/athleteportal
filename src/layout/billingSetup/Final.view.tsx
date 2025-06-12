@@ -21,6 +21,7 @@ const Final = ({ onPrevious }: Props) => {
   const { mutate: updateBilling } = useApiHook({
     key: 'billing',
     method: 'POST',
+    queriesToInvalidate: ['user'],
   }) as any;
 
   const handleSubmit = async () => {
@@ -34,7 +35,7 @@ const Final = ({ onPrevious }: Props) => {
     try {
       await updateBilling({
         url: `/payment/${loggedInUser?.profileRefs.athlete}`,
-        formData: { paymentFormValues, billingCycle, selectedPlans },
+        formData: { paymentFormValues, billingCycle, selectedPlans, paymentMethod },
       });
     } catch (err: any) {
       setError(err?.message ?? 'An unexpected error occurred.');
