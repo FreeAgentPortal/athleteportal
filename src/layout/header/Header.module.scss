@@ -85,6 +85,11 @@
         }
       }
 
+      .profileButton {
+        cursor: pointer;
+        color: var(--primary-dark);
+      }
+
       .logoutIcon {
         cursor: pointer;
         font-size: 20px;
