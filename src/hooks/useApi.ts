@@ -4,7 +4,16 @@ import { useRouter } from 'next/navigation';
 import { CryptoService } from '@/utils/CryptoService';
 import { useSearchStore as store } from '@/state/search';
 import { useInterfaceStore } from '@/state/interface';
-import { message } from 'antd';
+
+function cleanParams(params: Record<string, any>): Record<string, any> {
+  const cleaned: Record<string, any> = {};
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      cleaned[key] = value;
+    }
+  });
+  return cleaned;
+}
 
 const fetchData = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any, options?: any) => {
   const secret = process.env.ENCRYPTION_KEY!;
@@ -23,12 +32,14 @@ const fetchData = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE',
 
       response = await axios.get(url, {
         params: {
-          keyword: defaultKeyword,
-          pageNumber: defaultPageNumber,
-          pageLimit: defaultPageLimit,
-          filterOptions: defaultFilter,
-          sortOptions: defaultSort,
-          includeOptions: defaultInclude,
+          ...cleanParams({
+            keyword: defaultKeyword,
+            pageNumber: defaultPageNumber,
+            pageLimit: defaultPageLimit,
+            filterOptions: defaultFilter,
+            sortOptions: defaultSort,
+            includeOptions: defaultInclude,
+          }),
         },
       });
 
