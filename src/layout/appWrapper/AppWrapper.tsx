@@ -9,6 +9,7 @@ import PageLayout from '../page/Page.layout';
 import BillingSetup from '../billingSetup/BillingSetup.layout';
 import { navigation } from '@/data/navigation';
 import useApiHook from '@/hooks/useApi';
+import { Skeleton } from 'antd';
 
 type Props = {
   children: React.ReactNode;
@@ -59,9 +60,13 @@ const AppWrapper = (props: Props) => {
       }
     };
   }, [socket]);
+
+  if (userIsLoading || (!userIsLoading && !selectedProfile)) {
+    return <Skeleton active />; // or skeleton loader
+  }
   return (
     <>
-      {!userIsLoading && selectedProfile?.payload?.needsBillingSetup ? (
+      {selectedProfile?.payload?.needsBillingSetup ? (
         <PageLayout pages={[navigation().billing.links.account_center]}>
           <BillingSetup />
         </PageLayout>
