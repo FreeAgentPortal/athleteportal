@@ -1,4 +1,4 @@
-@import '@/styles/globals.scss';
+@use '@/styles/globals.scss' as *;
 
 .wrapper {
   display: flex;
@@ -16,14 +16,14 @@
   backdrop-filter: blur(8px);
 }
 
-.title {
+.code {
   font-size: var(--font-size-hero);
   color: var(--primary);
   font-family: var(--font-family-secondary);
   font-weight: var(--font-weight-bold);
 }
 
-.subtitle {
+.title {
   font-size: var(--font-size-xl);
   margin: var(--spacing-sm) 0;
   font-weight: var(--font-weight-medium);
