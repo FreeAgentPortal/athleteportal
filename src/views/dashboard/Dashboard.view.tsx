@@ -5,7 +5,7 @@ import Card from './layout/card/Card.component';
 import DashboardHeader from './layout/header/Header.layout';
 import Masonry from 'react-masonry-css';
 import dashboardCards, { Card as CardType } from './Cards.data';
-import { useQueryClient } from '@tanstack/react-query';
+import { QueryClient, useQueryClient } from '@tanstack/react-query';
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
@@ -24,7 +24,12 @@ const Dashboard = () => {
       <div className={styles.container}>
         <Masonry breakpointCols={breakpoints} className={styles.masonryGrid} columnClassName={styles.masonryColumn}>
           {cards
-            .filter((c) => !c.hideIf)
+            .filter((c) => {
+              if (typeof c.hideIf === 'function') {
+                return !c.hideIf({ profile: selectedProfile, queryClient } as { profile: any; queryClient: QueryClient });
+              }
+              return !c.hideIf;
+            })
             .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
             .map((card: CardType, index: number) => {
               const cardSize = card.size ?? 1;

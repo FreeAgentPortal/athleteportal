@@ -1,6 +1,8 @@
+import { QueryClient } from '@tanstack/react-query';
 import NewsCard from './components/cards/newsCard/NewsCard.component';
 import PaymentCard from './components/cards/paymentCard/PaymentCard.component';
 import ProfileCard from './components/cards/profileCard/ProfileCard.component';
+import { DashboardRulesEngine } from './DashboardRulesEngine';
 export interface CardComponentProps {
   data: any; // or AthleteProfile | TeamProfile | etc when you type it
 }
@@ -11,7 +13,7 @@ export interface Card {
   size?: number; // NEW: size = column weight (1 = default, 2 = double-width, 3 = triple-width)
   gridKey: string;
   isCard?: boolean;
-  hideIf?: boolean;
+  hideIf?: ((params: { profile: any; queryClient: QueryClient }) => boolean) | boolean;
 }
 
 export default [
@@ -22,6 +24,7 @@ export default [
     order: 2,
     size: 2,
     isCard: true,
+    hideIf: DashboardRulesEngine.noNews,
   },
   {
     title: 'Payment',
@@ -30,6 +33,7 @@ export default [
     order: 3,
     size: 1,
     isCard: true,
+    hideIf: false,
   },
   {
     title: 'Profile',
@@ -38,5 +42,6 @@ export default [
     order: 1,
     size: 3,
     isCard: false,
+    hideIf: DashboardRulesEngine.profileIncomplete,
   },
 ] as Card[];
