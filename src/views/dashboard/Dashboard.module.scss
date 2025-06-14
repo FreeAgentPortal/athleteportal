@@ -1,50 +1,41 @@
-@use "@/styles/globals.scss" as *;
-.wrapper {
+@use '@/styles/globals.scss' as *;
+.container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+  align-items: start;
+  justify-content: stretch;
+}
+
+.cardWrapper {
+  transition: all 0.3s ease;
+}
+
+.small {
+  grid-column: span 1;
+}
+
+.medium {
+  grid-column: span 2;
+}
+
+.large {
+  grid-column: span 3;
+}
+.masonryGrid {
   display: flex;
-  align-items: center;
-  justify-content: center;
+  margin-left: -var(--spacing-md);
+  width: auto;
+}
+
+.masonryColumn {
+  padding-left: var(--spacing-md);
+  background-clip: padding-box;
+  display: flex;
   flex-direction: column;
-  .noFeaturesContainer {
-    // width: 100%;
-    background-color: white;
-    margin: 20px;
-    align-self: flex-start;
-    padding: 20px;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+}
 
-    h1 {
-      font-size: 20px;
-      color: var(--primary);
-    }
-  }
-  .container {
-    display: grid;
-    grid-template-areas: 'payment-card payment-card news';
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 20px;
-    padding: 20px;
-    max-width: 1500px;
-    width: 100%;
-
-    @include tablet {
-      grid-template-areas:
-        "views likes videos"
-        "map map map"
-        "top top top"
-        "viewsChart subscribers subscribers"
-        "news news payment";
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-gap: 20px;
-      padding: 20px;
-      max-width: 1500px;
-    }
-
-    @include mobile {
-      grid-template-areas: "views" "likes" "videos" "map" "viewsChart" "top" "subscribers" "payment" "news";
-      grid-template-columns: 1fr;
-    }
-  }
+.cardWrapper {
+  margin-bottom: var(--spacing-md);
+  transition: all 0.3s ease;
 }

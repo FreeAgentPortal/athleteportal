@@ -1,42 +1,60 @@
-"use client";
-import { useState } from "react";
-import styles from "./Dashboard.module.scss";
-import Card from "./layout/card/Card.component";
-import DashboardHeader from "./layout/header/Header.layout";
-import { useUser } from "@/state/auth";
-import dashboardCards, { Card as CardType } from "./Cards.data";
+'use client';
+import { useState } from 'react';
+import styles from './Dashboard.module.scss';
+import Card from './layout/card/Card.component';
+import DashboardHeader from './layout/header/Header.layout';
+import Masonry from 'react-masonry-css';
+import dashboardCards, { Card as CardType } from './Cards.data';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Dashboard = () => {
-  const { data: loggedInData } = useUser();
+  const queryClient = useQueryClient();
+  const selectedProfile = queryClient.getQueryData(['profile', 'athlete']) as any;
+  const [cards] = useState(dashboardCards);
 
-  const [cards, setCards] = useState(dashboardCards);
-
+  // Setup your breakpoints
+  const breakpoints = {
+    default: 3,
+    1100: 2,
+    700: 1,
+  };
   return (
     <div className={styles.wrapper}>
       <DashboardHeader />
-      {/* {!hasFeature(loggedInData?.user, FEATURES.VOD, FEATURES.LIVESTREAMING) && (
-        <div className={styles.noFeaturesContainer}>
-          <h1>Welcome to your dashboard. You currently do not have any features enabled.</h1>
-          <p>
-            To enhance your Truthcasting experience, you can add features such as Video On Demand and Livestreaming.
-            Please navigate to the Features page to find the option to add these features and unlock their
-            functionalities.
-          </p>
-          <Link href="/features">
-            <Button type="primary">Go to Features</Button>
-          </Link>
-        </div>
-      )} */}
       <div className={styles.container}>
-        {cards
-          .filter((c) => !c.hideIf)
-          .map((card: CardType, index: number) => {
-            return (
-              <Card key={index} title={card.title} gridKey={card.gridKey}>
-                {card.component}
-              </Card>
-            );
-          })}
+        <Masonry breakpointCols={breakpoints} className={styles.masonryGrid} columnClassName={styles.masonryColumn}>
+          {cards
+            .filter((c) => !c.hideIf)
+            .sort((a, b) => (a.order ?? 999) - (b.order ?? 999))
+            .map((card: CardType, index: number) => {
+              const cardSize = card.size ?? 1;
+              return card.isCard ? (
+                <div
+                  key={index}
+                  className={styles.cardWrapper}
+                  style={{
+                    flexGrow: cardSize,
+                    flexBasis: `${cardSize * 100}%`,
+                  }}
+                >
+                  <Card title={card.title} gridKey={card.gridKey}>
+                    {card.component({ data: selectedProfile?.payload })}
+                  </Card>
+                </div>
+              ) : (
+                <div
+                  key={index}
+                  className={styles.cardWrapper}
+                  style={{
+                    flexGrow: cardSize,
+                    flexBasis: `${cardSize * 100}%`,
+                  }}
+                >
+                  {card.component({ data: selectedProfile?.payload })}
+                </div>
+              );
+            })}
+        </Masonry>
       </div>
     </div>
   );

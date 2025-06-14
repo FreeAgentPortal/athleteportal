@@ -5,8 +5,11 @@ import type { ColumnsType } from 'antd/es/table';
 import Error from '@/components/error/Error.component';
 import Link from 'next/link';
 import useApiHook from '@/hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 
 const PaymentCard = () => {
+  const queryClient = useQueryClient();
+  const selectedProfile = queryClient.getQueryData(['profile', 'athlete']) as any;
   const {
     data: paymentData,
     error,
@@ -15,7 +18,7 @@ const PaymentCard = () => {
   } = useApiHook({
     key: 'payment-details',
     method: 'GET',
-    url: `/`,
+    url: `/payment/${selectedProfile?.payload?._id}/receipts`,
   }) as any;
   interface DataType {
     amount: number;
