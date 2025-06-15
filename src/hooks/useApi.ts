@@ -128,11 +128,11 @@ const useApiHook = (options: {
     mutationFn: (data: { url?: string; formData?: any }) => fetchData(url ? url : (data.url as any), method, data.formData),
     onSuccess: (data: any) => {
       if (successMessage) {
-        addAlert({ message: successMessage, type: 'success' });
+        addAlert({ message: successMessage, type: 'success', duration: 3000 });
       }
 
       queriesToInvalidate?.forEach((query: string) => {
-        queryClient.invalidateQueries([query] as any);
+        queryClient.invalidateQueries([query.split(',')] as any);
       });
 
       if (redirectUrl) {
@@ -146,7 +146,7 @@ const useApiHook = (options: {
     onError: (error: any) => {
       const messageTxt = error.response && error.response.data.message ? error.response.data.message : error.message;
 
-      addAlert({ message: messageTxt, type: 'error' });
+      addAlert({ message: messageTxt, type: 'error', duration: 10000 });
       if (onErrorCallback) {
         onErrorCallback(error);
       }

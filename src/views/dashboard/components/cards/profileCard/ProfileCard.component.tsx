@@ -4,6 +4,7 @@ import styles from './ProfileCard.module.scss';
 import { IAthlete } from '@/types/IAthleteType';
 import { Button } from 'antd';
 import { IoOpenOutline } from 'react-icons/io5';
+import Link from 'next/link';
 
 interface Props {
   profile: IAthlete | null;
@@ -34,9 +35,11 @@ const ProfileCard = ({ profile }: Props) => {
     <div className={styles.container}>
       <div className={styles.titleContainer}>
         <h2 className={styles.title}>Finish setting up your profile!</h2>
-        <Button type="primary" onClick={() => {}}>
-          <IoOpenOutline />
-        </Button>
+        <Link href="/account_details/profile" passHref>
+          <Button type="primary">
+            <IoOpenOutline />
+          </Button>
+        </Link>
       </div>
       <StepIndicator steps={steps} />
     </div>
