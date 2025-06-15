@@ -5,6 +5,7 @@ import { CgProfile } from "react-icons/cg";
 import { BsBox, BsBroadcastPin } from "react-icons/bs";
 import { BsFillPeopleFill } from "react-icons/bs";
 import { IoCodeSlashOutline } from "react-icons/io5";
+import { profile } from "console";
 
 export const navigation = (options?: any) => {
   return {
@@ -15,6 +16,11 @@ export const navigation = (options?: any) => {
           title: "Home",
           link: "/",
           icon: <RiHome2Fill />,
+        },
+        feed: {
+          title: "Feed",
+          link: "/feed",
+          icon: <BsBroadcastPin />,
         },
         notifications: {
           title: "Notifications",
@@ -28,6 +34,11 @@ export const navigation = (options?: any) => {
     account_details: {
       title: "Account Details",
       links: {
+        profile: {
+          title: "Profile",
+          link: "/account_details/profile",
+          icon: <BsFillPeopleFill />,
+        },
         account_details: {
           title: "Edit Account Settings",
           link: "/account_details",

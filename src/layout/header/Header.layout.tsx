@@ -28,8 +28,7 @@ const Header = (props: Props) => {
         scout: process.env.SCOUT_APP_URL,
       };
       const url = urls[p];
-      if (url)
-        window.open(`${url}/?token=${loggedInData?.token}`);
+      if (url) window.open(`${url}/?token=${loggedInData?.token}`);
     },
   }));
   return (
@@ -62,8 +61,7 @@ const Header = (props: Props) => {
               return {
                 title: page?.title,
                 path: page?.link || '',
-
-                // element: <Link href={page?.link || ""}>{page?.title}</Link>,
+                element: <Link href={page?.link || ''}>{page?.title}</Link>,
               };
             }) as any[]
           }
