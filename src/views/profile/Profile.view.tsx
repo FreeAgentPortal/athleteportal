@@ -11,6 +11,8 @@ import { useQueryClient } from '@tanstack/react-query';
 const Profile = () => {
   const queryClient = useQueryClient();
   const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
+
+  const validateUrl = (value: string) => /^https:\/\/.+/.test(value);
   const { mutate: handleSubmit } = useApiHook({
     method: 'PUT',
     key: 'updateProfile',
@@ -106,6 +108,7 @@ const Profile = () => {
           title="Highlight Videos"
           mode="list"
           data={profile.payload.highlightVideos}
+          validateItem={validateUrl}
           onSave={(updated) => {
             handleSubmit({
               url: `/athlete/${profile.payload._id}`,
