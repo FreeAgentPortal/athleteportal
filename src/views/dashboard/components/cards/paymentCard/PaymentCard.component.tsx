@@ -18,7 +18,7 @@ const PaymentCard = () => {
   } = useApiHook({
     key: 'payment-details',
     method: 'GET',
-    url: `/payment/${selectedProfile?.payload?._id}/receipts`,
+    url: `/payment/receipt/${selectedProfile?.payload?._id}`,
   }) as any;
   interface DataType {
     amount: number;
@@ -45,7 +45,7 @@ const PaymentCard = () => {
   ];
 
   if (isLoading) return <Skeleton active />;
-  if (!isError) return <Error error={error} />;
+  if (isError) return <Error error={error} />;
   const DateTimeFormat = new Intl.DateTimeFormat('en', {
     year: 'numeric',
     month: 'long',
@@ -78,8 +78,7 @@ const PaymentCard = () => {
         <div className={styles.previousPayments}>
           <h1>Previous Payments</h1>
           <Table
-            dataSource={paymentData?.receipts
-              ?.map((r: any) => {
+            dataSource={paymentData?.payload?.map((r: any) => {
                 return {
                   amount: r.amount.toFixed(2),
                   date: DateTimeFormat.format(new Date(r.billedAt)),

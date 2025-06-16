@@ -27,15 +27,6 @@ export default [
     hideIf: DashboardRulesEngine.noNews,
   },
   {
-    title: 'Payment',
-    component: ({ data }: CardComponentProps) => <PaymentCard />,
-    gridKey: 'payment-card',
-    order: 3,
-    size: 1,
-    isCard: true,
-    hideIf: false,
-  },
-  {
     title: 'Profile',
     component: ({ data }: CardComponentProps) => <ProfileCard profile={data} />,
     gridKey: 'profile-card',
