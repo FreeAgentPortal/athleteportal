@@ -109,7 +109,7 @@ const Profile = () => {
           onSave={(updated) => {
             handleSubmit({
               url: `/athlete/${profile.payload._id}`,
-              formData: { ...profile.payload, videos: updated },
+              formData: { ...profile.payload, highlightVideos: updated },
             });
           }}
         />
