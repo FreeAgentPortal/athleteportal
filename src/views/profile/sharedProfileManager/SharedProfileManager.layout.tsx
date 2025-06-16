@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Card, Input, InputNumber, Modal, Popconfirm, Select } from 'antd';
+import { Button, Card, Input, InputNumber, Modal, Popconfirm, Select, message } from 'antd';
 import styles from './SharedProfileManager.module.scss';
 
 type AllowedItem = { key: string; label: string; unit?: string };
@@ -11,9 +11,10 @@ interface SharedProfileManagerProps {
   data: Record<string, any> | string[];
   allowedItems?: AllowedItem[]; // Only required for 'map' mode
   onSave: (updatedData: any) => void;
+  validateItem?: (value: string) => boolean;
 }
 
-const SharedProfileManager: React.FC<SharedProfileManagerProps> = ({ title, mode, data, allowedItems = [], onSave }) => {
+const SharedProfileManager: React.FC<SharedProfileManagerProps> = ({ title, mode, data, allowedItems = [], onSave, validateItem }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState<any>(null);
@@ -37,7 +38,11 @@ const SharedProfileManager: React.FC<SharedProfileManagerProps> = ({ title, mode
       const updated = { ...(data as Record<string, any>), [selectedKey!]: inputValue };
       onSave(updated);
     } else {
-      let updated = [...(data as string[])];
+      if (validateItem && !validateItem(inputValue)) {
+        message.error('Please enter a valid https link');
+        return;
+      }
+      const updated = [...(data as string[])];
       if (isEditing && selectedKey !== null) {
         updated[parseInt(selectedKey)] = inputValue;
       } else {
@@ -54,7 +59,7 @@ const SharedProfileManager: React.FC<SharedProfileManagerProps> = ({ title, mode
       delete updated[key as string];
       onSave(updated);
     } else {
-      let updated = [...(data as string[])];
+      const updated = [...(data as string[])];
       updated.splice(key as number, 1);
       onSave(updated);
     }
