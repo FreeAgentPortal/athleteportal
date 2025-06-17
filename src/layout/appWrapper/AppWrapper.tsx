@@ -62,7 +62,11 @@ const AppWrapper = (props: Props) => {
   }, [socket]);
 
   if (userIsLoading || (!userIsLoading && !selectedProfile)) {
-    return <Skeleton active />; // or skeleton loader
+    return (
+      <PageLayout>
+        <Skeleton active />
+      </PageLayout>
+    ); // or skeleton loader
   }
   return (
     <>

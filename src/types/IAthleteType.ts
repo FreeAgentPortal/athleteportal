@@ -1,4 +1,5 @@
 export interface IAthlete {
+  graduationYear: any;
   _id: string;
   userId: string;
   fullName: string;
