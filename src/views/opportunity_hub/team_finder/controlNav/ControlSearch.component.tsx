@@ -6,7 +6,7 @@ import useApiHook from '@/hooks/useApi';
 import { useSearchStore } from '@/state/search';
 
 const ControlSearch = () => {
-  const { pageNumber, filter, modifyFilter } = useSearchStore((state) => state);
+  const { pageNumber, filter, modifyFilter, setSearch } = useSearchStore((state) => state);
   const [searchParams, setSearchParams] = useState({
     keyword: '',
     sport: '',
@@ -30,7 +30,20 @@ const ControlSearch = () => {
     // create an array of values
     const values = Object.values(searchParams);
     //create a string of key-value pairs seperated by ; and |
-    const filterString = keys.map((key, index) => `${key};${values[index]}`).join('|');
+    // we also want to skip the keyword search for filtering that will be handled by search
+    const filterString = keys
+      .map((key, index) => {
+        if (key === 'keyword') return ''; // skip keyword for filtering
+        if (Array.isArray(values[index])) {
+          return values[index].length > 0 ? `${key}:${values[index].join(',')}` : '';
+        }
+        return values[index] ? `${key}:${values[index]}` : '';
+      })
+      .filter(Boolean)
+      .join('|');
+    // set the search keyword
+    setSearch(searchParams.keyword);
+    // set the filter in the search store
     modifyFilter(filterString);
   };
 
@@ -39,7 +52,6 @@ const ControlSearch = () => {
       <h3>Search Teams</h3>
 
       <div className={styles.field}>
-        <label>Keyword</label>
         <Input value={searchParams.keyword} onChange={(e) => onChangeHandler('keyword', e.target.value)} placeholder="Team name, coach, etc." />
       </div>
 

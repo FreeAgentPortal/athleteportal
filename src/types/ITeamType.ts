@@ -1,4 +1,5 @@
 export interface ITeamType  {
+  coachName: string;
   _id: string; // Unique identifier for the team
   name: string;
   email?: string;

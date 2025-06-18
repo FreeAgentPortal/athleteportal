@@ -25,6 +25,9 @@ const TeamCard: React.FC<Props> = ({ team }) => {
 
       <div className={styles.meta}>
         <p>
+          <strong>Coach:</strong> {team.coachName || 'N/A'}
+        </p>
+        <p>
           <strong>Email:</strong> {team.email}
         </p>
         {team.phone && (

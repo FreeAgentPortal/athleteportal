@@ -4,8 +4,7 @@
   border: 2px solid;
   padding: var(--spacing-sm);
   border-radius: var(--radius-md);
-  display: flex;
-  flex-direction: column;
+  display: flex; 
   gap: var(--spacing-xs);
   box-shadow: var(--shadow-default);
   transition: transform 0.2s ease;
