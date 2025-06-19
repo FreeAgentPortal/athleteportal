@@ -13,7 +13,7 @@ const ControlSearch = () => {
     positions: [],
     stateRegion: '',
     ageRange: [18, 30],
-    verifiedOnly: false,
+    verified: false,
     openToTryouts: false,
   });
 
@@ -55,51 +55,8 @@ const ControlSearch = () => {
         <Input value={searchParams.keyword} onChange={(e) => onChangeHandler('keyword', e.target.value)} placeholder="Team name, coach, etc." />
       </div>
 
-      <div className={styles.field}>
-        <label>Sport / Program</label>
-        <Select value={searchParams.sport} onChange={(e) => onChangeHandler('sport', e)} placeholder="Select sport">
-          <Select.Option value="football">Football</Select.Option>
-          <Select.Option value="basketball">Basketball</Select.Option>
-          <Select.Option value="baseball">Baseball</Select.Option>
-          <Select.Option value="soccer">Soccer</Select.Option>
-        </Select>
-      </div>
-
-      <div className={styles.field}>
-        <label>Positions Needed</label>
-        <Select mode="multiple" value={searchParams.positions} onChange={(value) => onChangeHandler('positions', value)} placeholder="e.g., QB, WR, CB">
-          <Select.Option value="QB">Quarterback</Select.Option>
-          <Select.Option value="WR">Wide Receiver</Select.Option>
-          <Select.Option value="CB">Cornerback</Select.Option>
-          {/* Add more as needed */}
-        </Select>
-      </div>
-
-      <div className={styles.field}>
-        <label>State</label>
-        <Select value={searchParams.stateRegion} onChange={(value) => onChangeHandler('stateRegion', value)} placeholder="e.g., Texas">
-          <Select.Option value="TX">Texas</Select.Option>
-          <Select.Option value="CA">California</Select.Option>
-          <Select.Option value="FL">Florida</Select.Option>
-          {/* Pull from US states list eventually */}
-        </Select>
-      </div>
-
-      <div className={styles.field}>
-        <label>Age Range</label>
-        <Slider
-          range
-          min={16}
-          max={35}
-          value={searchParams.ageRange}
-          onChange={(value) => {
-            onChangeHandler('ageRange', value);
-          }}
-        />
-      </div>
-
       <div className={styles.checkboxGroup}>
-        <Checkbox checked={searchParams.verifiedOnly} onChange={(e) => onChangeHandler('verifiedOnly', e.target.checked)}>
+        <Checkbox checked={searchParams.verified} onChange={(e) => onChangeHandler('verified', e.target.checked)}>
           Only show verified organizations
         </Checkbox>
         <Checkbox checked={searchParams.openToTryouts} onChange={(e) => onChangeHandler('openToTryouts', e.target.checked)}>

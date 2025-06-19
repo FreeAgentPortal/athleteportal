@@ -6,6 +6,10 @@
   --color-metallic-blue: #7acdf2;
   --color-metallic-blue-dark: #4ba7d6;
   --color-metallic-blue-light: #b3e6fc;
+  --color-success-green: #28a745;
+  --color-error-red: #dc3545;
+  --color-warning-yellow: #ffc107;
+  --color-info-blue: #17a2b8;
 
   --color-bg-dark: var(--color-black);
   --color-bg-gradient: linear-gradient(120deg, var(--color-black) 0%, var(--color-metallic-blue-dark) 100%);
@@ -16,7 +20,8 @@
   --primary: var(--color-metallic-blue-dark);
   --primary-light: var(--color-metallic-blue-light);
   --primary-dark: var(--color-black);
-
+  --disabled: var(--color-silver-dark);
+  --success: var(--color-success-green);
   --secondary: var(--color-silver);
   --secondary-dark: var(--color-silver-dark);
 
