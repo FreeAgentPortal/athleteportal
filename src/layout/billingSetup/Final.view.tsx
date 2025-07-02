@@ -53,7 +53,7 @@ const Final = ({ onPrevious }: Props) => {
       <div className={styles.summary}>
         <strong>Selected Plan:</strong>{' '}
         {selectedPlans?.map((plan) => (
-          <FeaturePlanCard plan={plan} selected billingCycle={billingCycle} />
+          <FeaturePlanCard key={plan._id} plan={plan} selected billingCycle={billingCycle} />
         ))}
       </div>
       <p>
