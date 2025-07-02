@@ -1,12 +1,20 @@
-import React from "react";
-import formStyles from "@/styles/Form.module.scss";
-import { Form, FormInstance, Input, Select } from "antd";
+import React from 'react';
+import formStyles from '@/styles/Form.module.scss';
+import { Form, FormInstance, Input, Select } from 'antd';
+import useApiHook from '@/hooks/useApi';
+import { ISupportGroup } from '@/types/ISupport';
 
 interface SupportFormProps {
   form: FormInstance;
 }
 
 const SupportForm = ({ form }: SupportFormProps) => {
+  const { data } = useApiHook({
+    url: `/support/support_group`,
+    key: 'support_groups',
+    method: 'GET',
+  }) as any;
+
   return (
     <Form form={form} layout="vertical">
       <Form.Item
@@ -15,7 +23,7 @@ const SupportForm = ({ form }: SupportFormProps) => {
         rules={[
           {
             required: true,
-            message: "Please enter the subject",
+            message: 'Please enter the subject',
           },
         ]}
       >
@@ -27,7 +35,7 @@ const SupportForm = ({ form }: SupportFormProps) => {
         rules={[
           {
             required: true,
-            message: "Please select a category",
+            message: 'Please select a category',
           },
         ]}
       >
@@ -36,12 +44,10 @@ const SupportForm = ({ form }: SupportFormProps) => {
           className={formStyles.select}
           allowClear
           mode="multiple"
-          options={[
-            { label: "General", value: "General" },
-            { label: "Technical", value: "Technical" },
-            { label: "Billing", value: "Billing" },
-            { label: "Other", value: "Other" },
-          ]}
+          options={data?.payload?.map((group: ISupportGroup) => ({
+            label: group.name,
+            value: group.name,
+          }))}
         />
       </Form.Item>
       <Form.Item
@@ -50,7 +56,7 @@ const SupportForm = ({ form }: SupportFormProps) => {
         rules={[
           {
             required: true,
-            message: "Please enter your message",
+            message: 'Please enter your message',
           },
         ]}
       >

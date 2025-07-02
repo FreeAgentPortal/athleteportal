@@ -9,11 +9,6 @@ const ControlSearch = () => {
   const { pageNumber, filter, modifyFilter, setSearch } = useSearchStore((state) => state);
   const [searchParams, setSearchParams] = useState({
     keyword: '',
-    sport: '',
-    positions: [],
-    stateRegion: '',
-    ageRange: [18, 30],
-    verified: false,
     openToTryouts: false,
   });
 
@@ -56,9 +51,6 @@ const ControlSearch = () => {
       </div>
 
       <div className={styles.checkboxGroup}>
-        <Checkbox checked={searchParams.verified} onChange={(e) => onChangeHandler('verified', e.target.checked)}>
-          Only show verified organizations
-        </Checkbox>
         <Checkbox checked={searchParams.openToTryouts} onChange={(e) => onChangeHandler('openToTryouts', e.target.checked)}>
           Currently recruiting
         </Checkbox>
