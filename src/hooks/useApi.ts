@@ -5,6 +5,16 @@ import { CryptoService } from '@/utils/CryptoService';
 import { useSearchStore as store } from '@/state/search';
 import { useInterfaceStore } from '@/state/interface';
 
+function cleanParams(params: Record<string, any>): Record<string, any> {
+  const cleaned: Record<string, any> = {};
+  Object.entries(params).forEach(([key, value]) => {
+    if (value !== undefined && value !== null && value !== '') {
+      cleaned[key] = value;
+    }
+  });
+  return cleaned;
+}
+
 const fetchData = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE', data?: any, options?: any) => {
   const secret = process.env.ENCRYPTION_KEY!;
   const cryptoService = new CryptoService(secret);
@@ -22,12 +32,14 @@ const fetchData = async (url: string, method: 'GET' | 'POST' | 'PUT' | 'DELETE',
 
       response = await axios.get(url, {
         params: {
-          keyword: defaultKeyword,
-          pageNumber: defaultPageNumber,
-          pageLimit: defaultPageLimit,
-          filterOptions: defaultFilter,
-          sortOptions: defaultSort,
-          includeOptions: defaultInclude,
+          ...cleanParams({
+            keyword: defaultKeyword,
+            pageNumber: defaultPageNumber,
+            pageLimit: defaultPageLimit,
+            filterOptions: defaultFilter,
+            sortOptions: defaultSort,
+            includeOptions: defaultInclude,
+          }),
         },
       });
 
@@ -116,11 +128,11 @@ const useApiHook = (options: {
     mutationFn: (data: { url?: string; formData?: any }) => fetchData(url ? url : (data.url as any), method, data.formData),
     onSuccess: (data: any) => {
       if (successMessage) {
-        addAlert({ message: successMessage, type: 'success' });
+        addAlert({ message: successMessage, type: 'success', duration: 3000 });
       }
 
       queriesToInvalidate?.forEach((query: string) => {
-        queryClient.invalidateQueries([query] as any);
+        queryClient.invalidateQueries([query.split(',')] as any);
       });
 
       if (redirectUrl) {
@@ -132,8 +144,9 @@ const useApiHook = (options: {
       }
     },
     onError: (error: any) => {
-      console.log(error);
-      addAlert({ message: error.message, type: 'error' });
+      const messageTxt = error.response && error.response.data.message ? error.response.data.message : error.message;
+
+      addAlert({ message: messageTxt, type: 'error', duration: 10000 });
       if (onErrorCallback) {
         onErrorCallback(error);
       }

@@ -6,6 +6,10 @@
   --color-metallic-blue: #7acdf2;
   --color-metallic-blue-dark: #4ba7d6;
   --color-metallic-blue-light: #b3e6fc;
+  --color-success-green: #28a745;
+  --color-error-red: #dc3545;
+  --color-warning-yellow: #ffc107;
+  --color-info-blue: #17a2b8;
 
   --color-bg-dark: var(--color-black);
   --color-bg-gradient: linear-gradient(120deg, var(--color-black) 0%, var(--color-metallic-blue-dark) 100%);
@@ -16,14 +20,14 @@
   --primary: var(--color-metallic-blue-dark);
   --primary-light: var(--color-metallic-blue-light);
   --primary-dark: var(--color-black);
-
+  --disabled: var(--color-silver-dark);
+  --success: var(--color-success-green);
   --secondary: var(--color-silver);
   --secondary-dark: var(--color-silver-dark);
 
   --text-color: var(--color-text-primary);
   --bg-color: var(--color-bg-dark);
   --bg-gradient: var(--color-bg-gradient);
-
   --accent: var(--color-accent);
 
   /* === Font Families === */
@@ -59,6 +63,7 @@
   /* === Shadows === */
   --shadow-default: 0 2px 6px rgba(0, 0, 0, 0.2);
   --shadow-hover: 0 4px 10px rgba(0, 0, 0, 0.3);
+  --shadow-default: 4px 4px 20px #4ba1c9e5;
 }
 * {
   box-sizing: border-box;

@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import BlockedMessage from '@/components/blockedMessage/BlockedMessage.component';
 import { useUser } from '@/state/auth';
 import { FEATURES, hasFeature } from '@/utils/hasFeature';
@@ -18,7 +18,7 @@ import { LoaderProvider } from '../progressBar/LoaderProvider.component';
 //make a type with children as a prop
 type Props = {
   children: React.ReactNode;
-  pages: Array<{ title: string; link?: string; icon?: ReactNode }>;
+  pages?: Array<{ title: string; link?: string; icon?: ReactNode; onClick?: () => {} }>;
   largeSideBar?: boolean;
   backgroundColor?: string;
   hideControlLayout?: boolean;
@@ -32,6 +32,7 @@ type Props = {
     url?: string;
     image?: string;
   };
+  sidebarHidden?: boolean;
 };
 const PageLayout = (props: Props) => {
   const sideBarOpen = useLayoutStore((state) => state.sideBarOpen);
@@ -64,7 +65,7 @@ const PageLayout = (props: Props) => {
         {loggedInData ? (
           <>
             <Header pages={props.pages} />
-            <div className={styles.sideBar}>{props.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>
+            {!props.sidebarHidden && <div className={styles.sideBar}>{props?.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>}
             <div
               className={`${styles.content} ${controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive} ${
                 props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive
@@ -91,7 +92,7 @@ const PageLayout = (props: Props) => {
                     <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
                   ) : (
                     <>
-                      {/* <NextTopLoader
+                      <NextTopLoader
                         color="var(--primary)"
                         initialPosition={0.08}
                         crawlSpeed={200}
@@ -102,7 +103,7 @@ const PageLayout = (props: Props) => {
                         speed={200}
                         shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
                         showForHashAnchor
-                      /> */}
+                      />
                       <AlertCenter />
                       <LoaderProvider>{props.children}</LoaderProvider>
                     </>
@@ -112,7 +113,9 @@ const PageLayout = (props: Props) => {
             </div>
           </>
         ) : (
-          <Auth />
+          <Suspense>
+            <Auth />
+          </Suspense>
         )}
       </div>
     </>

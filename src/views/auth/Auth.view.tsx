@@ -1,15 +1,23 @@
+'use client';
 import { Button } from 'antd';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 
 import styles from './Auth.module.scss';
+import { useEffect, useState } from 'react';
 
-type Props = {
-  fullUrl?: string;
-};
-
-const Auth = (props: Props) => {
+const Auth = () => {
   const pathname = usePathname();
+  const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const origin = window.location.origin;
+    const token = window.localStorage.getItem('token');
+
+    setRedirectUrl(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
+    setIsAuthenticated(!!token);
+  }, [pathname]);
 
   return (
     <div className={styles.wrapper}>
@@ -33,11 +41,13 @@ const Auth = (props: Props) => {
           <br />
           <span style={{ fontSize: '14px' }}>Please click the button below to authenticate and access the dashboard</span>
         </p>
-        <a href={`${process.env.AUTH_URL!}?redirect=${location.origin + pathname}`} className={styles.buttonLink}>
-          <Button className={styles.button} type="primary" size="large" loading={!!window.localStorage.getItem('token')} disabled={!!window.localStorage.getItem('token')}>
-            Login
-          </Button>
-        </a>
+        {redirectUrl && (
+          <a href={redirectUrl} className={styles.buttonLink}>
+            <Button className={styles.button} type="primary" size="large" loading={isAuthenticated} disabled={isAuthenticated}>
+              Login
+            </Button>
+          </a>
+        )}
       </div>
       <div className={styles.waveContainer}>
         <svg id="wave" viewBox="0 0 1440 490" version="1.1" xmlns="http://www.w3.org/2000/svg">

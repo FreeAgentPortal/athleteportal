@@ -1,18 +1,24 @@
 export default interface User {
-  token: string;
-  fullName: string;
+  _id: string;
   firstName: string;
   lastName: string;
+  customerId: string;
   profileImageUrl: string;
-  email: string;
-  ministry: {
-    name: string;
-    id: string;
-    ministryImageUrl: string;
-  };
-  role: string;
-  username: string;
-  id: string;
-  _id: string;
   phoneNumber: string;
+  email: string;
+  password: string;
+  role: string;
+  fullName: string;
+  isActive: boolean;
+  resetPasswordToken: string | undefined | null;
+  resetPasswordExpire: Date | undefined | null;
+  createdAt: Date;
+  updatedAt: Date;
+  isEmailVerified: boolean;
+  token?: string;
+  needsBillingSetup: boolean;
+  permissions: string[];
+  emailVerificationToken: string | undefined | null;
+  emailVerificationExpires: Date | undefined | null;
+  profileRefs: Record<string, string | null>;
 }

@@ -1,6 +1,6 @@
-import PageLayout from "@/layout/page/Page.layout";
-import { navigation } from "@/data/navigation";
-import Support from "@/views/account_details/support/Support.view";
+import PageLayout from '@/layout/page/Page.layout';
+import { navigation } from '@/data/navigation';
+import Support from '@/views/support/Support.view';
 
 export default function Component() {
   return (

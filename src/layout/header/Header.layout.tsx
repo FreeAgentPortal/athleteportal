@@ -1,6 +1,6 @@
 import styles from './Header.module.scss';
 import { RxHamburgerMenu } from 'react-icons/rx';
-import { Avatar, Breadcrumb, Tooltip } from 'antd';
+import { Avatar, Breadcrumb, Tooltip, Dropdown } from 'antd';
 import Link from 'next/link';
 import { useUser, logout } from '@/state/auth';
 import { BiLogOutCircle } from 'react-icons/bi';
@@ -15,6 +15,22 @@ type Props = {
 const Header = (props: Props) => {
   const toggleSideBar = useLayoutStore((state) => state.toggleSideBar);
   const { data: loggedInData } = useUser();
+  const profiles = Object.keys(loggedInData?.profileRefs || {});
+
+  const profileItems = profiles.map((p) => ({
+    key: p,
+    label: p.charAt(0).toUpperCase() + p.slice(1),
+    onClick: () => {
+      if (p === 'athlete') return;
+      const urls: Record<string, string | undefined> = {
+        team: process.env.TEAMS_APP_URL,
+        admin: process.env.ADMIN_APP_URL,
+        scout: process.env.SCOUT_APP_URL,
+      };
+      const url = urls[p];
+      if (url) window.open(`${url}/?token=${loggedInData?.token}`);
+    },
+  }));
   return (
     <div className={styles.header}>
       <div className={styles.headerLeft}>
@@ -45,8 +61,7 @@ const Header = (props: Props) => {
               return {
                 title: page?.title,
                 path: page?.link || '',
-
-                // element: <Link href={page?.link || ""}>{page?.title}</Link>,
+                element: <Link href={page?.link || ''}>{page?.title}</Link>,
               };
             }) as any[]
           }
@@ -62,6 +77,13 @@ const Header = (props: Props) => {
               </div>
               <Avatar src={loggedInData?.profileImageUrl ?? '/images/no-photo.png'} className={styles.avatar} />
             </div>
+            {profiles.length > 1 ? (
+              <Dropdown menu={{ items: profileItems }}>
+                <span className={styles.profileButton}>Profiles</span>
+              </Dropdown>
+            ) : profiles.length === 1 ? (
+              <span className={styles.profileButton}>{profileItems[0]?.label}</span>
+            ) : null}
             <Notifications />
             <Tooltip title="Logout">
               <span

@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import ReactQueryProvider from '@/providers/ReactQueryProvider';
-import AlertCenter from '@/layout/alertCenter/AlertCenter.layout';
+import ReactQueryProvider from '@/providers/ReactQueryProvider'; 
+import '@ant-design/v5-patch-for-react-19';
 import AppWrapper from '@/layout/appWrapper/AppWrapper';
+import { AntdRegistry } from '@ant-design/nextjs-registry';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -49,7 +50,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <ReactQueryProvider>
-          <AppWrapper>{children}</AppWrapper>
+          <AppWrapper><AntdRegistry>{children}</AntdRegistry></AppWrapper>
         </ReactQueryProvider>
       </body>
     </html>
