@@ -18,8 +18,8 @@ const FeatureSelect = ({ onContinue }: Props) => {
     url: `/auth/plan`,
     key: 'plan-select',
     method: 'GET',
-    enabled: !!loggedInUser._id,
-    filter: `availableTo;{"$in":"${Object.keys(loggedInUser.profileRefs).join(',')}"}`,
+    enabled: !!loggedInUser?._id,
+    filter: `availableTo;{"$in":"${Object.keys(loggedInUser?.profileRefs || {}).join(',')}"}`,
   }) as any;
 
   const { selectedPlans, togglePlan, billingCycle, setBillingCycle } = usePlansStore();
@@ -56,7 +56,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
       </div>
       <div className={styles.header}>
         <h2>Select Your Feature Plan</h2>
-        <p className={styles.description}>Choose the features you'd like to include in your account.</p>
+        <p className={styles.description}>Choose the features you&apos;d like to include in your account.</p>
         <p className={styles.description}>Prices Shown do not include applicable taxes</p>
       </div>
       <Button type="primary" onClick={onContinue} disabled={selectedPlans.length === 0}>

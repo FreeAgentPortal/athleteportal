@@ -5,6 +5,7 @@ import type { RcFile, UploadProps, UploadChangeParam, UploadFile } from 'antd/li
 import Cropper from 'antd-img-crop';
 import Loader from '../loader/Loader.component';
 import errorHandler from '@/utils/errorHandler';
+import Image from 'next/image';
 
 type Props = {
   default?: string;
@@ -98,7 +99,7 @@ const PhotoUpload = (props: Props) => {
                   <Avatar size={200} src={imageUrl} />
                 </div>
               ) : (
-                <img src={imageUrl} style={props.imgStyle || { width: '100%' }} />
+                <Image src={imageUrl} style={props.imgStyle || { width: '100%' }} width={200} height={200} alt="Uploaded Image" />
               )
             ) : (
               <div style={props.imgStyle}>{props.placeholder ? props.placeholder : 'Upload an Image'}</div>

@@ -1,4 +1,5 @@
 'use client';
+import Image from 'next/image';
 import styles from './FeaturePlanCard.module.scss';
 
 export type Tier = 'silver' | 'gold' | 'platinum' | 'bronze' | 'diamond';
@@ -60,7 +61,7 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
       )}
       {plan.mostPopular && <div className={styles.popularBadge}>Most Popular</div>}
       <div className={styles.imageWrapper}>
-        <img src={plan.imageUrl || '/images/placeholder-logo.png'} alt={`${plan.name} icon`} className={styles.image} />
+        <Image src={plan.imageUrl || '/images/placeholder-logo.png'} alt={`${plan.name} icon`} className={styles.image} width={200} height={200} />
       </div>
       <div className={styles.content}>
         <h3 className={styles.name}>{plan.name}</h3>
