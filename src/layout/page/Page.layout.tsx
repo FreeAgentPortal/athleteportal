@@ -14,6 +14,7 @@ import NextTopLoader from 'nextjs-toploader';
 import { useLayoutStore } from '@/state/layout';
 import AlertCenter from '../alertCenter/AlertCenter.layout';
 import { LoaderProvider } from '../progressBar/LoaderProvider.component';
+import { Skeleton } from 'antd';
 
 //make a type with children as a prop
 type Props = {
@@ -33,6 +34,7 @@ type Props = {
     image?: string;
   };
   sidebarHidden?: boolean;
+  loading?: boolean;
 };
 const PageLayout = (props: Props) => {
   const sideBarOpen = useLayoutStore((state) => state.sideBarOpen);
@@ -42,16 +44,13 @@ const PageLayout = (props: Props) => {
   const { data: loggedInData } = useUser();
   const getPageBlockData: () => boolean | 'blacklist' | 'feature' | 'verification' = () => {
     if (!props.enableBlockCheck) return false;
-    if (loggedInData.user.isBlacklisted) {
-      return 'blacklist';
-    }
 
-    if (!loggedInData.user.isEmailVerified) {
+    if (!loggedInData?.isEmailVerified) {
       return 'verification';
     }
 
     if (props.neededFeature) {
-      if (!hasFeature(loggedInData.user, props.neededFeature)) {
+      if (!hasFeature(loggedInData, props.neededFeature)) {
         return 'feature';
       }
     }
@@ -105,7 +104,7 @@ const PageLayout = (props: Props) => {
                         showForHashAnchor
                       />
                       <AlertCenter />
-                      <LoaderProvider>{props.children}</LoaderProvider>
+                      <LoaderProvider>{props.loading ? <Skeleton active /> : props.children}</LoaderProvider>
                     </>
                   )}
                 </div>

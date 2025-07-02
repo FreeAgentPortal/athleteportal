@@ -10,11 +10,11 @@ import useApiHook from '@/hooks/useApi';
 
 const Notifications = () => {
   const [isOpen, setIsOpen] = useState<any>();
-  // const { data } = useApiHook({
-  //   url: `/notification`,
-  //   key: 'notifications',
-  //   method: 'GET',
-  // }) as any;
+  const { data } = useApiHook({
+    url: `/notification`,
+    key: 'notifications',
+    method: 'GET',
+  }) as any;
 
   return (
     <div className={styles.container}>

@@ -60,18 +60,11 @@ const AppWrapper = (props: Props) => {
       }
     };
   }, [socket]);
-
-  if (userIsLoading || (!userIsLoading && !selectedProfile)) {
-    return (
-      <PageLayout>
-        <Skeleton active />
-      </PageLayout>
-    ); // or skeleton loader
-  }
+ 
   return (
     <>
       {selectedProfile?.payload?.needsBillingSetup ? (
-        <PageLayout pages={[navigation().billing.links.account_center]}>
+        <PageLayout pages={[navigation().billing.links.account_center]} loading={userIsLoading || !selectedProfile}>
           <BillingSetup />
         </PageLayout>
       ) : (
