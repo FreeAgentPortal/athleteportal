@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { Suspense } from 'react';
 import styles from './TeamFinder.module.scss';
 import useApiHook from '@/hooks/useApi';
 import { useSearchStore } from '@/state/search';
@@ -36,45 +36,47 @@ const TeamFinder = () => {
   });
 
   return (
-    <main className={styles.container}>
-      <section className={styles.header}>
-        <h1 className={styles.pageTitle}>Team Finder</h1>
-        <p className={styles.pageDescription}>Discover teams that fit your goals. Use filters to narrow down programs actively searching for athletes like you.</p>
-      </section>
+    <Suspense fallback={<ProgressBar visible progress={100} />}>
+      <main className={styles.container}>
+        <section className={styles.header}>
+          <h1 className={styles.pageTitle}>Team Finder</h1>
+          <p className={styles.pageDescription}>Discover teams that fit your goals. Use filters to narrow down programs actively searching for athletes like you.</p>
+        </section>
 
-      <section className={styles.searchSection}>
-        {isLoading && <ProgressBar visible progress={100} />}
-        {isError && <Error error={error.message} />}
-        {data && data.length === 0 && <Empty description="No teams found matching your criteria. Try adjusting your filters." image={Empty.PRESENTED_IMAGE_SIMPLE} />}
-        {data && data?.payload.length > 0 && (
-          <div className={styles.teamList}>
-            {data?.payload?.map((team: ITeamType) => (
-              <TeamCard
-                key={team._id}
-                team={team}
-                onSubscribe={(teamId) =>
-                  subscribe({
-                    url: `/feed/subscription/toggle`,
-                    formData: {
-                      subscriber: {
-                        role: 'athlete',
-                        profileId: profileData.payload._id,
+        <section className={styles.searchSection}>
+          {isLoading && <ProgressBar visible progress={100} />}
+          {isError && <Error error={error.message} />}
+          {data && data.length === 0 && <Empty description="No teams found matching your criteria. Try adjusting your filters." image={Empty.PRESENTED_IMAGE_SIMPLE} />}
+          {data && data?.payload.length > 0 && (
+            <div className={styles.teamList}>
+              {data?.payload?.map((team: ITeamType) => (
+                <TeamCard
+                  key={team._id}
+                  team={team}
+                  onSubscribe={(teamId) =>
+                    subscribe({
+                      url: `/feed/subscription/toggle`,
+                      formData: {
+                        subscriber: {
+                          role: 'athlete',
+                          profileId: profileData.payload._id,
+                        },
+                        target: {
+                          role: 'team',
+                          profileId: teamId,
+                        },
                       },
-                      target: {
-                        role: 'team',
-                        profileId: teamId,
-                      },
-                    },
-                  })
-                }
-                isSubscribed={profileData?.payload?.subscriptions?.some((sub: any) => sub.targetProfileId === team._id) || false}
-              />
-            ))}
-          </div>
-        )}
-      </section>
-      <Paginator totalPages={data?.metadata?.pages || 0} currentPage={pageNumber} onPageChange={(page: any) => setPageNumber(page)} />
-    </main>
+                    })
+                  }
+                  isSubscribed={profileData?.payload?.subscriptions?.some((sub: any) => sub.targetProfileId === team._id) || false}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+        <Paginator totalPages={data?.metadata?.pages || 0} currentPage={pageNumber} onPageChange={(page: any) => setPageNumber(page)} />
+      </main>
+    </Suspense>
   );
 };
 

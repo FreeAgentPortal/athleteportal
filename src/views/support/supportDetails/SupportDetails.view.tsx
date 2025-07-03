@@ -2,17 +2,17 @@
 import React from 'react';
 import styles from './SupportDetails.module.scss';
 import { useParams } from 'next/navigation';
-import useApiHook from '@/state/useApi';
+import useApiHook from '@/hooks/useApi';
 import Loader from '@/components/loader/Loader.component';
 import Error from '@/components/error/Error.component';
 import { Button, Divider, Form, Tag } from 'antd';
 import { useUser } from '@/state/auth';
 import TinyEditor from '@/components/tinyEditor/TinyEditor.component';
 import parse from 'html-react-parser';
-import { timeDifference } from '@/utils/timeDifference';
-import { useMessages } from '@/state/useInfiniteMessages';
+import { timeDifference } from '@/utils/timeDifference'; 
 import { useSocketStore } from '@/state/socket';
 import { useQueryClient } from '@tanstack/react-query';
+import { useMessages } from '@/hooks/useInfiniteMessages';
 
 const SupportDetails = () => {
   const [form] = Form.useForm();
@@ -70,7 +70,7 @@ const SupportDetails = () => {
     // emit socket event to notify the support team of a new message
     socket.emit('sendNewMessage', {
       roomId: `support-${id}`,
-      user: loggedInData?.user,
+      user: loggedInData,
       message: form.getFieldValue('message'),
     });
     // navigate to the bottom of the chat window
@@ -83,7 +83,7 @@ const SupportDetails = () => {
       // join the room of the support ticket
       socket.emit('join', {
         roomId: `support-${id}`,
-        user: loggedInData?.user,
+        user: loggedInData,
       });
       socket.on('newMessage', () => {
         queryClient.invalidateQueries({ queryKey: ['messages', `${id}`] });
@@ -138,7 +138,7 @@ const SupportDetails = () => {
                   Is awaiting response from user <Tag color="blue">Pending</Tag>
                 </>
               ),
-            }[data?.payload?.data?.status] ?? <Tag color="blue">{data?.payload?.data?.status}</Tag>}
+            }[data?.payload?.data?.status as string] ?? <Tag color="blue">{data?.payload?.data?.status}</Tag>}
           </span>
         </Divider>
       </div>

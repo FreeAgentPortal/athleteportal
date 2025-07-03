@@ -19,7 +19,7 @@ import { Skeleton } from 'antd';
 //make a type with children as a prop
 type Props = {
   children: React.ReactNode;
-  pages?: Array<{ title: string; link?: string; icon?: ReactNode; onClick?: () => {} }>;
+  pages?: Array<{ title: string; link?: string; icon?: ReactNode; onClick?: () => void }>;
   largeSideBar?: boolean;
   backgroundColor?: string;
   hideControlLayout?: boolean;

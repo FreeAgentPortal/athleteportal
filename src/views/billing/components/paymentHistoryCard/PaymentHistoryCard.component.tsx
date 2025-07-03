@@ -38,7 +38,7 @@ const PaymentHistoryCard = () => {
         closable={false}
         centered
       >
-        <Loader title="Downloading receipt..." />
+        <Loader />
       </Modal>
 
       {/* {receipts?.receipts?.map((receipt: any, index: number) => {
