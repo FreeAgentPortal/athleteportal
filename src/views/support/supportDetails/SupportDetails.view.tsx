@@ -1,24 +1,25 @@
 'use client';
-import React from 'react';
+import React, { JSX } from 'react';
 import styles from './SupportDetails.module.scss';
 import { useParams } from 'next/navigation';
-import useApiHook from '@/hooks/useApi';
 import Loader from '@/components/loader/Loader.component';
 import Error from '@/components/error/Error.component';
 import { Button, Divider, Form, Tag } from 'antd';
 import { useUser } from '@/state/auth';
 import TinyEditor from '@/components/tinyEditor/TinyEditor.component';
 import parse from 'html-react-parser';
-import { timeDifference } from '@/utils/timeDifference'; 
+import { timeDifference } from '@/utils/timeDifference';
+import { useMessages } from '@/hooks/useInfiniteMessages';
 import { useSocketStore } from '@/state/socket';
 import { useQueryClient } from '@tanstack/react-query';
-import { useMessages } from '@/hooks/useInfiniteMessages';
+import useApiHook from '@/hooks/useApi';
 
 const SupportDetails = () => {
   const [form] = Form.useForm();
   // pull the id from the url
   const { id } = useParams();
   const { data: loggedInData } = useUser();
+  console.log(loggedInData);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   // socket events
@@ -33,15 +34,13 @@ const SupportDetails = () => {
 
   const { data: messagesData, fetchNextPage, hasNextPage, isFetchingNextPage } = useMessages(id as any);
   const { mutate: sendMessage } = useApiHook({
-    url: `/support/ticket/${id}/message`,
     key: 'message',
     method: 'POST',
-    // queriesToInvalidate: ["messages"],
+    queriesToInvalidate: ['messages'],
   }) as any;
 
   const handleScroll = () => {
     if (!containerRef.current || !hasNextPage || isFetchingNextPage) return;
-
     const { scrollTop } = containerRef.current;
     if (scrollTop === 0) {
       // Fetch older messages when scrolled to the top
@@ -63,6 +62,7 @@ const SupportDetails = () => {
 
   const handleMessage = () => {
     sendMessage({
+      url: `/support/ticket/${id}/message`,
       formData: form.getFieldsValue(),
     });
     // clear the form after sending the message
@@ -109,6 +109,7 @@ const SupportDetails = () => {
 
   // Flatten all messages into a single array
   const messages = messagesData?.pages.flatMap((page) => page.data) || [];
+  console.log(messages);
   return (
     <div className={styles.container}>
       <div className={styles.infoContainer}>
@@ -117,37 +118,40 @@ const SupportDetails = () => {
           Support Request <span className={styles.transactionId}>{id}</span>
           <Divider type="vertical" />
           <span className={styles.status}>
-            {{
-              Open: (
-                <>
-                  Is <Tag color="red">Open</Tag>
-                </>
-              ),
-              New: (
-                <>
-                  Is <Tag color="gold">New</Tag>
-                </>
-              ),
-              Solved: (
-                <>
-                  Has been <Tag color="grey">Solved</Tag>
-                </>
-              ),
-              Pending: (
-                <>
-                  Is awaiting response from user <Tag color="blue">Pending</Tag>
-                </>
-              ),
-            }[data?.payload?.data?.status as string] ?? <Tag color="blue">{data?.payload?.data?.status}</Tag>}
+            {(() => {
+              const statusMap: { [key: string]: JSX.Element } = {
+                Open: (
+                  <>
+                    Is <Tag color="red">Open</Tag>
+                  </>
+                ),
+                New: (
+                  <>
+                    Is <Tag color="gold">New</Tag>
+                  </>
+                ),
+                Solved: (
+                  <>
+                    Has been <Tag color="grey">Solved</Tag>
+                  </>
+                ),
+                Pending: (
+                  <>
+                    Is awaiting response from user <Tag color="blue">Pending</Tag>
+                  </>
+                ),
+              };
+              return statusMap[data?.payload?.data?.status] ?? <Tag color="blue">{data?.payload?.status}</Tag>;
+            })()}
           </span>
         </Divider>
       </div>
       <div className={styles.chatWindow} ref={containerRef} id="chatWindow">
-        {isFetchingNextPage && <p>Loading older messages...</p>}
+        {/* {isFetchingNextPage && <p>Loading older messages...</p>} */}
         <div className={styles.chatContainer}>
-          {messages.map((message, index) => (
+          {messages.map((message: any) => (
             <div
-              key={message._id}
+              key={message?._id}
               className={`${styles.chat} ${
                 // if the message is from the user, align it to the right
                 message?.user?.toString() === loggedInData?._id.toString() ? styles.rightChat : null
@@ -161,7 +165,7 @@ const SupportDetails = () => {
               >
                 <div className={styles.message}>
                   <div className={`${styles.sender}`}>{message?.sender?.fullName}</div>
-                  <div className={styles.chatText}>{parse(`${parse(message.message)}`)}</div>
+                  <div className={styles.chatText}>{parse(`${parse(message?.message ?? "")}`)}</div>
                 </div>
               </div>
               {/* timestamp */}

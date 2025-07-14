@@ -29,17 +29,15 @@ jobs:
           npm run build --if-present
           npm run test --if-present
         env:
-          API_URL: ${{ secrets.API_URL }}
-          AUTH_URL: ${{ secrets.AUTH_URL }}
-          SERVICE_NAME: ${{ secrets.SERVICE_NAME }}
-          ENV: ${{ secrets.ENV }}
+          API_URL: "https://api.thefreeagentportal.com"
+          AUTH_URL: "https://auth.thefreeagentportal.com/auth"
+          SERVICE_NAME: "FAP Athlete Portal"
+          ENV: "production"
           ENCRYPTION_KEY: ${{ secrets.ENCRYPTION_KEY }}
-          TEAMS_APP_URL: ${{ secrets.TEAMS_APP_URL }}
-          ADMIN_APP_URL: ${{ secrets.ADMIN_APP_URL }}
-          SCOUT_APP_URL: ${{ secrets.SCOUT_APP_URL }}
+          TINYMCE_API_KEY: ${{ secrets.TINYMCE_API_KEY }}
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* .next -qr
+        run: zip -r release.zip .next public package.json package-lock.json
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
