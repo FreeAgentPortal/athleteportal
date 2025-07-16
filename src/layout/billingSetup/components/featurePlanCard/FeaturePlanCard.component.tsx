@@ -8,7 +8,7 @@ export type FeaturePlan = {
   _id: string;
   name: string;
   description: string;
-  price: string;
+  price: number | string;
   billingCycle?: string;
   availableTo?: string[];
   features?: any[];
@@ -35,7 +35,7 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
   const popularClass = plan.mostPopular ? styles.mostPopular : '';
 
   const calculatePrice = (plan: FeaturePlan) => {
-    const basePrice = parseFloat(plan.price || '0');
+    const basePrice = parseFloat(String(plan.price ?? '0'));
 
     if (billingCycle === 'yearly' && plan.yearlyDiscount) {
       const discount = (plan.yearlyDiscount / 100) * basePrice * 12;
@@ -44,7 +44,7 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
 
     return billingCycle === 'yearly' ? basePrice * 12 : basePrice;
   };
-  const baseMonthlyPrice = parseFloat(plan.price || '0');
+  const baseMonthlyPrice = parseFloat(String(plan.price ?? '0'));
   const isYearly = billingCycle === 'yearly';
 
   const originalYearlyPrice = baseMonthlyPrice * 12;

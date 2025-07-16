@@ -19,7 +19,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
     key: 'plan-select',
     method: 'GET',
     enabled: !!loggedInUser?._id,
-    filter: `availableTo;{"$in":"${Object.keys(loggedInUser?.profileRefs || {}).join(',')}"}`,
+    filter: `availableTo;{"$in":"athlete"}`,
   }) as any;
 
   const { selectedPlans, togglePlan, billingCycle, setBillingCycle } = usePlansStore();
