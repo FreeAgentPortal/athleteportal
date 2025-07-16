@@ -13,7 +13,8 @@ import Final from './Final.view';
 const BillingSetup = () => {
   const [step, setStep] = useState<'features' | 'payment' | 'final'>('features');
   const { paymentFormValues } = usePaymentStore();
-  const { billingCycle, selectedPlans } = usePlansStore();
+  const { selectedPlans } = usePlansStore();
+  console.log('Selected Plans:', selectedPlans);
   const { mutate: updateBilling } = useApiHook({
     key: 'billing',
     method: 'POST',
@@ -26,7 +27,18 @@ const BillingSetup = () => {
       case 'payment':
         return <PaymentWrapper onContinue={() => setStep('final')} onPrevious={() => setStep('features')} />;
       default:
-        return <FeatureSelect onContinue={() => setStep('payment')} />;
+        return (
+          <FeatureSelect
+            onContinue={() => {
+              // if selectedPlans[0].price is 0, skip payment step
+              if (selectedPlans[0].price === 0) {
+                setStep('final');
+              } else {
+                setStep('payment');
+              }
+            }}
+          />
+        );
     }
   };
 

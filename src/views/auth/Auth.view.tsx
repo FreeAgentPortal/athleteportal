@@ -5,18 +5,27 @@ import { usePathname } from 'next/navigation';
 
 import styles from './Auth.module.scss';
 import { useEffect, useState } from 'react';
+import { useUser } from '@/state/auth';
 
 const Auth = () => {
   const pathname = usePathname();
   const [redirectUrl, setRedirectUrl] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+  const { data: loggedInData, isLoading: isLoggedInLoading } = useUser();
   useEffect(() => {
     const origin = window.location.origin;
     const token = window.localStorage.getItem('token');
 
     setRedirectUrl(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
-    setIsAuthenticated(!!token);
+
+    if (loggedInData || isLoggedInLoading) {
+      setIsAuthenticated(true);
+    } else if (token) {
+      // If token exists, we assume the user is authenticated
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
   }, [pathname]);
 
   return (
@@ -43,7 +52,7 @@ const Auth = () => {
         </p>
         {redirectUrl && (
           <a href={redirectUrl} className={styles.buttonLink}>
-            <Button className={styles.button} type="primary" size="large" loading={isAuthenticated} disabled={isAuthenticated}>
+            <Button className={styles.button} type="primary" size="large" loading={isLoggedInLoading} disabled={isAuthenticated}>
               Login
             </Button>
           </a>
