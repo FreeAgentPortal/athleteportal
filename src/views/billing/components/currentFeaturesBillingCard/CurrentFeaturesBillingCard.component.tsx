@@ -36,7 +36,7 @@ const CurrentFeaturesBillingCard = () => {
   const { data: loggedInData } = useUser();
 
   if (isLoading) return <Skeleton active />;
-  if (isError) return <Error error={error} />;
+  // if (isError) return <Error error={error} />;
   const DateTimeFormat = new Intl.DateTimeFormat('en', {
     year: 'numeric',
     month: 'long',

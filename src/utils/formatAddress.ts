@@ -13,7 +13,7 @@ type Address = {
  * @returns Formatted address string
  */
 export function formatAddress(address: Address): string {
-  const { line1, line2, city, state, country, postalCode } = address;
+  const { line1 = "", line2 = "", city = "", state = "", country = "", postalCode = "" } = address;
 
   const parts = [line1, line2, city, state, country, postalCode].filter((part) => part && part.trim() !== '');
 

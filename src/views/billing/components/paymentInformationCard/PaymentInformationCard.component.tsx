@@ -35,7 +35,7 @@ const PaymentInformationCard = () => {
   }) as any;
 
   if (isLoading) return <Skeleton active />;
-  if (isError) return <Error error={error} />;
+  // if (isError) return <Error error={error} />;
   const address = billingData?.payload?.billingDetails?.billingAddress;
   const creditCardDetails = billingData?.payload?.billingDetails?.creditCardDetails;
   const achDetails = billingData?.payload?.billingDetails?.achDetails;
@@ -51,7 +51,7 @@ const PaymentInformationCard = () => {
           <Descriptions.Item label="Name">{address?.name}</Descriptions.Item>
           <Descriptions.Item label="Email">{billingData?.payload?.email}</Descriptions.Item>
           <Descriptions.Item label="Phone #">{billingData?.payload?.phoneNumber}</Descriptions.Item>
-          <Descriptions.Item label="Address">{formatAddress(address)}</Descriptions.Item>
+          {/* <Descriptions.Item label="Address">{formatAddress(address)}</Descriptions.Item> */}
         </Descriptions>
       </div>
 
