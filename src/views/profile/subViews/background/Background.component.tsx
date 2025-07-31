@@ -34,7 +34,6 @@ const Background = () => {
   const handleSubmit = async (values: IAthlete) => {
     const payload = {
       ...values,
-      graduationYear: values.graduationYear?.year() ?? null,
     };
 
     await updateProfile({
@@ -63,10 +62,6 @@ const Background = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="Graduation Year" name="graduationYear" className={formStyles.field}>
-            <DatePicker picker="year" className={formStyles.input} placeholder="Select year" />
-          </Form.Item>
-
           <Form.Item label="Hometown" name="hometown" className={formStyles.field}>
             <Input className={formStyles.input} />
           </Form.Item>
@@ -75,27 +70,26 @@ const Background = () => {
             <Input.TextArea rows={4} placeholder="Tell us your story, experience, goals, or anything recruiters should know." className={formStyles.input} />
           </Form.Item>
         </div>
-          </Form>
-            <div className={styles.actionContainer}>
-              <Button className={styles.button} onClick={() => form.submit()} type="dashed">
-                Save Changes
-              </Button>
-            </div>
+      </Form>
+      <div className={styles.actionContainer}>
+        <Button className={styles.button} onClick={() => form.submit()} type="dashed">
+          Save Changes
+        </Button>
+      </div>
 
-        <div className={styles.awardsContainer}>
-          <SharedProfileManager
-            title="Awards & Honors"
-            mode="list"
-            data={profile?.payload?.awards ?? []}
-            onSave={(updated: string[]) => {
-              handleSubmit({
-                ...form.getFieldsValue(),
-                awards: updated,
-              });
-            }}
-          />
-        </div>
-
+      <div className={styles.awardsContainer}>
+        <SharedProfileManager
+          title="Awards & Honors"
+          mode="list"
+          data={profile?.payload?.awards ?? []}
+          onSave={(updated: string[]) => {
+            handleSubmit({
+              ...form.getFieldsValue(),
+              awards: updated,
+            });
+          }}
+        />
+      </div>
     </>
   );
 };

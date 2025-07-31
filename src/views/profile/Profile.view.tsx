@@ -32,7 +32,7 @@ const Profile = () => {
         <SharedProfileManager
           title="Measurements"
           mode="map"
-          data={profile.payload.measurements}
+          data={profile?.payload?.measurements}
           allowedItems={[
             { key: 'height', label: 'Height', unit: 'inches' },
             { key: 'weight', label: 'Weight', unit: 'lbs' },
@@ -49,8 +49,8 @@ const Profile = () => {
           ]}
           onSave={(updated) => {
             handleSubmit({
-              url: `/athlete/${profile.payload._id}`,
-              formData: { ...profile.payload, measurements: updated },
+              url: `/athlete/${profile?.payload?._id}`,
+              formData: { ...profile?.payload, measurements: updated },
             });
           }}
         />
@@ -63,7 +63,7 @@ const Profile = () => {
         <SharedProfileManager
           title="Metrics"
           mode="map"
-          data={profile.payload.metrics}
+          data={profile?.payload?.metrics}
           allowedItems={[
             // Combine Drills
             { key: 'fortyYardDash', label: '40 Yard Dash', unit: 'seconds' },
@@ -88,17 +88,30 @@ const Profile = () => {
           ]}
           onSave={(updated) => {
             handleSubmit({
-              url: `/athlete/${profile.payload._id}`,
-              formData: { ...profile.payload, metrics: updated },
+              url: `/athlete/${profile?.payload?._id}`,
+              formData: { ...profile?.payload, metrics: updated },
             });
           }}
         />
       ),
     },
     {
-      label: 'Background',
+      label: 'Awards & Honors',
       key: '4',
-      children: <Background />,
+      children: (
+        <SharedProfileManager
+          title="Awards & Honors"
+          mode="list"
+          data={profile?.payload?.awards ?? []}
+          validateItem={validateUrl}
+          onSave={(updated) => {
+            handleSubmit({
+              url: `/athlete/${profile?.payload?._id}`,
+              formData: { ...profile?.payload, awards: updated },
+            });
+          }}
+        />
+      ),
     },
     {
       label: 'Media',
@@ -107,12 +120,12 @@ const Profile = () => {
         <SharedProfileManager
           title="Highlight Videos"
           mode="list"
-          data={profile.payload.highlightVideos}
+          data={profile?.payload?.highlightVideos}
           validateItem={validateUrl}
           onSave={(updated) => {
             handleSubmit({
-              url: `/athlete/${profile.payload._id}`,
-              formData: { ...profile.payload, highlightVideos: updated },
+              url: `/athlete/${profile?.payload?._id}`,
+              formData: { ...profile?.payload, highlightVideos: updated },
             });
           }}
         />

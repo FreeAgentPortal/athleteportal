@@ -1,91 +1,237 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 import styles from './BasicInfo.module.scss';
 import formStyles from '@/styles/Form.module.scss';
-import { Button, DatePicker, Form, Input } from 'antd';
+import { Button, DatePicker, Form, Input, Card, Space, Select } from 'antd';
+import { UserOutlined, MailOutlined, PhoneOutlined, SaveOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { IAthlete } from '@/types/IAthleteType';
 import useApiHook from '@/hooks/useApi';
 import PhotoUpload from '@/components/photoUpload/PhotoUpload.component';
-import moment from 'moment';
 import dayjs from 'dayjs';
+import { useInterfaceStore } from '@/state/interface';
+import { availablePositions } from '@/data/positions';
+
+const { Option } = Select;
 
 const BasicInfo = () => {
   const queryClient = useQueryClient();
   const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
   const [form] = Form.useForm();
+  const [isEditing, setIsEditing] = useState(false);
+  const { addAlert } = useInterfaceStore((state) => state);
 
-  const { mutate: updateProfile } = useApiHook({
+  // Get athlete data
+  const { data: athleteData } = useApiHook({
+    url: `/athlete/${profile?.payload?._id}`,
+    key: ['athlete', profile?.payload?._id as string],
+    method: 'GET',
+  });
+
+  // Update athlete basic info
+  const { mutate: updateProfile, isLoading: isUpdating } = useApiHook({
     method: 'PUT',
+    url: `/athlete/${profile?.payload?._id}`,
     key: 'updateProfile',
-    queriesToInvalidate: ['profile,athlete'],
-    successMessage: 'Profile updated successfully',
+    queriesToInvalidate: ['profile', 'athlete'],
   }) as any;
 
-  React.useEffect(() => {
-    if (profile?.payload) {
+  useEffect(() => {
+    if (athleteData?.payload || profile?.payload) {
+      const data = athleteData?.payload || profile?.payload;
       form.setFieldsValue({
-        ...profile?.payload,
-        birthday: dayjs(profile?.payload?.birthday),
+        fullName: data.fullName,
+        email: data.email,
+        contactNumber: data.contactNumber,
+        birthdate: data.birthdate ? dayjs(data.birthdate) : null,
+        college: data.college,
+        highSchool: data.highSchool,
+        graduationYear: data.graduationYear,
+        bio: data.bio,
+        profileImageUrl: data.profileImageUrl,
+        experienceYears: data.experienceYears,
+        positions: data.positions ? data.positions.map((pos: any) => pos.abbreviation) : [],
       });
     }
-  }, [profile, form]);
+  }, [athleteData, profile, form]);
 
-  const handleSubmit = async (values: IAthlete) => {
-    await updateProfile({
-      url: `/athlete/${profile?.payload?._id}`,
-      formData: values,
-    });
+  const handleBasicInfoSubmit = (values: any) => {
+    console.log('Basic Info Submitted:', values);
+
+    // Convert position abbreviations back to position objects
+    const selectedPositions = values.positions 
+      ? values.positions.map((abbr: string) => 
+          availablePositions.find(pos => pos.abbreviation === abbr)
+        ).filter(Boolean) // Remove any undefined values
+      : [];
+
+    const formData = {
+      ...values,
+      birthdate: values.birthdate ? values.birthdate.toISOString() : null,
+      positions: selectedPositions,
+    };
+
+    updateProfile(
+      {
+        formData,
+      },
+      {
+        onSuccess: () => {
+          addAlert({
+            type: 'success',
+            message: 'Athlete profile updated successfully',
+            duration: 3000,
+          });
+          setIsEditing(false);
+          queryClient.invalidateQueries({ queryKey: ['profile', 'athlete'] });
+        },
+        onError: (error: any) => {
+          addAlert({
+            type: 'error',
+            message: error?.response?.data?.message || 'Failed to update athlete profile',
+            duration: 5000,
+          });
+        },
+      }
+    );
   };
   return (
-    <>
-      <Form form={form} layout="vertical" className={`${styles.container}`} onFinish={handleSubmit}>
-        <div className={styles.subContainer}>
-          <h1 className={styles.title}>Basic Info</h1>
-          <p className={styles.description}>Update your basic information here.</p>
-          <PhotoUpload form={form} default={form.getFieldValue('profileImageUrl')} />
-        </div>
-        <div className={styles.subContainer}>
-          <Form.Item label="Full Name" name="fullName" rules={[{ required: true, message: 'Please enter your first name' }]} className={formStyles.field}>
-            <Input type="text" />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              { required: true, message: 'Please enter your email' },
-              { type: 'email', message: 'Please enter a valid email' },
-            ]}
-            className={formStyles.field}
+    <div className={styles.container}>
+      <div className={styles.contentContainer}>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
+          {/* Basic Information Section */}
+          <Card
+            title="Basic Information"
+            extra={
+              <Button type="link" onClick={() => setIsEditing(!isEditing)} icon={isEditing ? <SaveOutlined /> : <UserOutlined />}>
+                {isEditing ? 'Cancel' : 'Edit Profile'}
+              </Button>
+            }
           >
-            <Input type="email" />
-          </Form.Item>
-          <div className={formStyles.row}>
-            <Form.Item
-              label="Phone Number"
-              name="contactNumber"
-              rules={[{ required: true, message: 'Please enter your phone number' }]}
-              tooltip="What number can people reach you at?"
-              className={formStyles.field}
-            >
-              <Input type="tel" className={formStyles.input} />
-            </Form.Item>
-            <Form.Item label="Birthday" name="birthday" className={formStyles.field}>
-              <DatePicker
-                placeholder="Birthday"
-                className={formStyles.input}
-                // allow the user to type in the date
-                format={'MM/DD/YYYY'}
-              />
-            </Form.Item>
-          </div>
-        </div>
-      </Form>
-      <div className={styles.actionContainer}>
-        <Button className={styles.button} onClick={() => form.submit()} onSubmit={(e) => e.preventDefault()} type="dashed">
-          Save Changes
-        </Button>
+            <div className={formStyles.form}>
+              <Form form={form} layout="vertical" onFinish={handleBasicInfoSubmit} disabled={!isEditing}>
+                {/* Profile Image Section */}
+                <div className={formStyles.row}>
+                  <div className={`${styles.imageContainer} ${formStyles.field}`}>
+                    <PhotoUpload
+                      default={athleteData?.payload?.profileImageUrl || profile?.payload?.profileImageUrl}
+                      name="profileImageUrl"
+                      action={`${process.env.API_URL}/upload/cloudinary/file`}
+                      isAvatar={true}
+                      form={form}
+                      aspectRatio={1}
+                      placeholder="Upload your profile photo"
+                      imgStyle={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '200px',
+                        height: '200px',
+                        borderRadius: '50%',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Basic Info Fields */}
+                <div className={formStyles.row}>
+                  <Form.Item name="fullName" label="Full Name" rules={[{ required: true, message: 'Please enter your full name' }]} className={formStyles.field}>
+                    <Input prefix={<UserOutlined />} placeholder="Enter your full name" />
+                  </Form.Item>
+
+                  <Form.Item
+                    name="email"
+                    label="Email Address"
+                    rules={[
+                      { required: true, message: 'Please enter your email' },
+                      { type: 'email', message: 'Please enter a valid email' },
+                    ]}
+                    className={formStyles.field}
+                  >
+                    <Input prefix={<MailOutlined />} placeholder="Enter your email address" />
+                  </Form.Item>
+                </div>
+
+                <div className={formStyles.row}>
+                  <Form.Item name="contactNumber" label="Phone Number" rules={[{ required: true, message: 'Please enter your phone number' }]} className={formStyles.field}>
+                    <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
+                  </Form.Item>
+
+                  <Form.Item name="birthdate" label="Birth Date" className={formStyles.field}>
+                    <DatePicker prefix={<CalendarOutlined />} placeholder="Select your birth date" format="MM/DD/YYYY" style={{ width: '100%' }} />
+                  </Form.Item>
+                </div>
+
+                <div className={formStyles.row}>
+                  <Form.Item name="college" label="College" className={formStyles.field}>
+                    <Input placeholder="Enter your college" />
+                  </Form.Item>
+
+                  <Form.Item name="highSchool" label="High School" className={formStyles.field}>
+                    <Input placeholder="Enter your high school" />
+                  </Form.Item>
+                </div>
+
+                <div className={formStyles.row}>
+                  <Form.Item name="graduationYear" label="Graduation Year" className={formStyles.field}>
+                    <Select placeholder="Select graduation year" allowClear>
+                      {Array.from({ length: 20 }, (_, i) => {
+                        const year = new Date().getFullYear() + 10 - i;
+                        return (
+                          <Option key={year} value={year}>
+                            {year}
+                          </Option>
+                        );
+                      })}
+                    </Select>
+                  </Form.Item>
+
+                  <Form.Item name="experienceYears" label="Years of Experience" className={formStyles.field}>
+                    <Select placeholder="Select years of experience" allowClear>
+                      {Array.from({ length: 20 }, (_, i) => (
+                        <Option key={i} value={i}>
+                          {i} {i === 1 ? 'year' : 'years'}
+                        </Option>
+                      ))}
+                    </Select>
+                  </Form.Item>
+                </div>
+
+                <Form.Item name="positions" label="Positions" tooltip="Select all positions you can play">
+                  <Select
+                    mode="multiple"
+                    placeholder="Select your positions"
+                    allowClear
+                    showSearch
+                    filterOption={(input, option) => (option?.label ?? '').toLowerCase().includes(input.toLowerCase())}
+                    options={availablePositions.map((position) => ({
+                      value: position.abbreviation,
+                      label: `${position.name} (${position.abbreviation})`,
+                      key: position.abbreviation,
+                    }))}
+                  />
+                </Form.Item>
+
+                <Form.Item name="bio" label="Biography">
+                  <Input.TextArea rows={4} placeholder="Tell us about yourself, your athletic journey, goals, and what makes you unique..." maxLength={500} showCount />
+                </Form.Item>
+
+                {isEditing && (
+                  <Form.Item>
+                    <Space>
+                      <Button type="primary" htmlType="submit" loading={isUpdating} icon={<SaveOutlined />}>
+                        Save Changes
+                      </Button>
+                      <Button onClick={() => setIsEditing(false)}>Cancel</Button>
+                    </Space>
+                  </Form.Item>
+                )}
+              </Form>
+            </div>
+          </Card>
+        </Space>
       </div>
-    </>
+    </div>
   );
 };
 

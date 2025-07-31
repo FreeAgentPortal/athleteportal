@@ -23,7 +23,7 @@ const AppWrapper = (props: Props) => {
   const { data: selectedProfile } = useApiHook({
     method: 'GET',
     key: ['profile', 'athlete'],
-    url: `/athlete/profile/${loggedInData?.profileRefs['athlete']}`,
+    url: `/profiles/athlete/${loggedInData?.profileRefs['athlete']}`,
     enabled: !!loggedInData?.profileRefs['athlete'],
   });
   //Set up socket connection
