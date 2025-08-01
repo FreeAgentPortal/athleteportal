@@ -103,7 +103,6 @@ const Profile = () => {
           title="Awards & Honors"
           mode="list"
           data={profile?.payload?.awards ?? []}
-          validateItem={validateUrl}
           onSave={(updated) => {
             handleSubmit({
               url: `/athlete/${profile?.payload?._id}`,
