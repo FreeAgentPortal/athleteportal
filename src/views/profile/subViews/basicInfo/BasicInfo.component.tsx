@@ -59,10 +59,8 @@ const BasicInfo = () => {
     console.log('Basic Info Submitted:', values);
 
     // Convert position abbreviations back to position objects
-    const selectedPositions = values.positions 
-      ? values.positions.map((abbr: string) => 
-          availablePositions.find(pos => pos.abbreviation === abbr)
-        ).filter(Boolean) // Remove any undefined values
+    const selectedPositions = values.positions
+      ? values.positions.map((abbr: string) => availablePositions.find((pos) => pos.abbreviation === abbr)).filter(Boolean) // Remove any undefined values
       : [];
 
     const formData = {
