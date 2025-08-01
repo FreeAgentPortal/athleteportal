@@ -1,32 +1,88 @@
-@use "@/styles/globals.scss" as *;
+@use '@/styles/globals.scss' as *;
 
 .container {
-  display: flex;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
 
   @include tablet {
-    flex-direction: column;
+    padding: 15px;
   }
 
-  .subContainer {
-    display: flex;
-    flex-direction: column;
-    margin-right: 20px;
-    flex: 1;
-    .label {
-      font-size: 14px;
-      color: #666;
-      margin-bottom: 5px;
-    }
-
-    .value {
-      font-size: 16px;
-      color: #333;
-    }
+  @include mobile {
+    padding: 10px;
   }
 }
+
+.contentContainer {
+  width: 100%;
+}
+
+.imageContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
+
+  @include tablet {
+    margin-bottom: 15px;
+  }
+}
+
+.subContainer {
+  display: flex;
+  flex-direction: column;
+  margin-right: 20px;
+  flex: 1;
+
+  @include tablet {
+    margin-right: 0;
+    margin-bottom: 20px;
+  }
+
+  .title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #333;
+
+    @include tablet {
+      font-size: 20px;
+    }
+  }
+
+  .description {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .label {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 5px;
+  }
+
+  .value {
+    font-size: 16px;
+    color: #333;
+  }
+}
+
 .actionContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.button {
+  min-width: 120px;
+  height: 40px;
+  font-weight: 500;
 }
