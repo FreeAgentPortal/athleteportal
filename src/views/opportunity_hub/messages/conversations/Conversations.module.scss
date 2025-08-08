@@ -1,0 +1,106 @@
+$primary-bg: #f7f9fc;
+$list-bg: #ffffff;
+$item-hover-bg: #eff3f7;
+$active-item-bg: #e8f0fe;
+$primary-text-color: #0f1419;
+$secondary-text-color: #536471;
+$border-color: #eff3f7;
+$primary-accent: #1d9bf0;
+$border-radius: 12px;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: $list-bg;
+  border-radius: $border-radius;
+  border-right: 1px solid $border-color;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+
+  .messagesList {
+    list-style: none;
+    margin: 0;
+    overflow-y: auto;
+    height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+      &:hover {
+        background: #aaa;
+      }
+    }
+
+    .messageItem {
+      display: flex;
+      align-items: center;
+      padding: 15px 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease-in-out;
+      border-bottom: 1px solid $border-color;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: $item-hover-bg;
+      }
+
+      &.active {
+        background-color: $active-item-bg;
+        border-right: 3px solid $primary-accent;
+      }
+
+      .messageHeader {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        gap: 12px;
+
+        .profileImage {
+          border-radius: 50%;
+          object-fit: cover;
+          flex-shrink: 0;
+        }
+
+        .senderName {
+          font-weight: 600;
+          font-size: 1rem;
+          color: $primary-text-color;
+          flex-grow: 1;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .lastMessageTime {
+          font-size: 0.85rem;
+          color: $secondary-text-color;
+          white-space: nowrap;
+          margin-left: auto;
+          padding-left: 10px;
+        }
+      }
+    }
+  }
+
+  .noMessages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 40px 20px;
+    text-align: center;
+    color: $secondary-text-color;
+    font-size: 1rem;
+  }
+}

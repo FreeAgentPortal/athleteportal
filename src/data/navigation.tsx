@@ -1,5 +1,5 @@
 import { RiHome2Fill } from 'react-icons/ri';
-import { MdSupportAgent } from 'react-icons/md';
+import { MdMessage, MdSupportAgent } from 'react-icons/md';
 import { FaRegBell } from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
 import { BsBox, BsBroadcastPin } from 'react-icons/bs';
@@ -37,6 +37,11 @@ export const navigation = (options?: any) => {
           title: 'Team Finder',
           link: '/team-finder',
           icon: <BsFillPeopleFill />,
+        },
+        messages: {
+          title: 'Messages',
+          link: '/messages',
+          icon: <MdMessage />,
         },
       },
       hidden: true,
