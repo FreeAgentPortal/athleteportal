@@ -9,25 +9,26 @@ type Props = {
   id: string;
 };
 const MessagesView = (props: Props) => {
-  const { data, isFetching } = useApiHook({
+  const { data, isLoading: isLoadingMessages } = useApiHook({
     url: '/messaging/' + props.id + '/messages?role=team',
     method: 'GET',
     key: ['messages', props.id],
+    refetchInterval: 1000,
   }) as any;
 
-  const { mutate, isLoading } = useApiHook({
+  const { mutate, isLoading: isLoadingSend } = useApiHook({
     url: '/messaging/' + props.id + '/messages?role=athlete',
     method: 'POST',
     key: ['sendMessage'],
     queriesToInvalidate: ['messages', props.id],
   }) as any;
 
-  if (isFetching || isLoading) {
+  if (isLoadingMessages || isLoadingSend) {
     return <div className={styles.container}>Loading messages...</div>;
   }
 
   const { participants, messages } = data.payload;
-  const athlete = participants.athlete;
+  const team = participants.team;
 
   const formatTime = (dateString: string) => {
     return new Date(dateString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -43,13 +44,14 @@ const MessagesView = (props: Props) => {
   return (
     <div className={styles.container}>
       <header className={styles.header}>
-        <Link className={styles.backButton} aria-label="Back to Conversations" href="/opportunities_hub/messages">
+        <Link className={styles.backButton} aria-label="Back to Conversations" href="/messages">
           <CgChevronLeft size={24} />
         </Link>
-        <Link className={styles.profileLink} href={`/opportunities_hub/athletes/${athlete._id}`}>
+
+        <Link className={styles.profileLink} href={`/team/${team._id}`}>
           <Image
-            src={athlete.profileImageUrl || '/images/no-photo.png'}
-            alt={athlete.fullName || 'Athlete'}
+            src={team.logos[0]?.href}
+            alt={team.name || 'Team Logo'}
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/images/no-photo.png';
             }}
@@ -57,7 +59,7 @@ const MessagesView = (props: Props) => {
             width={40}
             height={40}
           />
-          <span className={styles.participantName}>{athlete.fullName || 'Conversation'}</span>
+          <span className={styles.participantName}>{team.name || 'Unknown Team'}</span>
         </Link>
       </header>
 

@@ -23,11 +23,11 @@ const ConversationsView = () => {
           data.payload
             .sort((a: any, b: any) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
             .map((conversation: any) => (
-              <Link href={`/opportunities_hub/messages/${conversation._id}`} key={conversation._id} className={styles.messageItem}>
+              <Link href={`/messages/${conversation._id}`} key={conversation._id} className={styles.messageItem}>
                 <div className={styles.messageHeader}>
                   <Image
-                    src={conversation.participants.athlete?.profileImageUrl || '/images/no-photo.png'}
-                    alt={conversation.participants.athlete?.fullName || 'Unknown Athlete'}
+                    src={conversation.participants.team?.logos[0].href || '/images/no-photo.png'}
+                    alt={conversation.participants.team?.name || 'Unknown Team'}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/images/no-photo.png';
                     }}
@@ -35,7 +35,7 @@ const ConversationsView = () => {
                     width={50}
                     height={50}
                   />
-                  <span className={styles.senderName}>{conversation.participants.athlete?.fullName || 'Unknown Athlete'}</span>
+                  <span className={styles.senderName}>{conversation.participants.team?.name || 'Unknown Team'}</span>
                   <span className={styles.lastMessageTime}>{new Date(conversation.updatedAt).toLocaleTimeString()}</span>
                 </div>
               </Link>
