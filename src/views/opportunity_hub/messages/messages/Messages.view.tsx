@@ -10,7 +10,7 @@ type Props = {
 };
 const MessagesView = (props: Props) => {
   const { data, isLoading: isLoadingMessages } = useApiHook({
-    url: '/messaging/' + props.id + '/messages?role=team',
+    url: '/messaging/' + props.id + '/messages?role=athlete',
     method: 'GET',
     key: ['messages', props.id],
     refetchInterval: 1000,
@@ -23,8 +23,12 @@ const MessagesView = (props: Props) => {
     queriesToInvalidate: ['messages', props.id],
   }) as any;
 
-  if (isLoadingMessages || isLoadingSend) {
-    return <div className={styles.container}>Loading messages...</div>;
+  if (isLoadingMessages || isLoadingSend || !data?.payload) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.header}>Loading messages...</div>
+      </div>
+    );
   }
 
   const { participants, messages } = data.payload;
