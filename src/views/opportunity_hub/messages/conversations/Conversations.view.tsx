@@ -26,7 +26,7 @@ const ConversationsView = () => {
               <Link href={`/messages/${conversation._id}`} key={conversation._id} className={styles.messageItem}>
                 <div className={styles.messageHeader}>
                   <Image
-                    src={conversation.participants.team?.logos[0].href || '/images/no-photo.png'}
+                    src={conversation.participants.team?.logoUrl || '/images/no-photo.png'}
                     alt={conversation.participants.team?.name || 'Unknown Team'}
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = '/images/no-photo.png';

@@ -19,7 +19,7 @@ const TeamCard: React.FC<Props> = ({ team, isSubscribed, onSubscribe }) => {
   return (
     <div className={styles.card} style={{ borderColor: primaryColor, backgroundColor: altColor, color: primaryColor }}>
       <div className={styles.header}>
-        {team.logos && team.logos.length > 0 && <Image src={team.logos[0].href} alt={`${team.name} logo`} className={styles.logo} width={200} height={200} />}
+        {team.logoUrl && <Image src={team.logoUrl} alt={`${team.name} logo`} className={styles.logo} width={200} height={200} />}
         <div>
           <h3>{team.name}</h3>
           {team.openToTryouts ? <Tag color="green">Open to Tryouts</Tag> : <Tag color="gray">Not Recruiting</Tag>}
