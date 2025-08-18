@@ -30,6 +30,12 @@ const ProfileCard = ({ profile }: Props) => {
       description: 'Upload game film to showcase your skills.',
       isComplete: (profile?.highlightVideos?.length ?? 0) > 0,
     },
+    {
+      key: 'profileImage',
+      label: 'Profile Image',
+      description: 'Upload a profile image to represent yourself.',
+      isComplete: !!profile?.profileImageUrl,
+    }
   ];
   return (
     <div className={styles.container}>
