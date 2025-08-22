@@ -14,7 +14,6 @@ const { Text, Title } = Typography;
 
 interface TabItemsProps {
   resumeData: IResumeProfile | null;
-  onAddEducation: () => void;
   onAddAward: () => void;
   onAddQA: () => void;
   onAddReference: () => void;
@@ -33,7 +32,7 @@ const renderSectionHeader = (title: string, count: number, onAdd: () => void) =>
   </div>
 );
 
-export const createTabItems = ({ resumeData, onAddEducation, onAddAward, onAddQA, onAddReference, onAddMedia }: TabItemsProps) => [
+export const createTabItems = ({ resumeData, onAddAward, onAddQA, onAddReference, onAddMedia }: TabItemsProps) => [
   {
     key: 'experiences',
     label: (
@@ -58,7 +57,7 @@ export const createTabItems = ({ resumeData, onAddEducation, onAddAward, onAddQA
     ),
     children: (
       <div className={styles.tabContent}>
-        <Education resumeData={resumeData} renderSectionHeader={renderSectionHeader} onAddEducation={onAddEducation} />
+        <Education resumeData={resumeData} renderSectionHeader={renderSectionHeader} />
       </div>
     ),
   },

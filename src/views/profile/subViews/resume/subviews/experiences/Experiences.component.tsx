@@ -103,7 +103,7 @@ const Experiences: React.FC<ExperiencesProps> = ({ resumeData, renderSectionHead
 
   const handleDeleteExperience = (experienceId: string) => {
     deleteExperience({
-      url: `/profiles/resume/experience/${experienceId}`,
+      url: `/profiles/resume/experience/${resumeData?._id}/${experienceId}`,
     });
   };
 
