@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Typography, Empty, Button, Dropdown, MenuProps } from 'antd';
-import { MoreOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { MoreOutlined, EditOutlined, DeleteOutlined, PlayCircleOutlined, FileImageOutlined, LinkOutlined } from '@ant-design/icons';
 import { IResumeProfile, IExperience } from '@/types/IResumeTypes';
 import styles from './Experiences.module.scss';
 import useApiHook from '@/hooks/useApi';
@@ -25,6 +25,19 @@ const renderEmptyState = (title: string, description: string) => (
     }
   />
 );
+
+const getMediaIcon = (kind: string) => {
+  switch (kind) {
+    case 'video':
+      return <PlayCircleOutlined />;
+    case 'image':
+      return <FileImageOutlined />;
+    case 'link':
+      return <LinkOutlined />;
+    default:
+      return <LinkOutlined />;
+  }
+};
 
 const Experiences: React.FC<ExperiencesProps> = ({ resumeData, renderSectionHeader }) => {
   const [experienceModalVisible, setExperienceModalVisible] = useState(false);
@@ -158,6 +171,20 @@ const Experiences: React.FC<ExperiencesProps> = ({ resumeData, renderSectionHead
                         <li key={index}>{achievement}</li>
                       ))}
                     </ul>
+                  </div>
+                )}
+
+                {experience.media && experience.media.length > 0 && (
+                  <div className={styles.media}>
+                    <h5>Media & Highlights:</h5>
+                    <div className={styles.mediaList}>
+                      {experience.media.map((mediaItem, index) => (
+                        <a key={index} href={mediaItem.url} target="_blank" rel="noopener noreferrer" className={styles.mediaItem}>
+                          {getMediaIcon(mediaItem.kind)}
+                          <span>{mediaItem.label || `${mediaItem.kind.charAt(0).toUpperCase() + mediaItem.kind.slice(1)} ${index + 1}`}</span>
+                        </a>
+                      ))}
+                    </div>
                   </div>
                 )}
               </div>

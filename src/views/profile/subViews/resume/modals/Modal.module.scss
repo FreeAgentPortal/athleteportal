@@ -91,8 +91,8 @@
 
 .dynamicItem {
   display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
+  flex-direction: column;
+  gap: 0.5rem;
 
   .dynamicInput {
     flex: 1;
@@ -104,13 +104,31 @@
   }
 
   .removeButton {
-    margin-top: 0.25rem;
     color: var(--error);
 
     &:hover {
       background-color: rgba(var(--error-rgb), 0.1);
     }
   }
+
+  // For achievement items (TextArea only) - use a different approach
+  &.achievementItem {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
+
+    .removeButton {
+      margin-top: 0.25rem;
+    }
+  }
+}
+
+// Media item specific styles
+.mediaItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
 }
 
 .addButton {

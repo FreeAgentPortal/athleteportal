@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Modal, Form, Input, Select, DatePicker, Button, Row, Col, Typography, Divider } from 'antd';
-import { PlusOutlined, DeleteOutlined } from '@ant-design/icons';
-import { IExperience } from '@/types/IResumeTypes';
+import { Modal, Form, Input, Select, DatePicker, Button, Row, Col, Typography, Divider, Alert } from 'antd';
+import { PlusOutlined, DeleteOutlined, PlayCircleOutlined, FileImageOutlined, LinkOutlined } from '@ant-design/icons';
+import { IExperience, IMedia } from '@/types/IResumeTypes';
 import dayjs from 'dayjs';
 import styles from './Modal.module.scss';
 
@@ -22,6 +22,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
   const [form] = Form.useForm();
   const [isLoading, setIsLoading] = useState(false);
   const [achievements, setAchievements] = useState<string[]>(['']);
+  const [mediaItems, setMediaItems] = useState<Omit<IMedia, '_id'>[]>([{ kind: 'video', url: '', label: '' }]);
 
   useEffect(() => {
     if (visible) {
@@ -39,10 +40,12 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
           endDate: experience.endDate ? dayjs(experience.endDate) : null,
         });
         setAchievements(experience.achievements?.length ? experience.achievements : ['']);
+        setMediaItems(experience.media?.length ? experience.media.map(({ _id, ...rest }) => rest) : [{ kind: 'video', url: '', label: '' }]);
       } else {
         // Reset form for new experience
         form.resetFields();
         setAchievements(['']);
+        setMediaItems([{ kind: 'video', url: '', label: '' }]);
       }
     }
   }, [visible, experience, isEditing, form]);
@@ -54,6 +57,9 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
 
       // Filter out empty achievements
       const filteredAchievements = achievements.filter((achievement) => achievement.trim() !== '');
+
+      // Filter out empty media items
+      const filteredMedia = mediaItems.filter((media) => media.url.trim() !== '');
 
       const experienceData: Omit<IExperience, '_id'> = {
         orgName: values.orgName,
@@ -69,7 +75,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
         endDate: values.endDate ? values.endDate.toDate() : undefined,
         achievements: filteredAchievements.length ? filteredAchievements : undefined,
         stats: {}, // TODO: Add stats functionality later
-        media: [], // TODO: Add media functionality later
+        media: filteredMedia.length ? (filteredMedia as IMedia[]) : undefined,
       };
 
       onSubmit(experienceData);
@@ -84,6 +90,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
   const handleClose = () => {
     form.resetFields();
     setAchievements(['']);
+    setMediaItems([{ kind: 'video', url: '', label: '' }]);
     onClose();
   };
 
@@ -101,6 +108,37 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
     if (achievements.length > 1) {
       const newAchievements = achievements.filter((_, i) => i !== index);
       setAchievements(newAchievements);
+    }
+  };
+
+  // Media management functions
+  const addMediaItem = () => {
+    setMediaItems([...mediaItems, { kind: 'video', url: '', label: '' }]);
+  };
+
+  const updateMediaItem = (index: number, field: keyof Omit<IMedia, '_id'>, value: string) => {
+    const newMediaItems = [...mediaItems];
+    newMediaItems[index] = { ...newMediaItems[index], [field]: value };
+    setMediaItems(newMediaItems);
+  };
+
+  const removeMediaItem = (index: number) => {
+    if (mediaItems.length > 1) {
+      const newMediaItems = mediaItems.filter((_, i) => i !== index);
+      setMediaItems(newMediaItems);
+    }
+  };
+
+  const getMediaIcon = (kind: string) => {
+    switch (kind) {
+      case 'video':
+        return <PlayCircleOutlined />;
+      case 'image':
+        return <FileImageOutlined />;
+      case 'link':
+        return <LinkOutlined />;
+      default:
+        return <LinkOutlined />;
     }
   };
 
@@ -196,7 +234,7 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
         <Divider>Achievements & Highlights</Divider>
         <div className={styles.dynamicSection}>
           {achievements.map((achievement, index) => (
-            <div key={index} className={styles.dynamicItem}>
+            <div key={index} className={`${styles.dynamicItem} ${styles.achievementItem}`}>
               <TextArea
                 value={achievement}
                 onChange={(e) => updateAchievement(index, e.target.value)}
@@ -210,6 +248,56 @@ const ExperienceModal: React.FC<ExperienceModalProps> = ({ visible, onClose, onS
 
           <Button type="dashed" icon={<PlusOutlined />} onClick={addAchievement} className={styles.addButton}>
             Add Another Achievement
+          </Button>
+        </div>
+
+        <Divider>Media & Highlights</Divider>
+        <Alert
+          message="Experience-Specific Media Only"
+          description="Please only add videos, images, or links that are specifically related to this experience. General highlights should be added to the main Media section of your resume, and or to your Profile section (Media)."
+          type="info"
+          showIcon
+          style={{ marginBottom: '1rem' }}
+        />
+
+        <div className={styles.dynamicSection}>
+          {mediaItems.map((media, index) => (
+            <div key={index} className={styles.dynamicItem}>
+              <div className={styles.mediaItemHeader}>
+                <Select value={media.kind} onChange={(value) => updateMediaItem(index, 'kind', value)} style={{ width: 120 }} size="small">
+                  <Select.Option value="video">
+                    <PlayCircleOutlined /> Video
+                  </Select.Option>
+                  <Select.Option value="image">
+                    <FileImageOutlined /> Image
+                  </Select.Option>
+                  <Select.Option value="link">
+                    <LinkOutlined /> Link
+                  </Select.Option>
+                </Select>
+                {mediaItems.length > 1 && (
+                  <Button type="text" danger icon={<DeleteOutlined />} onClick={() => removeMediaItem(index)} className={styles.removeButton} size="small" />
+                )}
+              </div>
+
+              <Row gutter={8}>
+                <Col span={16}>
+                  <Input
+                    value={media.url}
+                    onChange={(e) => updateMediaItem(index, 'url', e.target.value)}
+                    placeholder={`${media.kind === 'video' ? 'Video URL (YouTube, Vimeo, etc.)' : media.kind === 'image' ? 'Image URL' : 'Website URL'}`}
+                    className={`${styles.dynamicInput}`}
+                  />
+                </Col>
+                <Col span={8}>
+                  <Input value={media.label} onChange={(e) => updateMediaItem(index, 'label', e.target.value)} placeholder="Label (optional)" className={styles.dynamicInput} />
+                </Col>
+              </Row>
+            </div>
+          ))}
+
+          <Button type="dashed" icon={<PlusOutlined />} onClick={addMediaItem} className={styles.addButton}>
+            Add Media Item
           </Button>
         </div>
       </Form>
