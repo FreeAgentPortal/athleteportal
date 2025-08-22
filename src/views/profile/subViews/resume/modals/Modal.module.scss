@@ -1,0 +1,151 @@
+@use '@/styles/globals.scss' as *;
+
+// Shared modal styles for all resume modals
+.resumeModal {
+  .ant-modal-header {
+    border-bottom: 1px solid var(--secondary);
+    padding-bottom: 1rem;
+
+    h3 {
+      margin: 0;
+      color: var(--primary);
+    }
+  }
+
+  .ant-modal-body {
+    padding: 1.5rem;
+  }
+
+  .ant-modal-footer {
+    border-top: 1px solid var(--secondary);
+    padding-top: 1rem;
+  }
+}
+
+.modalForm {
+  .ant-form-item-label > label {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .ant-input,
+  .ant-select-selector,
+  .ant-picker {
+    border-radius: 0.5rem;
+    border: 1px solid var(--secondary);
+
+    &:hover {
+      border-color: var(--primary);
+    }
+
+    &:focus,
+    &.ant-picker-focused {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+    }
+  }
+
+  .ant-select-dropdown {
+    border-radius: 0.5rem;
+  }
+
+  // Custom divider styling
+  .ant-divider {
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 500;
+    color: var(--text-secondary);
+
+    &::before,
+    &::after {
+      border-top-color: var(--secondary);
+    }
+  }
+
+  // Form validation styling
+  .ant-form-item-has-error {
+    .ant-input,
+    .ant-select-selector,
+    .ant-picker {
+      border-color: var(--error);
+
+      &:hover,
+      &:focus {
+        border-color: var(--error);
+        box-shadow: 0 0 0 2px rgba(var(--error-rgb), 0.1);
+      }
+    }
+  }
+
+  .ant-form-item-explain-error {
+    color: var(--error);
+    font-size: 0.875rem;
+  }
+}
+
+// Dynamic sections (achievements, etc.)
+.dynamicSection {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.dynamicItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+
+  .dynamicInput {
+    flex: 1;
+    resize: none;
+
+    &.ant-input {
+      border-radius: 0.5rem;
+    }
+  }
+
+  .removeButton {
+    margin-top: 0.25rem;
+    color: var(--error);
+
+    &:hover {
+      background-color: rgba(var(--error-rgb), 0.1);
+    }
+  }
+}
+
+.addButton {
+  align-self: flex-start;
+  border: 2px dashed var(--secondary);
+  border-radius: 0.5rem;
+  color: var(--primary);
+  font-weight: 500;
+
+  &:hover {
+    border-color: var(--primary);
+    background-color: rgba(var(--primary-rgb), 0.05);
+  }
+}
+
+// Responsive adjustments
+@include mobile {
+  .resumeModal {
+    .ant-modal {
+      margin: 1rem;
+      max-width: calc(100vw - 2rem);
+    }
+
+    .ant-modal-body {
+      padding: 1rem;
+    }
+  }
+
+  .dynamicItem {
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .removeButton {
+      align-self: flex-end;
+      margin-top: 0;
+    }
+  }
+}

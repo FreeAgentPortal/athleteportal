@@ -7,6 +7,7 @@ import Background from './subViews/background/Background.component';
 import SharedProfileManager from './sharedProfileManager/SharedProfileManager.layout';
 import useApiHook from '@/hooks/useApi';
 import { useQueryClient } from '@tanstack/react-query';
+import Resume from './subViews/resume/Resume.view';
 
 const Profile = () => {
   const queryClient = useQueryClient();
@@ -129,6 +130,11 @@ const Profile = () => {
           }}
         />
       ),
+    },
+    {
+      label: 'Resume',
+      key: '6',
+      children: <Resume />,
     },
   ];
 

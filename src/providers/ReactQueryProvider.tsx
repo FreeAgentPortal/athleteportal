@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useInterfaceStore } from '@/state/interface';
-import { default as themeOverride } from "@/styles/theme.json";
+import { default as themeOverride } from '@/styles/theme.json';
 import { ConfigProvider } from 'antd';
 
 function ReactQueryProvider({ children }: React.PropsWithChildren) {
@@ -11,13 +11,19 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
   const [client] = useState(
     new QueryClient({
       queryCache: new QueryCache({
-        onError: (error) => {
+        onError: (error, query) => {
           console.log(error);
-          addAlert({
-            type: 'info',
-            message: error instanceof Error ? error.message : 'An unknown error occurred',
-            duration: 5000,
-          });
+
+          // Check if we should show the error alert from query meta
+          const shouldShowErrorAlert = query.meta?.showErrorAlert !== false;
+
+          if (shouldShowErrorAlert) {
+            addAlert({
+              type: 'error',
+              message: error instanceof Error ? error.message : 'An unknown error occurred',
+              duration: 5000,
+            });
+          }
         },
       }),
     })

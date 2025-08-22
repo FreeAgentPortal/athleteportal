@@ -78,6 +78,7 @@ const useApiHook = (options: {
   staleTime?: number;
   cacheTime?: number;
   refetchInterval?: number;
+  showErrorAlert?: boolean;
   onSuccessCallback?: (data: any) => void;
   onErrorCallback?: (error: any) => void;
 }) => {
@@ -101,6 +102,7 @@ const useApiHook = (options: {
     staleTime = 1000 * 60 * 5, // 5 minutes
     cacheTime = 1000 * 60 * 10, // 10 minutes
     refetchInterval,
+    showErrorAlert = true,
     onSuccessCallback,
     onErrorCallback,
   } = options;
@@ -124,6 +126,7 @@ const useApiHook = (options: {
     gcTime: cacheTime,
     meta: {
       errorMessage: 'An error occurred while fetching data',
+      showErrorAlert: showErrorAlert,
     },
   });
 
@@ -149,7 +152,10 @@ const useApiHook = (options: {
     onError: (error: any) => {
       const messageTxt = error.response && error.response.data.message ? error.response.data.message : error.message;
 
-      addAlert({ message: messageTxt, type: 'error', duration: 10000 });
+      if (showErrorAlert) {
+        addAlert({ message: messageTxt, type: 'error', duration: 10000 });
+      }
+
       if (onErrorCallback) {
         onErrorCallback(error);
       }

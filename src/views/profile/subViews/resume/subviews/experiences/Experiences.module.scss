@@ -1,0 +1,157 @@
+@use '@/styles/globals.scss' as *;
+
+.experiencesContainer {
+  width: 100%;
+}
+
+.experiencesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.experienceCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.experienceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+
+  .experienceTitle {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+
+    h4 {
+      margin: 0;
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .position {
+      background: var(--primary);
+      color: white;
+      padding: 0.25rem 0.75rem;
+      border-radius: 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      width: fit-content;
+    }
+  }
+
+  @include mobile {
+    .experienceTitle {
+      gap: 0.25rem;
+
+      h4 {
+        font-size: 1.1rem;
+      }
+
+      .position {
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+.experienceDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  > div {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .league {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .level {
+    background: rgba(var(--secondary-rgb), 0.3);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+  }
+
+  .location::before {
+    content: '📍';
+    margin-right: 0.25rem;
+  }
+
+  .duration::before {
+    content: '📅';
+    margin-right: 0.25rem;
+  }
+
+  @include mobile {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+.achievements {
+  margin-top: 1rem;
+
+  h5 {
+    margin: 0 0 0.5rem 0;
+    color: var(--text-primary);
+    font-size: 1rem;
+    font-weight: 500;
+  }
+
+  ul {
+    margin: 0;
+    padding-left: 1.25rem;
+
+    li {
+      margin-bottom: 0.25rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Empty state styling
+.experiencesContainer {
+  .ant-empty {
+    margin: 2rem 0;
+
+    .ant-empty-description {
+      text-align: center;
+
+      span:first-child {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}

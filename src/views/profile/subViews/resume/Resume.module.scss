@@ -1,0 +1,140 @@
+@use '@/styles/globals.scss' as *;
+
+.resumeContainer {
+  width: 100%;
+  padding: 1rem;
+
+  @include mobile {
+    padding: 0.5rem;
+  }
+}
+
+.resumeCard {
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+  .ant-card-body {
+    padding: 2rem;
+
+    @include mobile {
+      padding: 1rem;
+    }
+  }
+}
+
+.resumeHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+
+  h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--primary);
+  }
+}
+
+.resumeTabs {
+  .ant-tabs-nav {
+    margin-bottom: 2rem;
+
+    .ant-tabs-tab {
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+
+      @include mobile {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      span {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+    }
+  }
+
+  .ant-tabs-content-holder {
+    min-height: 400px;
+  }
+}
+
+.tabContent {
+  width: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--secondary);
+
+  @include mobile {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: stretch;
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  h4 {
+    margin: 0;
+    color: var(--primary);
+  }
+
+  span {
+    color: var(--secondary);
+    font-size: 0.9rem;
+  }
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// Empty state styling
+.ant-empty {
+  margin: 2rem 0;
+
+  .ant-empty-description {
+    text-align: center;
+
+    span:first-child {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// Responsive tab behavior
+@include mobile {
+  .resumeTabs {
+    .ant-tabs-nav-wrap {
+      .ant-tabs-nav-list {
+        transform: none !important;
+      }
+
+      .ant-tabs-tab {
+        flex: 1;
+        text-align: center;
+        justify-content: center;
+      }
+    }
+  }
+}
