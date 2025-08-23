@@ -1,8 +1,10 @@
 import React from 'react';
-import { Modal, Typography, Space, Tag, Divider, Button, Empty } from 'antd';
+import { Modal, Typography, Space, Tag, Divider, Button, Empty, message } from 'antd';
 import { DownloadOutlined, PrinterOutlined, CloseOutlined } from '@ant-design/icons';
+import { pdf } from '@react-pdf/renderer';
 import { IResumeProfile, IExperience, IEducation, IAward, IQA, IReference, IMedia } from '@/types/IResumeTypes';
 import { IAthlete } from '@/types/IAthleteType';
+import ResumePDF from '../components/ResumePDF.component';
 import styles from './ResumePreviewModal.module.scss';
 
 const { Title, Text, Paragraph } = Typography;
@@ -15,6 +17,8 @@ interface ResumePreviewModalProps {
 }
 
 const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({ visible, onClose, resumeData, athlete }) => {
+  const [isGeneratingPDF, setIsGeneratingPDF] = React.useState(false);
+
   const formatDate = (date: Date | string | undefined): string => {
     if (!date) return '';
     return new Date(date).toLocaleDateString('en-US', {
@@ -269,9 +273,99 @@ const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({ visible, onClos
     );
   };
 
-  const handleDownloadPDF = () => {
-    // TODO: Implement PDF generation with FAP watermark
-    console.log('PDF download functionality to be implemented');
+  const handleDownloadPDF = async () => {
+    if (!resumeData || !hasContent) return;
+
+    try {
+      setIsGeneratingPDF(true);
+      message.loading({ content: 'Generating PDF...', key: 'pdf-generation' });
+
+      // Generate PDF blob
+      const blob = await pdf(<ResumePDF resumeData={resumeData} athlete={athlete} />).toBlob();
+
+      // Create download link
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `${athlete?.fullName || 'Athletic'}_Resume_${new Date().toISOString().split('T')[0]}.pdf`;
+
+      // Trigger download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Cleanup
+      URL.revokeObjectURL(url);
+
+      message.success({ content: 'PDF downloaded successfully!', key: 'pdf-generation' });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      message.error({ content: 'Failed to generate PDF. Please try again.', key: 'pdf-generation' });
+    } finally {
+      setIsGeneratingPDF(false);
+    }
+  };
+
+  const handlePrint = () => {
+    // Create a new window with just the resume content for printing
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
+      const resumeElement = document.getElementById('resume-preview');
+      if (resumeElement) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>${athlete?.fullName || 'Athletic'} Resume</title>
+              <style>
+                body { 
+                  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+                  line-height: 1.6; 
+                  color: #000;
+                  margin: 1in;
+                }
+                .headerSection { 
+                  display: flex; 
+                  justify-content: space-between; 
+                  margin-bottom: 2rem; 
+                  border-bottom: 2px solid #1890ff;
+                  padding-bottom: 1rem;
+                }
+                .athleteName { 
+                  font-size: 24pt; 
+                  font-weight: bold; 
+                  color: #1890ff;
+                  margin: 0;
+                }
+                .sectionTitle { 
+                  font-size: 16pt; 
+                  font-weight: bold; 
+                  color: #1890ff;
+                  border-bottom: 1px solid #ccc;
+                  padding-bottom: 5px;
+                }
+                .itemTitle { 
+                  font-size: 14pt; 
+                  font-weight: bold; 
+                }
+                @media print {
+                  body { margin: 0.5in; }
+                  .ant-tag { 
+                    background: #f0f0f0 !important; 
+                    color: #000 !important; 
+                    border: 1px solid #ccc !important; 
+                  }
+                }
+              </style>
+            </head>
+            <body>
+              ${resumeElement.innerHTML}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
   };
 
   const hasContent =
@@ -288,8 +382,11 @@ const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({ visible, onClos
       title={
         <div className={styles.modalHeader}>
           <Space>
-            <Button icon={<DownloadOutlined />} type="primary" onClick={handleDownloadPDF} disabled={!hasContent}>
-              Download PDF
+            <Button icon={<PrinterOutlined />} onClick={handlePrint} disabled={!hasContent}>
+              Print
+            </Button>
+            <Button icon={<DownloadOutlined />} type="primary" onClick={handleDownloadPDF} disabled={!hasContent || isGeneratingPDF} loading={isGeneratingPDF}>
+              {isGeneratingPDF ? 'Generating PDF...' : 'Download PDF'}
             </Button>
           </Space>
         </div>
