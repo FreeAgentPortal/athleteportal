@@ -8,11 +8,13 @@ import { createTabItems } from './tabs';
 import useApiHook from '@/hooks/useApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { IAthlete } from '@/types/IAthleteType';
+import ResumePreviewModal from './modals/ResumePreviewModal.component';
 
 const { Title, Text } = Typography;
 
 const Resume = () => {
   const [activeTab, setActiveTab] = useState('experiences');
+  const [previewModalVisible, setPreviewModalVisible] = useState(false);
   const profile = useQueryClient().getQueryData(['profile', 'athlete']) as { payload: IAthlete };
 
   // Fetch resume data
@@ -111,6 +113,14 @@ const Resume = () => {
     setActiveTab(key);
   };
 
+  const handlePreviewResume = () => {
+    setPreviewModalVisible(true);
+  };
+
+  const handleClosePreview = () => {
+    setPreviewModalVisible(false);
+  };
+
   const tabItems = createTabItems({
     resumeData,
   });
@@ -125,7 +135,7 @@ const Resume = () => {
           </div>
           <Space direction="vertical" size="small" align="end">
             <Space>
-              <Button icon={<EyeOutlined />} disabled={isLoading}>
+              <Button icon={<EyeOutlined />} disabled={isLoading} onClick={handlePreviewResume} type="primary">
                 Preview Resume
               </Button>
             </Space>
@@ -173,6 +183,9 @@ const Resume = () => {
           <Tabs activeKey={activeTab} onChange={handleTabChange} size="large" className={styles.resumeTabs} items={tabItems} />
         )}
       </Card>
+
+      {/* Resume Preview Modal */}
+      <ResumePreviewModal visible={previewModalVisible} onClose={handleClosePreview} resumeData={resumeData} athlete={profile?.payload || null} />
     </div>
   );
 };
