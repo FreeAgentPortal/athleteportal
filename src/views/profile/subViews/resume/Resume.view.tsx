@@ -59,12 +59,8 @@ const Resume = () => {
     setActiveTab(key);
   };
 
-  // Placeholder handlers for other modals (to be implemented)
-  const handleAddQA = () => console.log('Add Q&A');
-
   const tabItems = createTabItems({
     resumeData,
-    onAddQA: handleAddQA,
   });
 
   return (
