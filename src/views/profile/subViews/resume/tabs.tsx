@@ -15,7 +15,6 @@ const { Text, Title } = Typography;
 interface TabItemsProps {
   resumeData: IResumeProfile | null;
   onAddQA: () => void;
-  onAddReference: () => void;
   onAddMedia: () => void;
 }
 
@@ -31,11 +30,11 @@ const renderSectionHeader = (title: string, count: number, onAdd: () => void) =>
   </div>
 );
 
-export const createTabItems = ({ resumeData, onAddQA, onAddReference, onAddMedia }: TabItemsProps) => [
+export const createTabItems = ({ resumeData, onAddQA, onAddMedia }: TabItemsProps) => [
   {
     key: 'experiences',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <UserOutlined />
         Experiences
       </span>
@@ -49,7 +48,7 @@ export const createTabItems = ({ resumeData, onAddQA, onAddReference, onAddMedia
   {
     key: 'education',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <BookOutlined />
         Education
       </span>
@@ -63,7 +62,7 @@ export const createTabItems = ({ resumeData, onAddQA, onAddReference, onAddMedia
   {
     key: 'awards',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <TrophyOutlined />
         Awards
       </span>
@@ -77,7 +76,7 @@ export const createTabItems = ({ resumeData, onAddQA, onAddReference, onAddMedia
   {
     key: 'qa',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <QuestionCircleOutlined />
         Q&A
       </span>
@@ -91,21 +90,21 @@ export const createTabItems = ({ resumeData, onAddQA, onAddReference, onAddMedia
   {
     key: 'references',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <TeamOutlined />
         References
       </span>
     ),
     children: (
       <div className={styles.tabContent}>
-        <References resumeData={resumeData} renderSectionHeader={renderSectionHeader} onAddReference={onAddReference} />
+        <References resumeData={resumeData} renderSectionHeader={renderSectionHeader} />
       </div>
     ),
   },
   {
     key: 'media',
     label: (
-      <span>
+      <span className={styles.tabLabel}>
         <PlayCircleOutlined />
         Media
       </span>

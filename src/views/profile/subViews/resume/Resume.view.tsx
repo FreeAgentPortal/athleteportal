@@ -61,13 +61,11 @@ const Resume = () => {
 
   // Placeholder handlers for other modals (to be implemented)
   const handleAddQA = () => console.log('Add Q&A');
-  const handleAddReference = () => console.log('Add reference');
   const handleAddMedia = () => console.log('Add media');
 
   const tabItems = createTabItems({
     resumeData,
     onAddQA: handleAddQA,
-    onAddReference: handleAddReference,
     onAddMedia: handleAddMedia,
   });
 

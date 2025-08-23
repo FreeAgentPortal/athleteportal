@@ -29,6 +29,13 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 1rem;
+}
+
+.referenceTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
 
   h4 {
     margin: 0;
@@ -44,12 +51,7 @@
     border-radius: 1rem;
     font-size: 0.875rem;
     font-weight: 500;
-  }
-
-  @include mobile {
-    flex-direction: column;
-    gap: 0.5rem;
-    align-items: flex-start;
+    width: fit-content;
   }
 }
 
@@ -100,6 +102,41 @@
         display: block;
         margin-bottom: 0.5rem;
         font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Mobile responsive styles
+@media (max-width: 768px) {
+  .referenceCard {
+    padding: 1rem;
+  }
+
+  .referenceHeader {
+    align-items: center;
+  }
+
+  .referenceTitle {
+    h4 {
+      font-size: 1.1rem;
+    }
+
+    .role {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+    }
+  }
+
+  .referenceDetails {
+    .organization {
+      font-size: 0.85rem;
+    }
+
+    .contactInfo {
+      .email,
+      .phone {
+        font-size: 0.85rem;
       }
     }
   }
