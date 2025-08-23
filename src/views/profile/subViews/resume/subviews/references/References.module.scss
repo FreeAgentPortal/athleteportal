@@ -5,10 +5,26 @@
 }
 
 .referencesList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1rem;
+
+  // Responsive grid layout for better space utilization
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
 }
 
 .referenceCard {
@@ -16,11 +32,26 @@
   border: 1px solid var(--secondary);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  transition: all 0.2s ease;
+  transition: $simple-animation;
+  height: fit-content;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     border-color: var(--primary);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  @include tablet {
+    padding: 1.25rem;
+    min-height: 180px;
+  }
+
+  @include mobile {
+    padding: 1rem;
+    min-height: auto;
   }
 }
 
@@ -28,7 +59,14 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+  gap: 1rem;
+
+  @include mobile {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
 }
 
 .referenceTitle {
@@ -58,22 +96,40 @@
 .referenceDetails {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 1rem;
+  flex: 1;
 
   .organization {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-secondary);
     font-weight: 500;
+    padding: 0.5rem 0.75rem;
+    background: rgba(var(--primary-rgb), 0.1);
+    border-radius: 0.5rem;
+    border-left: 3px solid var(--primary);
+
+    @include mobile {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+    }
   }
 }
 
 .contactInfo {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(var(--secondary-rgb), 0.3);
+
+  @media (min-width: 500px) {
+    grid-template-columns: 1fr 1fr;
+  }
 
   .email,
   .phone {
@@ -81,12 +137,26 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 0.9rem;
-    color: var(--text-secondary);
+    color: var(--text-primary);
+    padding: 0.5rem 0.75rem;
+    background: rgba(var(--primary-rgb), 0.05);
+    border-radius: 0.4rem;
+    transition: $simple-animation;
+
+    &:hover {
+      background: rgba(var(--primary-rgb), 0.1);
+    }
+
+    @include mobile {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
+    }
   }
 
   @include mobile {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 0.5rem;
+    padding: 0.75rem;
   }
 }
 
@@ -107,14 +177,22 @@
   }
 }
 
-// Mobile responsive styles
+// Enhanced responsive styles for grid layout
 @media (max-width: 768px) {
+  .referencesList {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
   .referenceCard {
     padding: 1rem;
+    min-height: auto;
   }
 
   .referenceHeader {
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: row;
+    gap: 0.75rem;
   }
 
   .referenceTitle {
@@ -129,15 +207,35 @@
   }
 
   .referenceDetails {
+    gap: 0.75rem;
+
     .organization {
       font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
     }
+  }
 
-    .contactInfo {
-      .email,
-      .phone {
-        font-size: 0.85rem;
-      }
+  .contactInfo {
+    padding: 0.75rem;
+    gap: 0.5rem;
+
+    .email,
+    .phone {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.6rem;
     }
+  }
+}
+
+// Extra large screens optimization
+@media (min-width: 1800px) {
+  .referencesList {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .referenceCard {
+    padding: 1.75rem;
+    min-height: 220px;
   }
 }

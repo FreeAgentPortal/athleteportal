@@ -5,10 +5,26 @@
 }
 
 .experiencesList {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
   margin-top: 1rem;
+
+  // Responsive grid layout for better space utilization
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
 }
 
 .experienceCard {
@@ -16,11 +32,26 @@
   border: 1px solid var(--secondary);
   border-radius: 0.75rem;
   padding: 1.5rem;
-  transition: all 0.2s ease;
+  transition: $simple-animation;
+  height: fit-content;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
 
   &:hover {
     border-color: var(--primary);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  @include tablet {
+    padding: 1.25rem;
+    min-height: 220px;
+  }
+
+  @include mobile {
+    padding: 1rem;
+    min-height: auto;
   }
 }
 
@@ -210,5 +241,18 @@
         font-size: 1.1rem;
       }
     }
+  }
+}
+
+// Extra large screens optimization
+@media (min-width: 1800px) {
+  .experiencesList {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .experienceCard {
+    padding: 1.75rem;
+    min-height: 280px;
   }
 }
