@@ -1,8 +1,8 @@
 'use client';
 import React, { useState, useEffect } from 'react';
 import styles from './Resume.module.scss';
-import { Card, Button, Tabs, Space, Typography, Spin } from 'antd';
-import { EyeOutlined } from '@ant-design/icons';
+import { Card, Button, Tabs, Space, Typography, Spin, Select, message, Tooltip } from 'antd';
+import { EyeOutlined, GlobalOutlined, LockOutlined, LinkOutlined } from '@ant-design/icons';
 import { IResumeProfile } from '@/types/IResumeTypes';
 import { createTabItems } from './tabs';
 import useApiHook from '@/hooks/useApi';
@@ -32,8 +32,60 @@ const Resume = () => {
     queriesToInvalidate: ['resume-profile'],
   }) as any;
 
+  // Update resume visibility mutation
+  const { mutate: updateVisibility, isPending: isUpdatingVisibility } = useApiHook({
+    key: 'update-resume-visibility',
+    method: 'PUT',
+    queriesToInvalidate: ['resume-profile'],
+    successMessage: 'Resume visibility updated successfully!',
+  }) as any;
+
   const resumeData: IResumeProfile | null = resumeResponse?.payload || null;
   const isLoading = isLoadingResume || isCreatingResume;
+
+  // Handle visibility change
+  const handleVisibilityChange = (newVisibility: 'public' | 'private' | 'link') => {
+    if (!resumeData?._id) return;
+
+    updateVisibility({
+      url: `/profiles/resume/${resumeData._id}`,
+      formData: { visibility: newVisibility },
+    });
+  };
+
+  // Visibility options with icons and descriptions
+  const visibilityOptions = [
+    {
+      value: 'private',
+      label: (
+        <Space>
+          <LockOutlined />
+          Private
+        </Space>
+      ),
+      description: 'Only you can see your resume',
+    },
+    {
+      value: 'public',
+      label: (
+        <Space>
+          <GlobalOutlined />
+          Public
+        </Space>
+      ),
+      description: 'Anyone can find and view your resume',
+    },
+    {
+      value: 'link',
+      label: (
+        <Space>
+          <LinkOutlined />
+          Link Only
+        </Space>
+      ),
+      description: 'Only people with the link can view',
+    },
+  ];
 
   // Auto-create resume if none exists
   useEffect(() => {
@@ -71,11 +123,42 @@ const Resume = () => {
             <Title level={2}>Athletic Resume</Title>
             <Text type="secondary">Build your comprehensive athletic portfolio to showcase to teams and scouts</Text>
           </div>
-          <Space>
-            <Button icon={<EyeOutlined />} disabled={isLoading}>
-              Preview Resume
-            </Button>
-            <Text type="secondary">Visibility: {resumeData?.visibility || 'Private'}</Text>
+          <Space direction="vertical" size="small" align="end">
+            <Space>
+              <Button icon={<EyeOutlined />} disabled={isLoading}>
+                Preview Resume
+              </Button>
+            </Space>
+            <Space align="center">
+              <Text type="secondary" style={{ whiteSpace: 'nowrap' }}>
+                Visibility:
+              </Text>
+              <Tooltip
+                title={
+                  <div>
+                    <div>
+                      <strong>Private:</strong> Only you can see your resume
+                    </div>
+                    <div>
+                      <strong>Public:</strong> Anyone can find and view your resume
+                    </div>
+                    <div>
+                      <strong>Link Only:</strong> Only people with the link can view
+                    </div>
+                  </div>
+                }
+                placement="topLeft"
+              >
+                <Select
+                  value={resumeData?.visibility || 'private'}
+                  onChange={handleVisibilityChange}
+                  disabled={isLoading || isUpdatingVisibility}
+                  size="small"
+                  style={{ minWidth: 120 }}
+                  options={visibilityOptions}
+                />
+              </Tooltip>
+            </Space>
           </Space>
         </div>
 

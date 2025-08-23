@@ -27,6 +27,13 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 2rem;
+  gap: 2rem;
+
+  @include tablet {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
 
   @include mobile {
     flex-direction: column;
@@ -37,6 +44,31 @@
   h2 {
     margin: 0 0 0.5rem 0;
     color: var(--primary);
+  }
+
+  // Visibility controls styling
+  .ant-space-vertical {
+    min-width: 200px;
+
+    @include tablet {
+      align-self: flex-start;
+    }
+  }
+
+  .ant-select {
+    .ant-select-selector {
+      border-radius: 0.5rem;
+      border: 1px solid var(--secondary);
+
+      &:hover {
+        border-color: var(--primary);
+      }
+    }
+
+    &.ant-select-focused .ant-select-selector {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(var(--primary-rgb), 0.1);
+    }
   }
 }
 
@@ -122,9 +154,9 @@
   }
 }
 
-.tabLabel{
+.tabLabel {
   display: flex;
-  gap: 10px
+  gap: 10px;
 }
 
 // Responsive tab behavior
