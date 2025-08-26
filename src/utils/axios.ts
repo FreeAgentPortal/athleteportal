@@ -7,7 +7,7 @@ import axios from 'axios';
  * @possible      - production  https://api.truthcasting.com/api/v1
  */
 export default axios.create({
-  baseURL: process.env.NODE_ENV === 'production' ? process.env.API_URL : 'http://localhost:5002/api/v1',
+  baseURL: process.env.API_URL,
   headers: {
     'Content-type': 'application/json',
   },

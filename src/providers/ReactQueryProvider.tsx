@@ -11,13 +11,19 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
   const [client] = useState(
     new QueryClient({
       queryCache: new QueryCache({
-        onError: (error) => {
+        onError: (error, query) => {
           console.log(error);
-          addAlert({
-            type: 'info',
-            message: error instanceof Error ? error.message : 'An unknown error occurred',
-            duration: 5000,
-          });
+
+          // Check if we should show the error alert from query meta
+          const shouldShowErrorAlert = query.meta?.showErrorAlert !== false;
+
+          if (shouldShowErrorAlert) {
+            addAlert({
+              type: 'error',
+              message: error instanceof Error ? error.message : 'An unknown error occurred',
+              duration: 5000,
+            });
+          }
         },
       }),
     })

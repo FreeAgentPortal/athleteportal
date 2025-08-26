@@ -1,0 +1,177 @@
+@use '@/styles/globals.scss' as *;
+
+.awardsContainer {
+  width: 100%;
+}
+
+.awardsList {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+
+  // Responsive grid layout for better space utilization
+  @include tablet {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @include desktop {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 1600px) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.75rem;
+  }
+}
+
+.awardCard {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--secondary);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  transition: $simple-animation;
+  height: fit-content;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    border-color: var(--primary);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  @include tablet {
+    padding: 1.25rem;
+    min-height: 180px;
+  }
+
+  @include mobile {
+    padding: 1rem;
+    min-height: auto;
+  }
+}
+
+.awardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.awardTitle {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1;
+
+  h4 {
+    margin: 0;
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+
+  .year {
+    background: var(--primary);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    width: fit-content;
+  }
+}
+
+.awardDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  .organization {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+}
+
+.description {
+  margin-top: 1rem;
+
+  p {
+    margin: 0;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+}
+
+// Empty state styling
+.awardsContainer {
+  .ant-empty {
+    margin: 2rem 0;
+
+    .ant-empty-description {
+      text-align: center;
+
+      span:first-child {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 1.1rem;
+      }
+    }
+  }
+}
+
+// Mobile responsive styles
+@media (max-width: 768px) {
+  .awardCard {
+    padding: 1rem;
+  }
+
+  .awardHeader {
+    align-items: center;
+  }
+
+  .awardTitle {
+    h4 {
+      font-size: 1.1rem;
+    }
+
+    .year {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.6rem;
+    }
+  }
+
+  .awardDetails {
+    .organization {
+      font-size: 0.85rem;
+    }
+  }
+
+  .description {
+    p {
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// Extra large screens optimization
+@media (min-width: 1800px) {
+  .awardsList {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+  }
+
+  .awardCard {
+    padding: 1.75rem;
+    min-height: 220px;
+  }
+}
