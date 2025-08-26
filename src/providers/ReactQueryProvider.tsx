@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { QueryCache, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useInterfaceStore } from '@/state/interface';
-import { default as themeOverride } from "@/styles/theme.json";
+import { default as themeOverride } from '@/styles/theme.json';
 import { ConfigProvider } from 'antd';
 
 function ReactQueryProvider({ children }: React.PropsWithChildren) {
@@ -25,7 +25,7 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
 
   return (
     <QueryClientProvider client={client}>
-      <ConfigProvider theme={{ ...themeOverride }}>
+      <ConfigProvider theme={{ ...themeOverride, token: { fontFamily: 'var(--font-roboto)' } }}>
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>

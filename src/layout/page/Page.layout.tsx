@@ -2,7 +2,7 @@
 import React, { Suspense } from 'react';
 import BlockedMessage from '@/components/blockedMessage/BlockedMessage.component';
 import { useUser } from '@/state/auth';
-import { FEATURES, hasFeature } from '@/utils/hasFeature';
+import { hasFeature } from '@/utils/hasFeature';
 import Auth from '@/views/auth/Auth.view';
 import { ReactNode } from 'react';
 import { AiFillControl } from 'react-icons/ai';

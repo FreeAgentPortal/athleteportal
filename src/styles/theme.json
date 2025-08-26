@@ -2,13 +2,12 @@
   "token": {
     "colorPrimary": "#7acdf2",
     "colorPrimaryHover": "#4ba7d6",
-    "colorPrimaryActive": "#b3e6fc", 
-    "colorTextSecondary": "#6c757d", 
+    "colorPrimaryActive": "#b3e6fc",
+    "colorTextSecondary": "#6c757d",
     "colorSuccess": "#00b894",
     "colorError": "#d63031",
     "colorWarning": "#f39c12",
     "colorLink": "#7acdf2",
-    "fontFamily": "'Roboto', sans-serif",
     "fontSize": 16,
     "borderRadius": 8,
     "controlHeight": 40,
@@ -24,9 +23,8 @@
       "borderRadius": 8,
       "fontWeight": 500
     },
-    "Input": { 
-      "colorBorder": "#4ba7d6",
-      "fontFamily": "'Roboto', sans-serif"
+    "Input": {
+      "colorBorder": "#4ba7d6"
     },
     "Card": {
       "colorText": "#c0c0c0",
@@ -43,7 +41,6 @@
       "fontWeightStrong": 700
     },
     "Typography": {
-      "fontFamily": "'Roboto', sans-serif",
       "colorText": "#c0c0c0",
       "fontSize": 16
     },

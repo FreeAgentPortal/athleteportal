@@ -9,7 +9,7 @@ const Header = () => {
         <h1 className={styles.text}>
           Welcome <span>{loggedInData?.fullName}</span>
         </h1>
-        <p>What would you like to do today?</p>
+        <p>{new Date().toDateString()}</p>
       </div>
     </div>
   );

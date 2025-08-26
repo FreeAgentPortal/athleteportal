@@ -5,7 +5,7 @@ import Error from '@/layout/ErrorLayout/Error.layout';
 
 const NotFound: React.FC = () => {
   return (
-    <PageLayout pages={[navigation().home.links.home]}>
+    <PageLayout pages={[navigation().home.links.home]} largeSideBar>
       <Error code={404} title="Page Not Found" description="The page you're looking for doesn't exist or may have been moved." />
     </PageLayout>
   );

@@ -1,5 +1,3 @@
-// app/team-finder/page.tsx
-import React from 'react';
 import { Metadata } from 'next';
 import PageLayout from '@/layout/page/Page.layout';
 import { navigation } from '@/data/navigation';
@@ -36,6 +34,7 @@ export default function TeamFinderPage() {
           title: 'Search Teams',
         },
       ]}
+      largeSideBar
     >
       <TeamFinder />
     </PageLayout>

@@ -5,7 +5,7 @@ import { Suspense } from 'react';
 
 export default function Component() {
   return (
-    <PageLayout pages={[navigation().account_details.links.support]}>
+    <PageLayout pages={[navigation().account_details.links.support]} largeSideBar>
       <Suspense fallback={<div>Loading...</div>}>
         <SupportDetails />
       </Suspense>
