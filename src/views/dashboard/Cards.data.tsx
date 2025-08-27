@@ -1,6 +1,5 @@
 import { QueryClient } from '@tanstack/react-query';
 import NewsCard from './components/cards/newsCard/NewsCard.component';
-import PaymentCard from './components/cards/paymentCard/PaymentCard.component';
 import ProfileCard from './components/cards/profileCard/ProfileCard.component';
 import { DashboardRulesEngine } from './DashboardRulesEngine';
 export interface CardComponentProps {
@@ -31,7 +30,7 @@ export default [
     component: ({ data }: CardComponentProps) => <ProfileCard profile={data} />,
     gridKey: 'profile-card',
     order: 1,
-    size: 3,
+    size: 4,
     isCard: false,
     hideIf: DashboardRulesEngine.profileIncomplete,
   },

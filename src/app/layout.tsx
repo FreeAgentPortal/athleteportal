@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Roboto_Condensed } from 'next/font/google';
 import './globals.css';
 import ReactQueryProvider from '@/providers/ReactQueryProvider';
 import '@ant-design/v5-patch-for-react-19';
@@ -7,13 +7,8 @@ import AppWrapper from '@/layout/appWrapper/AppWrapper';
 import { AntdRegistry } from '@ant-design/nextjs-registry';
 import { Suspense } from 'react';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
-  subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
+const roboto = Roboto_Condensed({
+  variable: '--font-roboto',
   subsets: ['latin'],
 });
 
@@ -49,7 +44,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body className={`${roboto.variable}`}>
         <Suspense fallback={<div>Loading...</div>}>
           <ReactQueryProvider>
             <AppWrapper>

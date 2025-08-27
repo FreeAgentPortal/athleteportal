@@ -31,7 +31,7 @@ function ReactQueryProvider({ children }: React.PropsWithChildren) {
 
   return (
     <QueryClientProvider client={client}>
-      <ConfigProvider theme={{ ...themeOverride }}>
+      <ConfigProvider theme={{ ...themeOverride, token: { fontFamily: 'var(--font-roboto)' } }}>
         {children}
         <ReactQueryDevtools initialIsOpen={false} />
       </ConfigProvider>

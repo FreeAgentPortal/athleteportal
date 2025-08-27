@@ -1,10 +1,10 @@
-import AccountDetails from "@/views/account_details/AccountDetails.screen";
-import PageLayout from "@/layout/page/Page.layout";
-import { navigation } from "@/data/navigation";
+import AccountDetails from '@/views/account_details/AccountDetails.screen';
+import PageLayout from '@/layout/page/Page.layout';
+import { navigation } from '@/data/navigation';
 
 export default function Home() {
   return (
-    <PageLayout pages={[navigation().account_details.links.account_details]}>
+    <PageLayout pages={[navigation().account_details.links.account_details]} largeSideBar>
       <AccountDetails />
     </PageLayout>
   );

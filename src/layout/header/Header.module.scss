@@ -1,7 +1,7 @@
-@use "@/styles/globals.scss" as *;
+@use '@/styles/globals.scss' as *;
 .header {
   grid-area: header;
-  background-color: var(--quarternary);
+  background-color: white;
   color: var(--primary);
   display: flex;
   align-items: center;
@@ -14,7 +14,8 @@
   max-height: $header-height;
   height: $header-height;
 
-  box-shadow: rgba(33, 35, 38, 0.1) 0px 10px 10px -10px;
+  // box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  border-bottom: 1px solid rgb(230, 230, 230);
 
   .headerLeft {
     display: flex;

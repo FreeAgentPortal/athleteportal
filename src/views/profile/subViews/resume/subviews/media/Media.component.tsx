@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Empty, Button, Dropdown, MenuProps } from 'antd';
+import { Typography, Empty, Button, Dropdown, MenuProps, Card } from 'antd';
 import { MoreOutlined, EditOutlined, DeleteOutlined, LinkOutlined } from '@ant-design/icons';
 import { IResumeProfile, IMedia } from '@/types/IResumeTypes';
 import styles from './Media.module.scss';
@@ -127,7 +127,7 @@ const Media: React.FC<MediaProps> = ({ resumeData, renderSectionHeader }) => {
             ];
 
             return (
-              <div key={media._id} className={styles.mediaCard}>
+              <Card key={media._id} className={styles.mediaCard}>
                 <div className={styles.mediaHeader}>
                   <div className={styles.mediaInfo}>
                     <span className={styles.mediaIcon}>{getMediaIcon(media.kind)}</span>
@@ -146,7 +146,7 @@ const Media: React.FC<MediaProps> = ({ resumeData, renderSectionHeader }) => {
                     <LinkOutlined /> View Media
                   </a>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>

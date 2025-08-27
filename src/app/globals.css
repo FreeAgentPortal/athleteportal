@@ -17,7 +17,7 @@
   --color-accent: var(--color-metallic-blue);
 
   /* === Semantic Aliases === */
-  --primary: var(--color-metallic-blue-dark);
+  --primary: rgb(22, 30, 42);
   --primary-light: var(--color-metallic-blue-light);
   --primary-dark: var(--color-black);
   --disabled: var(--color-silver-dark);
@@ -31,8 +31,8 @@
   --accent: var(--color-accent);
 
   /* === Font Families === */
-  --font-family-primary: 'Roboto', sans-serif;
-  --font-family-secondary: 'Montserrat', sans-serif;
+  --font-family-primary: var(--font-roboto), sans-serif;
+  --font-family-secondary: var(--font-roboto), sans-serif
 
   /* === Font Sizes === */
   --font-size-xs: 0.75rem;
@@ -74,7 +74,8 @@
 html, body {
   background: var(--color-bg-gradient);
   color: var(--color-text-primary);
-  font-family: var(--font-family-primary);
+  font-family: var(--font-roboto);
+
   scroll-behavior: smooth;
   height: 100%;
 }
