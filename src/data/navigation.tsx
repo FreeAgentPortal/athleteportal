@@ -5,7 +5,6 @@ import { CgProfile } from 'react-icons/cg';
 import { BsBox, BsBroadcastPin } from 'react-icons/bs';
 import { BsFillPeopleFill } from 'react-icons/bs';
 import { IoCodeSlashOutline } from 'react-icons/io5';
-import { profile } from 'console';
 
 export const navigation = (options?: any) => {
   return {
@@ -44,7 +43,6 @@ export const navigation = (options?: any) => {
           icon: <MdMessage />,
         },
       },
-      hidden: true,
     },
     account_details: {
       title: 'Account Details',

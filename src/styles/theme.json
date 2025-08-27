@@ -1,13 +1,13 @@
 {
   "token": {
-    "colorPrimary": "#7acdf2",
+    "colorPrimary": "#161e2a",
     "colorPrimaryHover": "#4ba7d6",
     "colorPrimaryActive": "#b3e6fc",
     "colorTextSecondary": "#6c757d",
     "colorSuccess": "#00b894",
     "colorError": "#d63031",
     "colorWarning": "#f39c12",
-    "colorLink": "#7acdf2",
+    "colorLink": "#161e2a",
     "fontSize": 16,
     "borderRadius": 8,
     "controlHeight": 40,
@@ -17,7 +17,7 @@
   },
   "components": {
     "Button": {
-      "colorPrimary": "#7acdf2",
+      "colorPrimary": "#161e2a",
       "colorPrimaryHover": "#4ba7d6",
       "colorPrimaryActive": "#b3e6fc",
       "borderRadius": 8,
@@ -36,7 +36,7 @@
       "colorText": "#c0c0c0"
     },
     "Tabs": {
-      "colorPrimary": "#7acdf2",
+      "colorPrimary": "#161e2a",
       "colorText": "#c0c0c0",
       "fontWeightStrong": 700
     },
