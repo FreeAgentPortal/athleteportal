@@ -303,7 +303,11 @@ const ResumePDF: React.FC<ResumePDFProps> = ({ resumeData, athlete }) => {
         {athlete?.birthPlace && <Text style={styles.athleteLocation}>{formatLocation(athlete.birthPlace)}</Text>}
       </View>
       <View style={styles.watermark}>
-        <Image style={styles.logo} src="https://res.cloudinary.com/dsltlng97/image/upload/v1752863629/placeholder-logo_s7jg3y.png" />
+        {/* eslint-disable-next-line jsx-a11y/alt-text */}
+        <Image 
+          style={styles.logo} 
+          src="https://res.cloudinary.com/dsltlng97/image/upload/v1752863629/placeholder-logo_s7jg3y.png"
+        />
         <Text style={styles.watermarkText}>FreeAgentPortal.com</Text>
       </View>
     </View>

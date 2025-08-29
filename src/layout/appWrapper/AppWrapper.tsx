@@ -22,7 +22,7 @@ const AppWrapper = (props: Props) => {
   const { data: selectedProfile } = useApiHook({
     method: 'GET',
     key: ['profile', 'athlete'],
-    url: `/profiles/athlete/${loggedInData?.profileRefs['athlete']}`,
+    url: `/profiles/athlete/profile/${loggedInData?.profileRefs['athlete']}`,
     enabled: !!loggedInData?.profileRefs['athlete'],
   });
   //Set up socket connection
@@ -64,7 +64,7 @@ const AppWrapper = (props: Props) => {
     <>
       {selectedProfile?.payload?.needsBillingSetup ? (
         <PageLayout pages={[navigation().billing.links.account_center]} loading={userIsLoading || !selectedProfile} largeSideBar>
-          <BillingSetup />
+          <BillingSetup billingValidation={selectedProfile?.payload?.billingValidation} />
         </PageLayout>
       ) : (
         <>{props.children}</>

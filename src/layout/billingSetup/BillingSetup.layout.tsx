@@ -10,15 +10,38 @@ import useApiHook from '@/hooks/useApi';
 import PaymentWrapper from './PaymentWrapper.view';
 import Final from './Final.view';
 
-const BillingSetup = () => {
+interface BillingValidation {
+  needsUpdate: boolean;
+  reasons: string[];
+  severity: 'critical' | 'warning' | 'info';
+  recommendations: string[];
+}
+
+interface BillingSetupProps {
+  billingValidation?: BillingValidation;
+}
+
+const BillingSetup: React.FC<BillingSetupProps> = ({ billingValidation }) => {
   const [step, setStep] = useState<'features' | 'payment' | 'final'>('features');
   const { paymentFormValues } = usePaymentStore();
   const { selectedPlans } = usePlansStore();
-  console.log('Selected Plans:', selectedPlans);
   const { mutate: updateBilling } = useApiHook({
     key: 'billing',
     method: 'POST',
   }) as any;
+
+  const getSeverityClass = (severity: string) => {
+    switch (severity) {
+      case 'critical':
+        return styles.critical;
+      case 'warning':
+        return styles.warning;
+      case 'info':
+        return styles.info;
+      default:
+        return styles.info;
+    }
+  };
 
   const renderStep = () => {
     switch (step) {
@@ -50,6 +73,30 @@ const BillingSetup = () => {
           To continue using the platform, please complete your billing setup. This step is required if we haven&apos;t yet collected your payment details, or if a previous payment
           attempt failed.
         </p>
+
+        {/* Billing Validation Information */}
+        {billingValidation?.needsUpdate && (
+          <div className={`${styles.validationContainer} ${getSeverityClass(billingValidation.severity)}`}>
+            <div className={styles.validationHeader}>
+              <h3 className={styles.validationTitle}>
+                {billingValidation.severity === 'critical' && '⚠️ Action Required'}
+                {billingValidation.severity === 'warning' && '⚡ Attention Needed'}
+                {billingValidation.severity === 'info' && 'ℹ️ Information'}
+              </h3>
+            </div>
+
+            {billingValidation.reasons?.length > 0 && (
+              <div className={styles.validationSection}>
+                <h4>Why you&apos;re seeing this:</h4>
+                <ul className={styles.validationList}>
+                  {billingValidation.reasons.map((reason, index) => (
+                    <li key={index}>{reason}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        )}
       </div>
       <div className={styles.contentContainer}>
         <AnimatePresence mode="wait" initial={false}>

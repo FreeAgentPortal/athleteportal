@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Typography, Space, Tag, Divider, Button, Empty, message } from 'antd';
 import { DownloadOutlined, PrinterOutlined, CloseOutlined } from '@ant-design/icons';
 import { pdf } from '@react-pdf/renderer';
+import Image from 'next/image';
 import { IResumeProfile, IExperience, IEducation, IAward, IQA, IReference, IMedia } from '@/types/IResumeTypes';
 import { IAthlete } from '@/types/IAthleteType';
 import ResumePDF from '../components/ResumePDF.component';
@@ -44,7 +45,7 @@ const ResumePreviewModal: React.FC<ResumePreviewModalProps> = ({ visible, onClos
         {athlete?.birthPlace && <Text type="secondary">📍 {formatLocation(athlete.birthPlace)}</Text>}
       </div>
       <div className={styles.watermark}>
-        <img src="/images/logo.png" alt="FAP" className={styles.logo} />
+        <Image src="/images/logo.png" alt="FAP Logo" width={40} height={40} className={styles.logo} />
         <Text type="secondary" className={styles.watermarkText}>
           FreeAgentPortal.com
         </Text>

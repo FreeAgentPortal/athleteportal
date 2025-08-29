@@ -7,15 +7,18 @@ import getNotificationLink from '@/utils/getNotificationLink';
 import NotificationItem from '@/components/notificationItem/NotificationItem.component';
 import NotificationType from '@/types/NotificationType';
 import useApiHook from '@/hooks/useApi';
+import { useUser } from '@/state/auth';
 
 const Notifications = () => {
   const [isOpen, setIsOpen] = useState<any>();
+  const { data: user } = useUser();
   const { data } = useApiHook({
     url: `/notification`,
     key: 'notifications',
     method: 'GET',
-  }) as any;
-
+    enabled: !!user?._id,
+    filter: `userTo;${user?._id}`
+  });
   return (
     <div className={styles.container}>
       <Tooltip title="Notifications">

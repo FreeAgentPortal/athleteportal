@@ -11,12 +11,16 @@ import getNotificationLink from '@/utils/getNotificationLink';
 import NotificationItem from '@/components/notificationItem/NotificationItem.component';
 import NotificationType from '@/types/NotificationType';
 import useApiHook from '@/hooks/useApi';
+import { useUser } from '@/state/auth';
 
 const NotificationsView = () => {
+  const { data: user } = useUser();
   const { data } = useApiHook({
     url: `/notification`,
     key: 'notifications',
     method: 'GET',
+    enabled: !!user?._id,
+    filter: `userTo;${user?._id}`
   });
 
   const { mutate: updateNotification } = useApiHook({
