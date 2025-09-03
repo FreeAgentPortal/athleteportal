@@ -82,8 +82,8 @@ const TeamTable: React.FC<Props> = ({ teams }) => {
         const subscribed = profileData?.payload?.subscriptions?.some((sub: any) => sub.targetProfileId === record._id) || false;
         return (
           <Space>
-            <Link href={`/team/${record.slug || record._id}`}>
-              <Button icon={<IoMdOpen />} disabled />
+            <Link href={`/team/${record._id}`}>
+              <Button icon={<IoMdOpen />} />
             </Link>
             {subscribed ? (
               <Button type="primary" onClick={() => subscribeToTeam(record._id)} disabled>
@@ -106,7 +106,7 @@ const TeamTable: React.FC<Props> = ({ teams }) => {
 
   return (
     <div className={styles.container}>
-      <Table columns={columns} dataSource={teams} rowKey="_id" />
+      <Table columns={columns} dataSource={teams} rowKey="_id" pagination={false} />
     </div>
   );
 };
