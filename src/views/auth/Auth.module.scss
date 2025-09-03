@@ -1,4 +1,4 @@
-@use "@/styles/globals.scss" as *;
+@use '@/styles/globals.scss' as *;
 
 .wrapper {
   //   padding: clamp(40px, 5vw, 500px);
@@ -8,10 +8,10 @@
   flex-direction: column;
   width: 100svw;
   height: 100dvh;
-  background-color: white;
+  background-color: var(--primary-dark);
   .container {
-    // background-color: white;
-    background-color: white;
+    background-color: var(--primary);
+    color: white;
     box-shadow: rgba(9, 30, 66, 0.25) 0px 4px 8px -2px, rgba(9, 30, 66, 0.08) 0px 0px 0px 1px;
     gap: 40px;
     z-index: 1;
@@ -21,6 +21,9 @@
     justify-content: center;
     flex-direction: column;
     border-radius: 10px;
+    padding: 2rem;
+    border: 1px solid #353535;
+
     @include mobile {
       box-shadow: none;
       width: 100%;
@@ -30,8 +33,6 @@
 
     .header {
       width: 100%;
-
-      background-color: white;
       box-shadow: rgba(0, 0, 0, 0.094) 0px 1px 2px 0px;
       display: flex;
       align-items: center;
@@ -42,47 +43,33 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-        padding: 40px;
-
-        .studio {
-          margin: 0;
-          text-align: center;
-          width: 100%;
-          font-weight: 700;
-          color: var(--primary-dark);
-          font-size: 22px;
-        }
       }
     }
     .text {
       font-size: 18px;
-      font-weight: 400;
       border: 5px;
-      padding: 40px;
 
       max-width: 500px;
       text-align: left;
-      color: var(--primary-dark);
       line-height: 30px;
 
-      @include mobile {
-        // padding: 0px 40px;
-      }
       span {
-        color: var(--primary-dark);
-        font-weight: 900;
+        font-weight: 700;
         font-size: 25px;
       }
     }
 
     .buttonLink {
       width: 100%;
-      padding: 40px;
+      color: white;
       @include mobile {
         padding: 40px;
       }
 
       .button {
+        background-color: var(--primary-dark);
+        color: white;
+        border: none;
         width: 100%;
         font-weight: 600;
       }
