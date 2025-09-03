@@ -1,7 +1,7 @@
 'use client';
 import { Button } from 'antd';
 import Image from 'next/image';
-import { redirect, usePathname } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 import styles from './Auth.module.scss';
 import { useEffect, useState } from 'react';
@@ -25,7 +25,7 @@ const Auth = () => {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      redirect(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
+      // redirect(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
     }
   }, [pathname]);
 
