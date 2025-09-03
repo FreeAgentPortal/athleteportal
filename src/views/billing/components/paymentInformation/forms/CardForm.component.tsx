@@ -33,9 +33,9 @@ const CardForm = () => {
       initialValues={{
         first_name: 'John',
         last_name: 'Doe',
-        ccnumber: '4111111111111111',
-        ccexp: '10/25',
-        cvv: '123',
+        ccnumber: '4005529999000123',
+        ccexp: '12/31',
+        cvv: '196',
         address1: '123 Main St',
         address2: 'Apt 4',
         zip: '12345',
