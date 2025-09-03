@@ -59,65 +59,63 @@ const PageLayout = (props: Props) => {
   };
 
   return (
-    <>
-      <div className={`${styles.container} ${props.largeSideBar ? '' : styles.small} ${sideBarOpen && styles.sideBarActive}`}>
-        {loggedInData ? (
-          <>
-            <Header pages={props.pages} />
-            {!props.sidebarHidden && <div className={styles.sideBar}>{props?.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>}
-            <div
-              className={`${styles.content} ${controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive} ${
-                props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive
-              }`}
-              style={{
-                backgroundColor: props.backgroundColor,
-              }}
-            >
-              {props.controlNav && !getPageBlockData() && !props.hideControlLayout && (
-                <>
-                  <div className={styles.controlContainer}>
-                    <Control navigation={props.controlNav} />
-                  </div>
-
-                  <div className={styles.controlToggleBtn} onClick={() => toggleControlLayout()}>
-                    <AiFillControl />
-                  </div>
-                </>
-              )}
-
-              <div className={styles.childrenWrapper}>
-                <div className={styles.childrenContainer}>
-                  {getPageBlockData() ? (
-                    <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
-                  ) : (
-                    <>
-                      <NextTopLoader
-                        color="var(--primary)"
-                        initialPosition={0.08}
-                        crawlSpeed={200}
-                        height={3}
-                        crawl={true}
-                        showSpinner={false}
-                        easing="ease"
-                        speed={200}
-                        shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
-                        showForHashAnchor
-                      />
-                      <AlertCenter />
-                      <LoaderProvider>{props.loading ? <Skeleton active /> : props.children}</LoaderProvider>
-                    </>
-                  )}
+    <div className={`${styles.container} ${props.largeSideBar ? '' : styles.small} ${sideBarOpen && styles.sideBarActive}`}>
+      {loggedInData ? (
+        <>
+          <Header pages={props.pages} />
+          {!props.sidebarHidden && <div className={styles.sideBar}>{props?.pages && <SideBar page={props.pages[0]} large={props.largeSideBar} />}</div>}
+          <div
+            className={`${styles.content} ${controlLayoutOpen && !getPageBlockData() && styles.controlContainerActive} ${
+              props.controlNav && !getPageBlockData() && !props.hideControlLayout && styles.controlBarActive
+            }`}
+            style={{
+              backgroundColor: props.backgroundColor,
+            }}
+          >
+            {props.controlNav && !getPageBlockData() && !props.hideControlLayout && (
+              <>
+                <div className={styles.controlContainer}>
+                  <Control navigation={props.controlNav} />
                 </div>
+
+                <div className={styles.controlToggleBtn} onClick={() => toggleControlLayout()}>
+                  <AiFillControl />
+                </div>
+              </>
+            )}
+
+            <div className={styles.childrenWrapper}>
+              <div className={styles.childrenContainer}>
+                {getPageBlockData() ? (
+                  <BlockedMessage neededFeature={props.neededFeature} type={getPageBlockData() as any} />
+                ) : (
+                  <>
+                    <NextTopLoader
+                      color="var(--primary)"
+                      initialPosition={0.08}
+                      crawlSpeed={200}
+                      height={3}
+                      crawl={true}
+                      showSpinner={false}
+                      easing="ease"
+                      speed={200}
+                      shadow="0 0 10px var(--primary-dark),0 0 5px var(--primary)"
+                      showForHashAnchor
+                    />
+                    <AlertCenter />
+                    <LoaderProvider>{props.loading ? <Skeleton active /> : props.children}</LoaderProvider>
+                  </>
+                )}
               </div>
             </div>
-          </>
-        ) : (
-          <Suspense>
-            <Auth />
-          </Suspense>
-        )}
-      </div>
-    </>
+          </div>
+        </>
+      ) : (
+        <Suspense>
+          <Auth />
+        </Suspense>
+      )}
+    </div>
   );
 };
 export default PageLayout;
