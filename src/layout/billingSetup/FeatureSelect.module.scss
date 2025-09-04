@@ -9,6 +9,9 @@
   width: 100%;
   background-color: rgba(245, 245, 245, 0.533);
   padding: 2rem;
+  @include mobile {
+    padding: 0.5rem;
+  }
   .header {
     text-align: center;
     margin-top: 30px;
@@ -44,6 +47,12 @@
     flex-wrap: wrap;
     padding: var(--spacing-md);
     position: relative;
+
+    @include mobile {
+      display: flex;
+      padding: 0;
+      flex-direction: column;
+    }
   }
 }
 .billingToggle {
