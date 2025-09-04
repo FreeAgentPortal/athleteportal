@@ -1,5 +1,4 @@
 import { Button } from 'antd';
-import React from 'react';
 import styles from './FeatureSelect.module.scss';
 import PaymentInformationForm from '@/views/billing/components/paymentInformation/PaymentInformation.component';
 import { usePaymentStore } from '@/state/payment';
@@ -12,9 +11,15 @@ type Props = {
 const PaymentWrapper = ({ onContinue, onPrevious }: Props) => {
   const { paymentFormValues } = usePaymentStore();
   return (
-    <div className={styles.container}>
-      <PaymentInformationForm />
-      <div className={styles.buttonContainer}>
+    <>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Payment Information</h2>
+          <p className={styles.description}>Please provide your payment information.</p>
+        </div>
+        <PaymentInformationForm />
+      </div>
+      <div className={styles.footer}>
         <Button type="primary" onClick={onPrevious}>
           Previous
         </Button>
@@ -22,7 +27,7 @@ const PaymentWrapper = ({ onContinue, onPrevious }: Props) => {
           Continue
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

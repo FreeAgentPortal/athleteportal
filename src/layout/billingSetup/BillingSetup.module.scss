@@ -8,6 +8,10 @@
   gap: 20px;
   padding: 20px;
 
+  .contentContainer {
+    width: 100%;
+  }
+
   .header {
     text-align: left;
     margin-bottom: var(--spacing-md);

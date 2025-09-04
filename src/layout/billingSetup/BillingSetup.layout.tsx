@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import styles from './BillingSetup.module.scss';
-import PaymentInformationForm from '@/views/billing/components/paymentInformation/PaymentInformation.component';
 import FeatureSelect from './FeatureSelect.component';
 import { usePaymentStore } from '@/state/payment';
 import { usePlansStore } from '@/state/plans';

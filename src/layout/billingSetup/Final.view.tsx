@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import styles from './FeatureSelect.module.scss';
 import { usePaymentStore } from '@/state/payment';
 import { usePlansStore } from '@/state/plans';
 import useApiHook from '@/hooks/useApi';
-import { Button } from 'antd';
+import { Button, Tag } from 'antd';
 import FeaturePlanCard from './components/featurePlanCard/FeaturePlanCard.component';
 import PaymentSummary from './components/paymentSummary/PaymentSummary.component';
 import { useUser } from '@/state/auth';
@@ -45,25 +45,27 @@ const Final = ({ onPrevious }: Props) => {
   };
 
   return (
-    <div className={styles.container}>
-      <h3>Review & Submit</h3>
-      <p>Please review your information and submit your billing setup.</p>
+    <div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Review & Submit</h2>
+          <p className={styles.description}>Please review your information and submit your billing setup.</p>
+        </div>
+        {/* Display current selected plan and payment info */}
+        <div className={styles.summary}>
+          {selectedPlans?.map((plan) => (
+            <FeaturePlanCard key={plan._id} plan={plan} billingCycle={billingCycle} />
+          ))}
+        </div>
+        <PaymentSummary {...paymentFormValues} type={paymentMethod} />
 
-      {/* Display current selected plan and payment info */}
-      <div className={styles.summary}>
-        <strong>Selected Plan:</strong>{' '}
-        {selectedPlans?.map((plan) => (
-          <FeaturePlanCard key={plan._id} plan={plan} selected billingCycle={billingCycle} />
-        ))}
+        <p>
+          <strong>Billing Cycle:</strong> <Tag>{billingCycle.toUpperCase()}</Tag>
+        </p>
+
+        {error && <div className={styles.error}>{error}</div>}
       </div>
-      <p>
-        <strong>Billing Cycle:</strong> {billingCycle}
-      </p>
-      <PaymentSummary {...paymentFormValues} type={paymentMethod} />
-
-      {error && <div className={styles.error}>{error}</div>}
-
-      <div className={styles.buttonContainer}>
+      <div className={styles.footer}>
         <Button onClick={onPrevious} disabled={isSubmitting}>
           Back
         </Button>

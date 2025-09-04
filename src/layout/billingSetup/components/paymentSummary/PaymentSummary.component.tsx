@@ -1,48 +1,58 @@
-import React from 'react';
+import { CreditCard, Banknote } from 'lucide-react';
 import styles from './PaymentSummary.module.scss';
 
 const PaymentSummary = (paymentFormValues: any) => {
   if (!paymentFormValues) return null;
 
-  if (paymentFormValues.type === 'creditcard') {
-    return (
-      <div className={styles.paymentSummary}>
-        <p>
-          <strong>Payment Type:</strong> Credit/Debit Card
-        </p>
-        <p>
-          <strong>Cardholder:</strong> {`${paymentFormValues.first_name} ${paymentFormValues.last_name}`.trim()}
-        </p>
-        <p>
-          <strong>Card Number:</strong> {maskCardNumber(paymentFormValues.ccnumber)}
-        </p>
-        <p>
-          <strong>Expiration:</strong> {paymentFormValues.ccexp}
-        </p>
-      </div>
-    );
-  }
+  const isCard = paymentFormValues.type === 'creditcard';
+  const isACH = paymentFormValues.type === 'ach';
 
-  if (paymentFormValues.type === 'ach') {
-    return (
-      <div className={styles.paymentSummary}>
-        <p>
-          <strong>Payment Type:</strong> ACH / Bank Transfer
-        </p>
-        <p>
-          <strong>Account Holder:</strong> {paymentFormValues.accountHolderName}
-        </p>
-        <p>
-          <strong>Account Number:</strong> {maskAccountNumber(paymentFormValues.accountNumber)}
-        </p>
-        <p>
-          <strong>Routing Number:</strong> {paymentFormValues.routingNumber}
-        </p>
-      </div>
-    );
-  }
+  console.log(paymentFormValues);
 
-  return null;
+  return (
+    <div className={styles.paymentSummary}>
+      <div className={styles.header}>
+        {isCard ? <CreditCard size={20} /> : <Banknote size={20} />}
+        <h3>{isCard ? 'Credit / Debit Card' : 'ACH / Bank Transfer'}</h3>
+      </div>
+
+      <div className={styles.details}>
+        {isCard && (
+          <>
+            <div className={styles.row}>
+              <span className={styles.label}>Cardholder</span>
+              <span className={styles.value}>{`${paymentFormValues.first_name} ${paymentFormValues.last_name}`.trim()}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.label}>Card Number</span>
+              <span className={styles.value}>{maskCardNumber(paymentFormValues.ccnumber)}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.label}>Expiration</span>
+              <span className={styles.value}>{paymentFormValues.ccexp}</span>
+            </div>
+          </>
+        )}
+
+        {isACH && (
+          <>
+            <div className={styles.row}>
+              <span className={styles.label}>Account Holder</span>
+              <span className={styles.value}>{paymentFormValues.accountHolderName}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.label}>Account Number</span>
+              <span className={styles.value}>{maskAccountNumber(paymentFormValues.accountNumber)}</span>
+            </div>
+            <div className={styles.row}>
+              <span className={styles.label}>Routing Number</span>
+              <span className={styles.value}>{paymentFormValues.routingNumber}</span>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
 };
 
 export default PaymentSummary;

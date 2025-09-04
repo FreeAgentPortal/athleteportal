@@ -26,23 +26,7 @@ const CardForm = () => {
   }, []);
 
   return (
-    <Form
-      form={form}
-      className={styles.form}
-      layout="vertical"
-      initialValues={{
-        first_name: 'John',
-        last_name: 'Doe',
-        ccnumber: '4005529999000123',
-        ccexp: '12/31',
-        cvv: '196',
-        address1: '123 Main St',
-        address2: 'Apt 4',
-        zip: '12345',
-        city: 'New York',
-        country: 'United States of America (the)',
-      }}
-    >
+    <Form form={form} className={styles.form} layout="vertical">
       <div className={styles.row}>
         <Form.Item name="ccnumber" label="Card Number" rules={[{ required: true, message: 'Please input your card number' }]} className={styles.field}>
           <Input placeholder={'Customer card number'} className={styles.input} />
