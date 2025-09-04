@@ -1,11 +1,10 @@
 'use client';
-import { Button } from 'antd';
 import styles from './FeatureSelect.module.scss';
 import { useUser } from '@/state/auth';
 import useApiHook from '@/hooks/useApi';
 import { usePlansStore } from '@/state/plans';
 import FeaturePlanCard, { FeaturePlan } from './components/featurePlanCard/FeaturePlanCard.component';
-
+import { Button } from 'antd';
 
 type Props = {
   onContinue: () => void;
@@ -25,43 +24,45 @@ const FeatureSelect = ({ onContinue }: Props) => {
   const { selectedPlans, togglePlan, billingCycle, setBillingCycle } = usePlansStore();
 
   const plans: FeaturePlan[] = plansRequest?.payload?.data || plansRequest?.payload || plansRequest?.data || [];
-  const centerMostPopularPlan = (plans: FeaturePlan[]) => {
-    const popularIndex = plans.findIndex((p) => p.mostPopular);
-    if (popularIndex === -1) return plans;
-
-    const mostPopular = plans[popularIndex];
-    const others = [...plans.slice(0, popularIndex), ...plans.slice(popularIndex + 1)];
-
-    const centerIndex = Math.floor(others.length / 2);
-    return [...others.slice(0, centerIndex), mostPopular, ...others.slice(centerIndex)];
+  const sortPlansOnPrice = (plans: FeaturePlan[]) => {
+    return plans.sort((a, b) => {
+      const priceA = Number(a.price) || 0;
+      const priceB = Number(b.price) || 0;
+      return priceA - priceB;
+    });
   };
 
-  const sortedPlans = centerMostPopularPlan(plans);
+  const sortedPlans = sortPlansOnPrice(plans);
 
   return (
-    <div className={styles.container}>
-      <div className={styles.plans}>
-        {sortedPlans.map((plan: FeaturePlan) => (
-          <FeaturePlanCard key={plan._id} plan={plan} selected={selectedPlans.some((p) => p._id === plan._id)} onSelect={() => togglePlan(plan)} billingCycle={billingCycle} />
-        ))}
+    <div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <h2>Select Your Feature Plan</h2>
+          <p className={styles.description}>Choose the features you&apos;d like to include in your account.</p>
+
+          <div className={styles.billingToggle}>
+            <button className={`${styles.toggleOption} ${billingCycle === 'monthly' ? styles.active : ''}`} onClick={() => setBillingCycle('monthly')}>
+              Monthly
+            </button>
+            <div className={styles.separator} />
+            <button className={`${styles.toggleOption} ${billingCycle === 'yearly' ? styles.active : ''}`} onClick={() => setBillingCycle('yearly')}>
+              Yearly
+            </button>
+          </div>
+        </div>
+        <div className={styles.plans}>
+          {sortedPlans.map((plan: FeaturePlan) => (
+            <FeaturePlanCard key={plan._id} plan={plan} selected={selectedPlans.some((p) => p._id === plan._id)} onSelect={() => togglePlan(plan)} billingCycle={billingCycle} />
+          ))}
+        </div>
+        <p className={styles.info}>*Prices shown do not include applicable taxes.</p>
       </div>
-      <div className={styles.billingToggle}>
-        <button className={`${styles.toggleOption} ${billingCycle === 'monthly' ? styles.active : ''}`} onClick={() => setBillingCycle('monthly')}>
-          Monthly
-        </button>
-        <div className={styles.separator} />
-        <button className={`${styles.toggleOption} ${billingCycle === 'yearly' ? styles.active : ''}`} onClick={() => setBillingCycle('yearly')}>
-          Yearly
-        </button>
+      <div className={styles.footer}>
+        <Button type="primary" onClick={onContinue} disabled={selectedPlans.length === 0} size="large">
+          Continue with {selectedPlans[0].name} plan
+        </Button>
       </div>
-      <div className={styles.header}>
-        <h2>Select Your Feature Plan</h2>
-        <p className={styles.description}>Choose the features you&apos;d like to include in your account.</p>
-        <p className={styles.description}>Prices Shown do not include applicable taxes</p>
-      </div>
-      <Button type="primary" onClick={onContinue} disabled={selectedPlans.length === 0}>
-        Continue
-      </Button>
     </div>
   );
 };

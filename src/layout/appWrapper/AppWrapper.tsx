@@ -62,13 +62,13 @@ const AppWrapper = (props: Props) => {
 
   return (
     <>
-      {/* {selectedProfile?.payload?.needsBillingSetup ? (
+      {selectedProfile?.payload?.needsBillingSetup ? (
         <PageLayout pages={[navigation().billing.links.account_center]} loading={userIsLoading || !selectedProfile} largeSideBar>
           <BillingSetup billingValidation={selectedProfile?.payload?.billingValidation} />
         </PageLayout>
-      ) : ( */}
+      ) : (
         <>{props.children}</>
-      {/* )} */}
+      )}
     </>
   );
 };

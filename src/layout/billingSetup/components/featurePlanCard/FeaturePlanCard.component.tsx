@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import styles from './FeaturePlanCard.module.scss';
 
 export type Tier = 'silver' | 'gold' | 'platinum' | 'bronze' | 'diamond';
@@ -44,6 +43,7 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
 
     return billingCycle === 'yearly' ? basePrice * 12 : basePrice;
   };
+
   const baseMonthlyPrice = parseFloat(String(plan.price ?? '0'));
   const isYearly = billingCycle === 'yearly';
 
@@ -54,16 +54,9 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
 
   return (
     <div className={`${styles.container} ${selected ? styles.active : ''} ${tierClass} ${popularClass}`} onClick={handleSelect}>
-      {selected && (
-        <div className={styles.checkmarkOverlay}>
-          <div className={styles.checkmark}>✔</div>
-        </div>
-      )}
       {plan.mostPopular && <div className={styles.popularBadge}>Most Popular</div>}
-      <div className={styles.imageWrapper}>
-        <Image src={plan.imageUrl || '/images/placeholder-logo.png'} alt={`${plan.name} icon`} className={styles.image} width={200} height={200} />
-      </div>
-      <div className={styles.content}>
+
+      <div className={styles.infoRow}>
         <h3 className={styles.name}>{plan.name}</h3>
         <p className={styles.description}>{plan.description}</p>
         {hasDiscount && (
@@ -77,15 +70,15 @@ const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Pro
             <span className={styles.discountBadge}>Save {plan.yearlyDiscount}%</span>
           </div>
         )}
-        <div className={styles.priceRow}>
-          <span className={styles.price}>
-            {Intl.NumberFormat('en-US', {
-              style: 'currency',
-              currency: 'USD',
-            }).format(finalPrice)}
-            {plan.billingCycle && <span className={styles.billingCycle}>/ {billingCycle}</span>}
-          </span>
-        </div>
+      </div>
+      <div className={styles.priceRow}>
+        <span className={styles.price}>
+          {Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(finalPrice)}
+          {plan.billingCycle && <span className={styles.billingCycle}>/ {billingCycle}</span>}
+        </span>
       </div>
     </div>
   );
