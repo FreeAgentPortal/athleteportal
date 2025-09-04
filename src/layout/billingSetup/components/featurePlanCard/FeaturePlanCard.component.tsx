@@ -1,85 +1,56 @@
 'use client';
+
+// import { CheckCircle } from 'lucide-react';
 import styles from './FeaturePlanCard.module.scss';
 
-export type Tier = 'silver' | 'gold' | 'platinum' | 'bronze' | 'diamond';
+export type Tier = 'silver' | 'gold' | 'platinum';
 
 export type FeaturePlan = {
   _id: string;
   name: string;
   description: string;
-  price: number | string;
-  billingCycle?: string;
-  availableTo?: string[];
-  features?: any[];
-  isActive?: boolean;
-  imageUrl?: string;
-  tier?: Tier;
+  price: number;
+  billingCycle: 'monthly' | 'yearly';
+  features: { name: string }[];
+  tier: Tier;
   mostPopular?: boolean;
-  yearlyDiscount?: number; // percentage like 10 for 10% off
+  yearlyDiscount?: number;
 };
 
 interface Props {
   plan: FeaturePlan;
+  billingCycle: 'monthly' | 'yearly';
   selected?: boolean;
-  billingCycle?: string;
   onSelect?: () => void;
 }
 
-const FeaturePlanCard = ({ plan, selected = false, billingCycle, onSelect }: Props) => {
-  const handleSelect = () => {
-    if (onSelect) onSelect();
-  };
-
-  const tierClass = plan.tier ? styles[plan.tier] : '';
-  const popularClass = plan.mostPopular ? styles.mostPopular : '';
-
-  const calculatePrice = (plan: FeaturePlan) => {
-    const basePrice = parseFloat(String(plan.price ?? '0'));
-
-    if (billingCycle === 'yearly' && plan.yearlyDiscount) {
-      const discount = (plan.yearlyDiscount / 100) * basePrice * 12;
-      return basePrice * 12 - discount;
-    }
-
-    return billingCycle === 'yearly' ? basePrice * 12 : basePrice;
-  };
-
-  const baseMonthlyPrice = parseFloat(String(plan.price ?? '0'));
+const FeaturePlanCard = ({ plan, billingCycle, onSelect, selected }: Props) => {
   const isYearly = billingCycle === 'yearly';
+  const yearlyDiscount = plan.yearlyDiscount ?? 0;
+  const basePrice = plan.price;
 
-  const originalYearlyPrice = baseMonthlyPrice * 12;
-  const hasDiscount = isYearly && plan.yearlyDiscount && plan.yearlyDiscount > 0;
-
-  const finalPrice = hasDiscount ? originalYearlyPrice * (1 - plan.yearlyDiscount! / 100) : isYearly ? originalYearlyPrice : baseMonthlyPrice;
+  const price = isYearly ? basePrice * 12 * ((100 - yearlyDiscount) / 100) : basePrice;
 
   return (
-    <div className={`${styles.container} ${selected ? styles.active : ''} ${tierClass} ${popularClass}`} onClick={handleSelect}>
+    <div className={`${styles.container} ${selected ? styles.active : ''} ${styles[plan.tier]} ${plan.mostPopular ? styles.mostPopular : ''}`} onClick={onSelect}>
       {plan.mostPopular && <div className={styles.popularBadge}>Most Popular</div>}
 
-      <div className={styles.infoRow}>
-        <h3 className={styles.name}>{plan.name}</h3>
-        <p className={styles.description}>{plan.description}</p>
-        {hasDiscount && (
-          <div className={styles.discountRow}>
-            <span className={styles.originalPrice}>
-              {Intl.NumberFormat('en-US', {
-                style: 'currency',
-                currency: 'USD',
-              }).format(originalYearlyPrice)}
-            </span>
-            <span className={styles.discountBadge}>Save {plan.yearlyDiscount}%</span>
-          </div>
-        )}
-      </div>
+      <h3 className={styles.name}>{plan.name}</h3>
+      <p className={styles.description}>{plan.description}</p>
+
       <div className={styles.priceRow}>
-        <span className={styles.price}>
-          {Intl.NumberFormat('en-US', {
-            style: 'currency',
-            currency: 'USD',
-          }).format(finalPrice)}
-          {plan.billingCycle && <span className={styles.billingCycle}>/ {billingCycle}</span>}
-        </span>
+        <span className={styles.price}>${price.toFixed(0)}</span>
+        <span className={styles.billingCycle}>/{isYearly ? 'year' : 'month'}</span>
+        {isYearly && yearlyDiscount > 0 && <div className={styles.discountText}>Save {yearlyDiscount}% annually</div>}
       </div>
+
+      <ul className={styles.featureList}>
+        {plan.features.map((feature, i) => (
+          <li key={i} className={styles.featureItem}>
+            ✅ <span>{feature.name}</span>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };

@@ -7,10 +7,11 @@
   justify-content: center;
   gap: 20px;
   width: 100%;
-  background-color: whitesmoke;
+  background-color: rgba(245, 245, 245, 0.533);
   padding: 2rem;
   .header {
     text-align: center;
+    margin-top: 30px;
 
     h2 {
       font-size: var(--font-size-xxl);

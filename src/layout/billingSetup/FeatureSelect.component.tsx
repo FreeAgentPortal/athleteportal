@@ -60,7 +60,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
       </div>
       <div className={styles.footer}>
         <Button type="primary" onClick={onContinue} disabled={selectedPlans.length === 0} size="large">
-          Continue with {selectedPlans[0].name} plan
+          {selectedPlans.length === 0 ? 'Select a plan' : `Continue with ${selectedPlans[0].name} plan`}
         </Button>
       </div>
     </div>

@@ -7,8 +7,8 @@ export const ALLOW_MULTIPLE_PLAN_SELECT = false;
 
 interface PlansState {
   selectedPlans: FeaturePlan[];
-  billingCycle: string;
-  setBillingCycle: (data: string) => void;
+  billingCycle: 'monthly' | 'yearly';
+  setBillingCycle: (data: 'monthly' | 'yearly') => void;
   togglePlan: (plan: FeaturePlan) => void;
 }
 
@@ -16,7 +16,7 @@ export const usePlansStore = create<PlansState>((set) => ({
   selectedPlans: [],
   billingCycle: 'yearly',
 
-  setBillingCycle: (data: string) => {
+  setBillingCycle: (data: 'monthly' | 'yearly') => {
     set({ billingCycle: data });
   },
   togglePlan: (plan: FeaturePlan) =>
