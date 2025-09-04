@@ -49,7 +49,7 @@ const Auth = () => {
         <div className={styles.text}>
           <span>Welcome</span>
           <br />
-          <p style={{ fontSize: '14px' }}>Please click the button below if you are not already redirected</p>
+          <p style={{ fontSize: '14px' }}>Please click the button below to login</p>
         </div>
         {redirectUrl && (
           <a href={redirectUrl} className={styles.buttonLink}>
