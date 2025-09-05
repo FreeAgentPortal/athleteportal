@@ -25,6 +25,11 @@ export interface IAthlete {
     pick: number;
     team: string; // Team name or ID
   };
+  agent?: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  };
   birthdate?: Date;
   measurements?: Map<string, string | number>; // e.g., "height": "6'1\""
   metrics?: Map<string, number>; // e.g., "dash40": 4.42

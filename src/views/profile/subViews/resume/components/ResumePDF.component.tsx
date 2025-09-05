@@ -304,10 +304,7 @@ const ResumePDF: React.FC<ResumePDFProps> = ({ resumeData, athlete }) => {
       </View>
       <View style={styles.watermark}>
         {/* eslint-disable-next-line jsx-a11y/alt-text */}
-        <Image 
-          style={styles.logo} 
-          src="https://res.cloudinary.com/dsltlng97/image/upload/v1752863629/placeholder-logo_s7jg3y.png"
-        />
+        <Image style={styles.logo} src="https://res.cloudinary.com/dsltlng97/image/upload/v1752863629/placeholder-logo_s7jg3y.png" />
         <Text style={styles.watermarkText}>FreeAgentPortal.com</Text>
       </View>
     </View>

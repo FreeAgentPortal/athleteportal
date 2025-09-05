@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import styles from './BasicInfo.module.scss';
 import formStyles from '@/styles/Form.module.scss';
-import { Button, DatePicker, Form, Input, Card, Space, Select } from 'antd';
+import { Button, DatePicker, Form, Input, Card, Space, Select, Checkbox } from 'antd';
 import { UserOutlined, MailOutlined, PhoneOutlined, SaveOutlined, CalendarOutlined } from '@ant-design/icons';
 import { useQueryClient } from '@tanstack/react-query';
 import { IAthlete } from '@/types/IAthleteType';
@@ -19,6 +19,7 @@ const BasicInfo = () => {
   const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
+  const [hasAgent, setHasAgent] = useState(false);
   const { addAlert } = useInterfaceStore((state) => state);
 
   // Get athlete data
@@ -39,6 +40,9 @@ const BasicInfo = () => {
   useEffect(() => {
     if (athleteData?.payload || profile?.payload) {
       const data = athleteData?.payload || profile?.payload;
+      const hasAgentData = data.agent && (data.agent.name || data.agent.email || data.agent.phone);
+      setHasAgent(hasAgentData);
+
       form.setFieldsValue({
         fullName: data.fullName,
         email: data.email,
@@ -51,6 +55,7 @@ const BasicInfo = () => {
         profileImageUrl: data.profileImageUrl,
         experienceYears: data.experienceYears,
         positions: data.positions ? data.positions.map((pos: any) => pos.abbreviation) : [],
+        agent: data.agent || {},
       });
     }
   }, [athleteData, profile, form]);
@@ -67,6 +72,7 @@ const BasicInfo = () => {
       ...values,
       birthdate: values.birthdate ? values.birthdate.toISOString() : null,
       positions: selectedPositions,
+      agent: hasAgent ? values.agent : undefined, // Only include agent data if hasAgent is true
     };
 
     updateProfile(
@@ -213,6 +219,53 @@ const BasicInfo = () => {
                 <Form.Item name="bio" label="Biography">
                   <Input.TextArea rows={4} placeholder="Tell us about yourself, your athletic journey, goals, and what makes you unique..." maxLength={500} showCount />
                 </Form.Item>
+
+                {/* Agent Information Section */}
+                <Form.Item>
+                  <Checkbox
+                    checked={hasAgent}
+                    onChange={(e) => {
+                      setHasAgent(e.target.checked);
+                      if (!e.target.checked) {
+                        // Clear agent fields when unchecked
+                        form.setFieldsValue({
+                          agent: {
+                            name: undefined,
+                            email: undefined,
+                            phone: undefined,
+                          },
+                        });
+                      }
+                    }}
+                  >
+                    Do you have an agent?
+                  </Checkbox>
+                </Form.Item>
+
+                {hasAgent && (
+                  <>
+                    <div className={formStyles.row}>
+                      <Form.Item name={['agent', 'name']} label="Agent Name" className={formStyles.field}>
+                        <Input prefix={<UserOutlined />} placeholder="Enter your agent's name" />
+                      </Form.Item>
+
+                      <Form.Item
+                        name={['agent', 'email']}
+                        label="Agent Email"
+                        rules={[{ type: 'email', message: 'Please enter a valid email address' }]}
+                        className={formStyles.field}
+                      >
+                        <Input prefix={<MailOutlined />} placeholder="Enter your agent's email" />
+                      </Form.Item>
+                    </div>
+
+                    <div className={formStyles.row}>
+                      <Form.Item name={['agent', 'phone']} label="Agent Phone Number" className={formStyles.field}>
+                        <Input prefix={<PhoneOutlined />} placeholder="Enter your agent's phone number" />
+                      </Form.Item>
+                    </div>
+                  </>
+                )}
 
                 {isEditing && (
                   <Form.Item>
