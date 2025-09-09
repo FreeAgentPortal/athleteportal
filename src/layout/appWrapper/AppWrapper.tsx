@@ -9,6 +9,7 @@ import PageLayout from '../page/Page.layout';
 import BillingSetup from '../billingSetup/BillingSetup.layout';
 import { navigation } from '@/data/navigation';
 import useApiHook from '@/hooks/useApi';
+import PolicyCheckWrapper from '../policyCheckWrapper/PolicyCheckWrapper.layout';
 
 type Props = {
   children: React.ReactNode;
@@ -67,7 +68,9 @@ const AppWrapper = (props: Props) => {
           <BillingSetup billingValidation={selectedProfile?.payload?.billingValidation} />
         </PageLayout>
       ) : (
-        <>{props.children}</>
+        <>
+          <PolicyCheckWrapper>{props.children}</PolicyCheckWrapper>
+        </>
       )}
     </>
   );

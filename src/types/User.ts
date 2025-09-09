@@ -1,4 +1,5 @@
 export default interface User {
+  acceptedPolicies: Record<string, number>;
   _id: string;
   firstName: string;
   lastName: string;
