@@ -144,3 +144,33 @@
   text-align: center;
   color: #111827;
 }
+
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.25rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.benefitItem {
+  background: #f9fafb;
+  padding: 1rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1px solid #e5e7eb;
+
+  h4 {
+    margin: 0 0 0.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9rem;
+    color: #374151;
+    line-height: 1.5;
+  }
+}

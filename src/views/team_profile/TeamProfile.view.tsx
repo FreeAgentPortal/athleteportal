@@ -38,6 +38,8 @@ const TeamProfile = (props: { teamId: string }) => {
           Back
         </Button>
       </div>
+
+      {/* HEADER */}
       <header className={styles.header}>
         {team.logoUrl && (
           <div
@@ -62,6 +64,7 @@ const TeamProfile = (props: { teamId: string }) => {
         </div>
       </header>
 
+      {/* CONTENT */}
       <main className={styles.content}>
         <section className={styles.section}>
           <h3>About</h3>
@@ -71,6 +74,34 @@ const TeamProfile = (props: { teamId: string }) => {
             <strong>League:</strong> {team.league}
           </p>
         </section>
+
+        {team.bio && (
+          <section className={styles.section}>
+            <h3>Bio</h3>
+            <p>{team.bio}</p>
+          </section>
+        )}
+
+        {team.history && (
+          <section className={styles.section}>
+            <h3>History</h3>
+            <p>{team.history}</p>
+          </section>
+        )}
+
+        {team.benefits?.length > 0 && (
+          <section className={styles.section}>
+            <h3>Benefits</h3>
+            <ul className={styles.benefits}>
+              {team.benefits.map((benefit: { title: string; description: string }, idx: number) => (
+                <li key={idx} className={styles.benefitItem}>
+                  <h4>{benefit.title}</h4>
+                  <p>{benefit.description}</p>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
         {team.positionsNeeded?.length > 0 && (
           <section className={styles.section}>
