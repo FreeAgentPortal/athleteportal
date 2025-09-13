@@ -12,6 +12,7 @@ const nextConfig: NextConfig = {
     ADMIN_APP_URL: process.env.ADMIN_APP_URL,
     SCOUT_APP_URL: process.env.SCOUT_APP_URL,
     NEXT_PUBLIC_TINYMCE_API_KEY: process.env.TINYMCE_API_KEY,
+    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.STRIPE_PUBLISHABLE_KEY,
   },
   images: {
     remotePatterns: [
