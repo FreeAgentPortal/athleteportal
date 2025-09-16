@@ -114,3 +114,42 @@
   align-items: center;
   margin-top: 2rem;
 }
+
+.plan {
+  padding: 1.5rem;
+  border-top: 1px solid #e5e7eb;
+  width: 650px;
+}
+
+.plan-header {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.price {
+  margin: 0.5rem 0;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #374151;
+
+  strong {
+    font-weight: 700;
+    color: #111827;
+  }
+
+  &--highlight {
+    font-size: 1.125rem;
+    color: var(--primary);
+    font-weight: 500;
+  }
+
+  &--muted {
+    font-size: 0.95rem;
+    color: #6b7280;
+  }
+}

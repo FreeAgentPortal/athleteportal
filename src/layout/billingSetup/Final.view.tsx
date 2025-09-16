@@ -7,6 +7,7 @@ import { Button, Tag } from 'antd';
 import FeaturePlanCard from './components/featurePlanCard/FeaturePlanCard.component';
 import PaymentSummary from './components/paymentSummary/PaymentSummary.component';
 import { useUser } from '@/state/auth';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   onPrevious(): void;
@@ -17,6 +18,9 @@ const Final = ({ onPrevious }: Props) => {
   const { billingCycle, selectedPlans } = usePlansStore();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
 
   const { mutate: updateBilling } = useApiHook({
     key: 'billing',
@@ -59,9 +63,37 @@ const Final = ({ onPrevious }: Props) => {
         </div>
         <PaymentSummary {...paymentFormValues} type={paymentMethod} />
 
-        <p>
-          <strong>Billing Cycle:</strong> <Tag>{billingCycle.toUpperCase()}</Tag>
-        </p>
+        {selectedPlans?.map((plan) => {
+          const cycle = billingCycle === 'yearly' ? 'Year' : 'Month';
+          const yearlyDiscount = plan.yearlyDiscount ?? 0;
+          const basePrice = plan.price;
+
+          const price = cycle === 'Year' ? basePrice * 12 * ((100 - yearlyDiscount) / 100) : basePrice;
+
+          return (
+            <div key={plan._id} className={styles.plan}>
+              <p className={styles['plan-header']}>
+                {cycle}ly Plan
+                {!profile.payload.setupFeePaid && <Tag color="blue">+ $50 One-time Setup Fee</Tag>}
+              </p>
+
+              {!profile.payload.setupFeePaid ? (
+                <>
+                  <p className={`${styles.price} ${styles['price--highlight']}`}>
+                    First {cycle}: <strong>${50 + price}</strong>
+                  </p>
+                  <p className={`${styles.price} ${styles['price--muted']}`}>
+                    Then every {cycle}: <strong>${price}</strong>
+                  </p>
+                </>
+              ) : (
+                <p className={`${styles.price} ${styles['price--highlight']}`}>
+                  Every {cycle}: <strong>${price}</strong>
+                </p>
+              )}
+            </div>
+          );
+        })}
 
         {error && <div className={styles.error}>{error}</div>}
       </div>

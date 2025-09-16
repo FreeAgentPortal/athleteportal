@@ -7,6 +7,8 @@
   border: 1px solid var(--border-color, #e5e7eb);
   box-shadow: var(--shadow-sm);
   transition: transform 0.2s ease;
+  max-width: 640px;
+
   cursor: pointer;
 
   &:hover {
