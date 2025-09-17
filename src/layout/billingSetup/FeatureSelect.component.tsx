@@ -5,6 +5,7 @@ import useApiHook from '@/hooks/useApi';
 import { usePlansStore } from '@/state/plans';
 import FeaturePlanCard, { FeaturePlan } from './components/featurePlanCard/FeaturePlanCard.component';
 import { Button } from 'antd';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Props = {
   onContinue: () => void;
@@ -12,6 +13,8 @@ type Props = {
 
 const FeatureSelect = ({ onContinue }: Props) => {
   const { data: loggedInUser } = useUser();
+  const queryClient = useQueryClient();
+  const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
 
   const { data: plansRequest } = useApiHook({
     url: `/auth/plan`,
@@ -56,6 +59,13 @@ const FeatureSelect = ({ onContinue }: Props) => {
             <FeaturePlanCard key={plan._id} plan={plan} selected={selectedPlans.some((p) => p._id === plan._id)} onSelect={() => togglePlan(plan)} billingCycle={billingCycle} />
           ))}
         </div>
+
+        {!profile.payload.setupFeePaid && (
+          <p>
+            <strong>There is a one-time, non-refundable setup fee of $50 that will be added to your initial payment.</strong>
+          </p>
+        )}
+
         <p className={styles.info}>*Prices shown do not include applicable taxes.</p>
       </div>
       <div className={styles.footer}>
