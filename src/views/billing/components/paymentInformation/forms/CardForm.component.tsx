@@ -6,6 +6,7 @@ import { countries } from '@/data/countries';
 import { usePaymentStore } from '@/state/payment';
 import { Elements, useStripe, useElements, CardElement } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
+import { useInterfaceStore } from '@/state/interface';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '');
 const USE_STRIPE = true; // Replace with your own logic or config
@@ -63,7 +64,7 @@ const CardForm = () => {
   const [country, setCountry] = useState(countries[0]);
   const { paymentFormValues, setCurrentForm, setPaymentFormValues } = usePaymentStore((state) => state);
   const [stripeToken, setStripeToken] = useState<string | null>(null);
-
+  const { addAlert } = useInterfaceStore();
   const onFinish = async (values: any) => {
     const isValid = await form.validateFields();
     if (!isValid) {
@@ -71,6 +72,11 @@ const CardForm = () => {
       return;
     }
 
+    // if using Stripe, ensure token is created
+    if (USE_STRIPE && !stripeToken) {
+      addAlert({ message: 'Please complete your card information', type: 'error' });
+      return;
+    }
     // Include Stripe token if using Stripe
     const finalValues = {
       ...values,
