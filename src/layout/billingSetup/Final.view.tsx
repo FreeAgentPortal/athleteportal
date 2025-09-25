@@ -67,6 +67,7 @@ const Final = ({ onPrevious }: Props) => {
           const cycle = billingCycle === 'yearly' ? 'Year' : 'Month';
           const yearlyDiscount = plan.yearlyDiscount ?? 0;
           const basePrice = plan.price;
+          const setupFeePaid = true;
 
           const price = cycle === 'Year' ? basePrice * 12 * ((100 - yearlyDiscount) / 100) : basePrice;
 
@@ -74,10 +75,10 @@ const Final = ({ onPrevious }: Props) => {
             <div key={plan._id} className={styles.plan}>
               <p className={styles['plan-header']}>
                 {cycle}ly Plan
-                {!profile.payload.setupFeePaid && <Tag color="blue">+ $50 One-time Setup Fee</Tag>}
+                {!setupFeePaid && <Tag color="blue">+ $50 One-time Setup Fee</Tag>}
               </p>
 
-              {!profile.payload.setupFeePaid ? (
+              {!setupFeePaid ? (
                 <>
                   <p className={`${styles.price} ${styles['price--highlight']}`}>
                     First {cycle}: <strong>${50 + price}</strong>

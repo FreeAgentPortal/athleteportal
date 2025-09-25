@@ -14,7 +14,6 @@ type Props = {
 const FeatureSelect = ({ onContinue }: Props) => {
   const { data: loggedInUser } = useUser();
   const queryClient = useQueryClient();
-  const profile = queryClient.getQueryData(['profile', 'athlete']) as any;
 
   const { data: plansRequest } = useApiHook({
     url: `/auth/plan`,
@@ -36,6 +35,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
   };
 
   const sortedPlans = sortPlansOnPrice(plans);
+  const setupFeePaid = true;
 
   return (
     <div>
@@ -60,7 +60,7 @@ const FeatureSelect = ({ onContinue }: Props) => {
           ))}
         </div>
 
-        {!profile.payload.setupFeePaid && (
+        {!setupFeePaid && (
           <p>
             <strong>There is a one-time, non-refundable setup fee of $50 that will be added to your initial payment.</strong>
           </p>
