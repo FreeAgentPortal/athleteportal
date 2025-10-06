@@ -1,14 +1,16 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import { Form, Input, Button, Card, Space, Divider } from "antd";
-import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, SaveOutlined } from "@ant-design/icons";
-import styles from "./AccountDetails.module.scss";
-import formStyles from "@/styles/Form.module.scss";
-import useApiHook from "@/hooks/useApi";
-import { useUser } from "@/state/auth";
-import type User from "@/types/User";
-import PhotoUpload from "@/components/photoUpload/PhotoUpload.component";
-import { useInterfaceStore } from "@/state/interface";
+'use client';
+import React, { useState, useEffect } from 'react';
+import { Form, Input, Button, Card, Space, Divider, Switch, Tooltip } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, SaveOutlined, BellOutlined } from '@ant-design/icons';
+import styles from './AccountDetails.module.scss';
+import formStyles from '@/styles/Form.module.scss';
+import useApiHook from '@/hooks/useApi';
+import { useUser } from '@/state/auth';
+import type User from '@/types/User';
+import PhotoUpload from '@/components/photoUpload/PhotoUpload.component';
+import { useInterfaceStore } from '@/state/interface';
+import useBilling from '@/hooks/useBilling';
+import { hasFeature, FEATURES } from '@/utils/hasFeature';
 
 const AccountDetails = () => {
   const { data: loggedInUser, refetch: refetchUser } = useUser();
@@ -16,26 +18,26 @@ const AccountDetails = () => {
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const { addAlert } = useInterfaceStore((state) => state);
-
+  const { data: billingData } = useBilling();
   const { data: userData } = useApiHook({
     url: `/user/${loggedInUser?._id}`,
-    key: ["user", loggedInUser?._id as string],
-    method: "GET",
+    key: ['user', loggedInUser?._id as string],
+    method: 'GET',
   });
 
   // Update user basic info
   const { mutate: updateUser, isLoading: isUpdating } = useApiHook({
-    method: "PUT",
+    method: 'PUT',
     url: `/user/${loggedInUser?._id}`,
-    key: "user-update",
-    queriesToInvalidate: ["user"],
+    key: 'user-update',
+    queriesToInvalidate: ['user'],
   }) as any;
 
   // Update password
   const { mutate: updatePassword, isLoading: isUpdatingPassword } = useApiHook({
-    method: "PUT",
+    method: 'PUT',
     url: `/user/${loggedInUser?._id}/password`,
-    key: "user-password-update",
+    key: 'user-password-update',
   }) as any;
 
   useEffect(() => {
@@ -46,12 +48,15 @@ const AccountDetails = () => {
         email: userData.payload.email,
         phoneNumber: userData.payload.phoneNumber,
         profileImageUrl: userData.payload.profileImageUrl,
+        emailNotifications: userData.payload.notificationSettings?.emailNotifications ?? true,
+        smsNotifications: userData.payload.notificationSettings?.smsNotifications ?? false,
+        pushNotifications: userData.payload.notificationSettings?.pushNotifications ?? true,
       });
     }
   }, [userData, form]);
 
   const handleBasicInfoSubmit = (values: any) => {
-    console.log("Basic Info Submitted:", values);
+    console.log('Basic Info Submitted:', values);
     updateUser(
       {
         formData: {
@@ -60,13 +65,18 @@ const AccountDetails = () => {
           email: values.email,
           phoneNumber: values.phoneNumber,
           profileImageUrl: values.profileImageUrl,
+          notificationSettings: {
+            emailNotifications: values.emailNotifications,
+            smsNotifications: values.smsNotifications,
+            pushNotifications: values.pushNotifications,
+          },
         },
       },
       {
         onSuccess: () => {
           addAlert({
-            type: "success",
-            message: "Account information updated successfully",
+            type: 'success',
+            message: 'Account information updated successfully',
             duration: 3000,
           });
           setIsEditing(false);
@@ -74,8 +84,8 @@ const AccountDetails = () => {
         },
         onError: (error: any) => {
           addAlert({
-            type: "error",
-            message: error?.response?.data?.message || "Failed to update account information",
+            type: 'error',
+            message: error?.response?.data?.message || 'Failed to update account information',
             duration: 5000,
           });
         },
@@ -86,8 +96,8 @@ const AccountDetails = () => {
   const handlePasswordSubmit = (values: any) => {
     if (values.newPassword !== values.confirmPassword) {
       addAlert({
-        type: "error",
-        message: "New passwords do not match",
+        type: 'error',
+        message: 'New passwords do not match',
         duration: 5000,
       });
       return;
@@ -103,16 +113,16 @@ const AccountDetails = () => {
       {
         onSuccess: () => {
           addAlert({
-            type: "success",
-            message: "Password updated successfully",
+            type: 'success',
+            message: 'Password updated successfully',
             duration: 3000,
           });
-          form.resetFields(["currentPassword", "newPassword", "confirmPassword"]);
+          form.resetFields(['currentPassword', 'newPassword', 'confirmPassword']);
         },
         onError: (error: any) => {
           addAlert({
-            type: "error",
-            message: error?.response?.data?.message || "Failed to update password",
+            type: 'error',
+            message: error?.response?.data?.message || 'Failed to update password',
             duration: 5000,
           });
         },
@@ -123,17 +133,13 @@ const AccountDetails = () => {
   return (
     <div className={styles.container}>
       <div className={styles.contentContainer}>
-        <Space direction="vertical" size="large" style={{ width: "100%" }}>
+        <Space direction="vertical" size="large" style={{ width: '100%' }}>
           {/* Profile Section */}
           <Card
             title="Profile Information"
             extra={
-              <Button
-                type="link"
-                onClick={() => setIsEditing(!isEditing)}
-                icon={isEditing ? <SaveOutlined /> : <UserOutlined />}
-              >
-                {isEditing ? "Cancel" : "Edit Profile"}
+              <Button type="link" onClick={() => setIsEditing(!isEditing)} icon={isEditing ? <SaveOutlined /> : <UserOutlined />}>
+                {isEditing ? 'Cancel' : 'Edit Profile'}
               </Button>
             }
           >
@@ -152,23 +158,18 @@ const AccountDetails = () => {
                       aspectRatio={1}
                       placeholder="Upload your profile photo"
                       imgStyle={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        width: "200px",
-                        height: "200px",
-                        borderRadius: "50%",
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '200px',
+                        height: '200px',
+                        borderRadius: '50%',
                       }}
                     />
                   </div>
                 </div>
                 <div className={formStyles.row}>
-                  <Form.Item
-                    name="firstName"
-                    label="First Name"
-                    rules={[{ required: true, message: "Please enter your first name" }]}
-                    className={formStyles.field}
-                  >
+                  <Form.Item name="firstName" label="First Name" rules={[{ required: true, message: 'Please enter your first name' }]} className={formStyles.field}>
                     <Input prefix={<UserOutlined />} placeholder="Enter your first name" />
                   </Form.Item>
 
@@ -181,21 +182,43 @@ const AccountDetails = () => {
                     name="email"
                     label="Email Address"
                     rules={[
-                      { required: true, message: "Please enter your email" },
-                      { type: "email", message: "Please enter a valid email" },
+                      { required: true, message: 'Please enter your email' },
+                      { type: 'email', message: 'Please enter a valid email' },
                     ]}
                     className={formStyles.field}
                   >
                     <Input prefix={<MailOutlined />} placeholder="Enter your email address" />
                   </Form.Item>
 
-                  <Form.Item
-                    name="phoneNumber"
-                    label="Phone Number"
-                    rules={[{ required: true, message: "Please enter your phone number" }]}
-                    className={formStyles.field}
-                  >
+                  <Form.Item name="phoneNumber" label="Phone Number" rules={[{ required: true, message: 'Please enter your phone number' }]} className={formStyles.field}>
                     <Input prefix={<PhoneOutlined />} placeholder="Enter your phone number" />
+                  </Form.Item>
+                </div>
+
+                {/* Notification Settings */}
+                <Divider orientation="left">
+                  <BellOutlined /> Notification Preferences
+                </Divider>
+                <div className={formStyles.row}>
+                  <Form.Item name="emailNotifications" label="Email Notifications" valuePropName="checked" className={formStyles.field}>
+                    <Switch disabled={!isEditing} />
+                  </Form.Item>
+
+                  <Form.Item name="smsNotifications" label="SMS Notifications" valuePropName="checked" className={formStyles.field}>
+                    {(() => {
+                      const hasSmsFeature = hasFeature(billingData?.plan?.features as any, FEATURES.TEXT_NOTIFICATIONS);
+                      const isDisabled = !isEditing || !hasSmsFeature;
+
+                      return (
+                        <Tooltip title={!hasSmsFeature ? 'Your current plan does not support SMS notifications' : ''} placement="top">
+                          <Switch disabled={isDisabled} checked={hasSmsFeature ? undefined : false} />
+                        </Tooltip>
+                      );
+                    })()}
+                  </Form.Item>
+
+                  <Form.Item name="pushNotifications" label="Push Notifications" valuePropName="checked" className={formStyles.field}>
+                    <Switch disabled={!isEditing} />
                   </Form.Item>
                 </div>
 
@@ -222,8 +245,8 @@ const AccountDetails = () => {
                     name="newPassword"
                     label="New Password"
                     rules={[
-                      { required: true, message: "Please enter your new password" },
-                      { min: 6, message: "Password must be at least 6 characters" },
+                      { required: true, message: 'Please enter your new password' },
+                      { min: 6, message: 'Password must be at least 6 characters' },
                     ]}
                     className={formStyles.field}
                   >
@@ -234,13 +257,13 @@ const AccountDetails = () => {
                     name="confirmPassword"
                     label="Confirm New Password"
                     rules={[
-                      { required: true, message: "Please confirm your new password" },
+                      { required: true, message: 'Please confirm your new password' },
                       ({ getFieldValue }) => ({
                         validator(_, value) {
-                          if (!value || getFieldValue("newPassword") === value) {
+                          if (!value || getFieldValue('newPassword') === value) {
                             return Promise.resolve();
                           }
-                          return Promise.reject(new Error("Passwords do not match"));
+                          return Promise.reject(new Error('Passwords do not match'));
                         },
                       }),
                     ]}

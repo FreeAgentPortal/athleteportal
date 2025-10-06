@@ -9,6 +9,7 @@ export default interface User {
   email: string;
   password: string;
   role: string;
+  notificationSettings: Record<string, boolean>;
   fullName: string;
   isActive: boolean;
   resetPasswordToken: string | undefined | null;
