@@ -11,12 +11,15 @@ import PhotoUpload from '@/components/photoUpload/PhotoUpload.component';
 import { useInterfaceStore } from '@/state/interface';
 import useBilling from '@/hooks/useBilling';
 import { hasFeature, FEATURES } from '@/utils/hasFeature';
+import SmsOptInModal from './components/SmsOptInModal.component';
 
 const AccountDetails = () => {
   const { data: loggedInUser, refetch: refetchUser } = useUser();
 
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
+  const [showSmsOptInModal, setShowSmsOptInModal] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
   const { addAlert } = useInterfaceStore((state) => state);
   const { data: billingData } = useBilling();
   const { data: userData } = useApiHook({
@@ -42,18 +45,54 @@ const AccountDetails = () => {
 
   useEffect(() => {
     if (userData?.payload) {
+
       form.setFieldsValue({
         firstName: userData.payload.firstName,
         lastName: userData.payload.lastName,
         email: userData.payload.email,
         phoneNumber: userData.payload.phoneNumber,
         profileImageUrl: userData.payload.profileImageUrl,
-        emailNotifications: userData.payload.notificationSettings?.emailNotifications ?? true,
-        smsNotifications: userData.payload.notificationSettings?.smsNotifications ?? false,
-        pushNotifications: userData.payload.notificationSettings?.pushNotifications ?? true,
+        emailNotifications: userData.payload?.notificationSettings?.emailNotifications,
+        smsNotifications: userData.payload?.notificationSettings?.smsNotifications,
+        pushNotifications: userData.payload?.notificationSettings?.pushNotifications,
       });
+      setDataLoaded(true);
     }
-  }, [userData, form]);
+  }, [userData, billingData, form]);
+
+  // Handle SMS opt-in modal confirmation
+  const handleSmsOptInConfirm = () => {
+    form.setFieldsValue({ smsNotifications: true });
+    setShowSmsOptInModal(false);
+    addAlert({
+      type: 'success',
+      message: 'SMS notifications enabled successfully',
+      duration: 3000,
+    });
+  };
+
+  // Handle SMS opt-in modal cancellation
+  const handleSmsOptInCancel = () => {
+    form.setFieldsValue({ smsNotifications: false });
+    setShowSmsOptInModal(false);
+  };
+
+  // Handle SMS switch change
+  const handleSmsToggle = (checked: boolean) => {
+    const hasSmsFeature = hasFeature(billingData?.plan?.features as any, FEATURES.TEXT_NOTIFICATIONS);
+
+    if (!hasSmsFeature) {
+      return; // Feature not available, do nothing
+    }
+
+    if (checked) {
+      // Show opt-in modal when trying to enable
+      setShowSmsOptInModal(true);
+    } else {
+      // Allow direct disable
+      form.setFieldsValue({ smsNotifications: false });
+    }
+  };
 
   const handleBasicInfoSubmit = (values: any) => {
     console.log('Basic Info Submitted:', values);
@@ -208,10 +247,11 @@ const AccountDetails = () => {
                     {(() => {
                       const hasSmsFeature = hasFeature(billingData?.plan?.features as any, FEATURES.TEXT_NOTIFICATIONS);
                       const isDisabled = !isEditing || !hasSmsFeature;
+                      const currentValue = form.getFieldValue('smsNotifications');
 
                       return (
                         <Tooltip title={!hasSmsFeature ? 'Your current plan does not support SMS notifications' : ''} placement="top">
-                          <Switch disabled={isDisabled} checked={hasSmsFeature ? undefined : false} />
+                          <Switch key={`sms-opt-in-${dataLoaded}`} disabled={isDisabled} checked={hasSmsFeature ? currentValue : false} onChange={handleSmsToggle} />
                         </Tooltip>
                       );
                     })()}
@@ -283,6 +323,9 @@ const AccountDetails = () => {
           </Card>
         </Space>
       </div>
+
+      {/* SMS Opt-In Modal */}
+      <SmsOptInModal isVisible={showSmsOptInModal} onConfirm={handleSmsOptInConfirm} onCancel={handleSmsOptInCancel} businessName="FreeAgentPortal" messagesPerMonth={30} />
     </div>
   );
 };
