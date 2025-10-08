@@ -16,11 +16,11 @@ export const navigation = (options?: any) => {
           link: '/',
           icon: <RiHome2Fill />,
         },
-        feed: {
-          title: 'Feed',
-          link: '/feed',
-          icon: <BsBroadcastPin />,
-        },
+        // feed: {
+        //   title: 'Feed',
+        //   link: '/feed',
+        //   icon: <BsBroadcastPin />,
+        // },
         notifications: {
           title: 'Notifications',
           link: '/notifications',
@@ -56,11 +56,6 @@ export const navigation = (options?: any) => {
           title: 'Edit Account Settings',
           link: '/account_details',
           icon: <CgProfile />,
-        },
-        keys: {
-          title: 'API Keys',
-          link: '/account_details/keys',
-          icon: <IoCodeSlashOutline />,
         },
         support: {
           title: 'Support',

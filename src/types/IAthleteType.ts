@@ -7,6 +7,7 @@ export interface IAthlete {
   fullName: string;
   contactNumber?: string;
   email?: string;
+  isActive: boolean;
   birthPlace?: {
     city: string;
     state: string;
