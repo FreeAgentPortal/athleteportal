@@ -45,7 +45,6 @@ const AccountDetails = () => {
 
   useEffect(() => {
     if (userData?.payload) {
-
       form.setFieldsValue({
         firstName: userData.payload.firstName,
         lastName: userData.payload.lastName,
@@ -64,6 +63,8 @@ const AccountDetails = () => {
   const handleSmsOptInConfirm = () => {
     form.setFieldsValue({ smsNotifications: true });
     setShowSmsOptInModal(false);
+    // Force re-render by updating dataLoaded state
+    setDataLoaded((prev) => !prev);
     addAlert({
       type: 'success',
       message: 'SMS notifications enabled successfully',
@@ -75,22 +76,30 @@ const AccountDetails = () => {
   const handleSmsOptInCancel = () => {
     form.setFieldsValue({ smsNotifications: false });
     setShowSmsOptInModal(false);
+    // Force re-render by updating dataLoaded state
+    setDataLoaded((prev) => !prev);
   };
 
   // Handle SMS switch change
   const handleSmsToggle = (checked: boolean) => {
+    console.log(checked);
     const hasSmsFeature = hasFeature(billingData?.plan?.features as any, FEATURES.TEXT_NOTIFICATIONS);
 
     if (!hasSmsFeature) {
+      console.log(`does not have feature`);
       return; // Feature not available, do nothing
     }
 
     if (checked) {
+      console.log(`wants to enable`);
       // Show opt-in modal when trying to enable
       setShowSmsOptInModal(true);
     } else {
+      console.log(`wants to disable`);
       // Allow direct disable
       form.setFieldsValue({ smsNotifications: false });
+      // Force re-render to update the switch display
+      setDataLoaded((prev) => !prev);
     }
   };
 

@@ -78,6 +78,25 @@ const SmsOptInModal: React.FC<SmsOptInModalProps> = ({ isVisible, onConfirm, onC
           </Text>
         </div>
 
+        <div>
+          <Text type="secondary" style={{ fontSize: '12px', color: '#666' }}>
+            <strong>Privacy Notice:</strong> Your information will be used in accordance with our{' '}
+            <a href="https://thefreeagentportal.com/legal/privacy" target="_blank" rel="noopener noreferrer">
+              Privacy Policy
+            </a>
+            . We respect your privacy and will not share your information with third parties without your consent.
+          </Text>
+        </div>
+        <div>
+          <Text type="secondary" style={{ fontSize: '12px', color: '#666' }}>
+            <strong>SMS Policy Notice:</strong> Please review our{' '}
+            <a href="https://thefreeagentportal.com/legal/sms-terms" target="_blank" rel="noopener noreferrer">
+              SMS Policy
+            </a>
+            . By opting in, you agree to comply with the terms outlined in our SMS Policy.
+          </Text>
+        </div>
+
         <Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)} style={{ alignSelf: 'flex-start' }}>
           <Text style={{ fontSize: '14px', color: '#333' }}>I have read and agree to the SMS opt-in terms and conditions above</Text>
         </Checkbox>

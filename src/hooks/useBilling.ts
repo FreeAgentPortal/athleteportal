@@ -19,7 +19,7 @@ export interface IBilling {
   setupFeePaid?: boolean;
   createdAt: Date;
   updatedAt: Date;
-  vaulted: Boolean;
+  vaulted: boolean;
   vaultId: string;
   nextBillingDate?: Date;
   needsUpdate?: boolean;

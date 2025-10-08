@@ -49,11 +49,11 @@ const PageLayout = (props: Props) => {
       return 'verification';
     }
 
-    if (props.neededFeature) {
-      if (!hasFeature(loggedInData, props.neededFeature)) {
-        return 'feature';
-      }
-    }
+    // if (props.neededFeature) {
+    //   if (!hasFeature(loggedInData, props.neededFeature)) {
+    //     return 'feature';
+    //   }
+    // }
 
     return false as boolean;
   };
