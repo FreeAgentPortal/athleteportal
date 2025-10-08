@@ -1,0 +1,62 @@
+@use '@/styles/globals.scss' as *;
+
+.container {
+  background: var(--card-background, #fff);
+  border-radius: 8px;
+  overflow: hidden;
+
+  .header {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+    background: var(--primary-light, #f8f9fa);
+
+    .accountInfo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .twitterIcon {
+        font-size: 24px;
+        color: #1da1f2; // Twitter blue
+      }
+
+      .rssIcon {
+        font-size: 24px;
+        color: #ff6600; // RSS orange
+      }
+
+      .accountDetails {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+
+        .accountName {
+          font-weight: 600;
+          font-size: 16px;
+          color: var(--text-primary);
+        }
+
+        .accountUsername {
+          font-size: 14px;
+          color: var(--text-secondary);
+        }
+      }
+    }
+  }
+
+  .postsContainer {
+    max-height: 400px;
+    overflow-y: auto;
+
+    .noPosts {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-secondary);
+
+      p {
+        margin: 0;
+        font-style: italic;
+      }
+    }
+  }
+}

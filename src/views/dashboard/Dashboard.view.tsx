@@ -6,10 +6,11 @@ import DashboardHeader from './layout/header/Header.layout';
 import Masonry from 'react-masonry-css';
 import dashboardCards, { Card as CardType } from './Cards.data';
 import { QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useSelectedProfile } from '@/hooks/useSelectedProfile';
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
-  const selectedProfile = queryClient.getQueryData(['profile', 'athlete']) as any;
+  const { selectedProfile} = useSelectedProfile();
   const [cards] = useState(dashboardCards);
 
   // Setup your breakpoints
@@ -43,7 +44,7 @@ const Dashboard = () => {
                   }}
                 >
                   <Card title={card.title} gridKey={card.gridKey}>
-                    {card.component({ data: selectedProfile?.payload })}
+                    {card.component({ data: selectedProfile })}
                   </Card>
                 </div>
               ) : (
@@ -55,7 +56,7 @@ const Dashboard = () => {
                     flexBasis: `${cardSize * 100}%`,
                   }}
                 >
-                  {card.component({ data: selectedProfile?.payload })}
+                  {card.component({ data: selectedProfile })}
                 </div>
               );
             })}

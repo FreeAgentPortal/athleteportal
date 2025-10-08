@@ -2,6 +2,8 @@ import { QueryClient } from '@tanstack/react-query';
 import NewsCard from './components/cards/newsCard/NewsCard.component';
 import ProfileCard from './components/cards/profileCard/ProfileCard.component';
 import { DashboardRulesEngine } from './DashboardRulesEngine';
+import RecentAthleteSignups from './components/cards/recentAthletes/RecentAthleteSignups.component';
+import TwitterCard from './components/cards/twitterCard/TwitterCard.component';
 export interface CardComponentProps {
   data: any; // or AthleteProfile | TeamProfile | etc when you type it
 }
@@ -23,7 +25,7 @@ export default [
     order: 2,
     size: 2,
     isCard: true,
-    hideIf: DashboardRulesEngine.noNews,
+    // hideIf: DashboardRulesEngine.noNews,
   },
   {
     title: 'Profile',
@@ -33,5 +35,25 @@ export default [
     size: 4,
     isCard: false,
     hideIf: DashboardRulesEngine.profileIncomplete,
+  },
+  {
+    title: 'Recent Athlete Signups',
+    component: ({ data }: CardComponentProps) => <RecentAthleteSignups />,
+    gridKey: 'recent-athlete-signups',
+    order: 4,
+    size: 1,
+    isCard: true,
+    // hideIf: DashboardRulesEngine.noRecentAthletes,
+  },
+  {
+    title: 'Latest Updates',
+    component: ({ data }: CardComponentProps) => (
+      <TwitterCard feedUrl="https://rss.app/feeds/_OQlYV7HprFXS1idX.xml" feedTitle="Latest Updates" maxPosts={10} useTwitterIcon={true} />
+    ),
+    gridKey: 'rss-updates',
+    order: 3,
+    size: 2,
+    isCard: false,
+    // hideIf: DashboardRulesEngine.noRSSUpdates,
   },
 ] as Card[];
