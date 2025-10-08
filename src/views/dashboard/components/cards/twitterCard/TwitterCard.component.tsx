@@ -31,11 +31,12 @@ const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/_OQlYV7HprFXS1idX.xml', 
 
     // Extract feed information
     const channel = xmlDoc.querySelector('channel');
+    const imageUrl = channel?.querySelector('image url')?.textContent || channel?.querySelector('image')?.querySelector('url')?.textContent;
     const feed = {
       title: channel?.querySelector('title')?.textContent || feedTitle,
       description: channel?.querySelector('description')?.textContent || 'RSS Feed',
       link: channel?.querySelector('link')?.textContent || '',
-      image: channel?.querySelector('image url')?.textContent || channel?.querySelector('image')?.querySelector('url')?.textContent,
+      image: imageUrl || undefined,
     };
 
     // Extract feed items
