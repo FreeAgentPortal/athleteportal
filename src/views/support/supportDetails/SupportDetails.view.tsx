@@ -4,7 +4,7 @@ import styles from './SupportDetails.module.scss';
 import { useParams } from 'next/navigation';
 import Loader from '@/components/loader/Loader.component';
 import Error from '@/components/error/Error.component';
-import { Button, Divider, Form, Tag } from 'antd';
+import { Button, Divider, Form, Input, Tag } from 'antd';
 import { useUser } from '@/state/auth';
 import TinyEditor from '@/components/tinyEditor/TinyEditor.component';
 import parse from 'html-react-parser';
@@ -164,7 +164,7 @@ const SupportDetails = () => {
               >
                 <div className={styles.message}>
                   <div className={`${styles.sender}`}>{message?.sender?.fullName}</div>
-                  <div className={styles.chatText}>{parse(`${parse(message?.message ?? "")}`)}</div>
+                  <div className={styles.chatText}>{parse(`${parse(message?.message ?? '')}`)}</div>
                 </div>
               </div>
               {/* timestamp */}
@@ -185,7 +185,7 @@ const SupportDetails = () => {
         <div className={styles.editor}>
           <Form layout="vertical" form={form}>
             <Form.Item name="message">
-              <TinyEditor handleChange={(value: string) => form.setFieldsValue({ message: value })} initialContent="" />
+              <Input.TextArea placeholder="Type your message here..." autoSize={{ minRows: 3, maxRows: 6 }} className={styles.textArea} />
             </Form.Item>
             <Button onClick={handleMessage}>Send</Button>
           </Form>
