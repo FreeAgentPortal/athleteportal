@@ -19,7 +19,6 @@ const SupportDetails = () => {
   // pull the id from the url
   const { id } = useParams();
   const { data: loggedInData } = useUser();
-  console.log(loggedInData);
   const containerRef = React.useRef<HTMLDivElement>(null);
   const queryClient = useQueryClient();
   // socket events
