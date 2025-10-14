@@ -2,11 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useInterfaceStore } from '../state/interface';
 import { ITransaction } from './useTransasctions';
 import axios from '@/utils/axios';
-import { 
-  generatePDFReceipt, 
-  generateReceiptFilename,
-  type ReceiptData 
-} from '@/utils/receiptGenerator';
+import { generatePDFReceipt, generateReceiptFilename, type ReceiptData } from '@/utils/receiptGenerator';
 
 interface DownloadReceiptProps {
   transactionId: string;

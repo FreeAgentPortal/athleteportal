@@ -156,7 +156,7 @@ export const ReceiptDocument: React.FC<{ receiptData: ReceiptData }> = ({ receip
   const { transaction, companyInfo } = receiptData;
   const company = companyInfo || {
     name: 'Free Agent Portal',
-    email: 'support@freeagentportal.com'
+    email: 'support@freeagentportal.com',
   };
 
   const getStatusStyle = (status: string) => {
@@ -247,9 +247,7 @@ export const ReceiptDocument: React.FC<{ receiptData: ReceiptData }> = ({ receip
         <View style={styles.footer}>
           <Text style={styles.footerBold}>Thank you for your business!</Text>
           <Text style={styles.footerText}>This is an official receipt for your payment.</Text>
-          {company.email && (
-            <Text style={styles.footerText}>Questions? Contact us at {company.email}</Text>
-          )}
+          {company.email && <Text style={styles.footerText}>Questions? Contact us at {company.email}</Text>}
           <Text style={styles.footerText}>Receipt generated on {formatDate(new Date())}</Text>
         </View>
       </Page>
