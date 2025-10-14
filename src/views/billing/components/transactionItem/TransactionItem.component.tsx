@@ -69,7 +69,7 @@ const TransactionItem = ({ transaction, onDownloadReceipt }: TransactionItemProp
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: currency,
-    }).format(amount / 100); // Assuming amount is in cents
+    }).format(amount); // Assuming amount is in cents
   };
 
   const getPaymentMethod = () => {

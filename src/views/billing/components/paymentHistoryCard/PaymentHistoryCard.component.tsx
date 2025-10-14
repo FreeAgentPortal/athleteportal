@@ -33,8 +33,8 @@ const PaymentHistoryCard = () => {
         <TransactionItem
           key={transaction._id}
           transaction={transaction}
-          onDownloadReceipt={(transactionId, format = 'pdf') => {
-            handleDownload(transaction, format as 'pdf' | 'html');
+          onDownloadReceipt={(transactionId) => {
+            handleDownload(transaction);
           }}
         />
       ))}
