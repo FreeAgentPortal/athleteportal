@@ -7,6 +7,7 @@ export interface RSSFeedItem {
   author?: string;
   content?: string;
   guid?: string;
+  mediaUrl?: string;
 }
 
 export interface RSSFeedData {

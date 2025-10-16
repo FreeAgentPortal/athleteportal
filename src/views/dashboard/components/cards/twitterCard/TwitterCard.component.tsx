@@ -14,82 +14,108 @@ interface TwitterCardProps {
   useTwitterIcon?: boolean; // Whether to show Twitter icon instead of RSS icon
 }
 
-const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/t1BZDo5ufDDD481P.xml', feedTitle = 'RSS Feed', maxPosts = 3, useTwitterIcon = true }: TwitterCardProps) => {
+const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/v1.1/_ce7ZbJOuBULzU6DG.json', feedTitle = 'RSS Feed', maxPosts = 3, useTwitterIcon = true }: TwitterCardProps) => {
   const [feedData, setFeedData] = useState<RSSFeedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const parseRSSFeed = (xmlText: string): RSSFeedData => {
-    const parser = new DOMParser();
-    const xmlDoc = parser.parseFromString(xmlText, 'text/xml');
+  const parseJSONFeed = (jsonData: any): RSSFeedData => {
+    // Helper function to extract text content from HTML
+    const extractTextFromHTML = (htmlString: string): string => {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlString;
+      return tempDiv.textContent || tempDiv.innerText || '';
+    };
 
-    // Check for parsing errors
-    const parserError = xmlDoc.querySelector('parsererror');
-    if (parserError) {
-      throw 'Failed to parse RSS feed';
-    }
-
+    console.log(jsonData);
     // Extract feed information
-    const channel = xmlDoc.querySelector('channel');
-    const imageUrl = channel?.querySelector('image url')?.textContent || channel?.querySelector('image')?.querySelector('url')?.textContent;
     const feed = {
-      title: channel?.querySelector('title')?.textContent || feedTitle,
-      description: channel?.querySelector('description')?.textContent || 'RSS Feed',
-      link: channel?.querySelector('link')?.textContent || '',
-      image: imageUrl || undefined,
+      title: jsonData.title || feedTitle,
+      description: jsonData.description || 'RSS Feed',
+      link: jsonData.home_page_url || jsonData.feed_url || '',
+      image: jsonData.icon || jsonData.image || undefined,
     };
 
     // Extract feed items
-    const items = Array.from(xmlDoc.querySelectorAll('item'))
-      .slice(0, maxPosts)
-      .map((item, index) => {
-        const title = item.querySelector('title')?.textContent || '';
-        const description = item.querySelector('description')?.textContent || '';
-        const link = item.querySelector('link')?.textContent || '';
-        const pubDate = item.querySelector('pubDate')?.textContent || new Date().toISOString();
-        const guid = item.querySelector('guid')?.textContent || `item-${index}`;
-        const author = item.querySelector('author')?.textContent || item.querySelector('dc\\:creator')?.textContent || '';
+    const items = (jsonData.items || []).slice(0, maxPosts).map((item: any, index: number) => {
+      const title = item.title || '';
+      const rawDescription = item.content_html || item.content_text || item.summary || '';
+      const description = extractTextFromHTML(rawDescription);
+      const link = item.url || item.external_url || '';
+      const pubDate = item.date_published || item.date_modified || new Date().toISOString();
+      const guid = item.id || `item-${index}`;
+      const author = item.authors?.[0]?.name || item.author?.name || '';
 
-        return {
-          id: guid,
-          title,
-          description,
-          link,
-          pubDate,
-          author,
-          guid,
-        } as RSSFeedItem;
-      });
+      // Look for media/images in various JSON feed formats
+      let mediaUrl = '';
+      if (item.image) {
+        mediaUrl = item.image;
+      } else if (item.attachments?.length > 0) {
+        const imageAttachment = item.attachments.find((att: any) => att.mime_type?.startsWith('image/') || att.url?.match(/\.(jpg|jpeg|png|gif|webp)$/i));
+        if (imageAttachment) {
+          mediaUrl = imageAttachment.url;
+        }
+      } else if (item._rss?.enclosure?.url) {
+        mediaUrl = item._rss.enclosure.url;
+      }
+
+      return {
+        id: guid,
+        title,
+        description,
+        link,
+        pubDate,
+        author,
+        guid,
+        mediaUrl: mediaUrl || undefined,
+      } as RSSFeedItem;
+    });
 
     return { items, feed };
   };
 
   useEffect(() => {
-    const fetchRSSFeed = async () => {
+    const fetchJSONFeed = async () => {
       try {
         setIsLoading(true);
         setError(null);
 
-        // Use a CORS proxy to fetch the RSS feed
-        const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
-        const response = await fetch(proxyUrl);
+        // Direct fetch for JSON feeds (no CORS proxy needed for most JSON feeds)
+        let response;
+        try {
+          response = await fetch(feedUrl);
+        } catch (corsError) {
+          // Fallback to CORS proxy if direct fetch fails
+          const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(feedUrl)}`;
+          response = await fetch(proxyUrl);
+
+          if (!response.ok) {
+            throw `HTTP error! status: ${response.status}`;
+          }
+
+          const proxyData = await response.json();
+          const jsonData = JSON.parse(proxyData.contents);
+          const rssData = parseJSONFeed(jsonData);
+          setFeedData(rssData);
+          return;
+        }
 
         if (!response.ok) {
           throw `HTTP error! status: ${response.status}`;
         }
 
-        const data = await response.json();
-        const rssData = parseRSSFeed(data.contents);
+        const jsonData = await response.json();
+        const rssData = parseJSONFeed(jsonData);
         setFeedData(rssData);
       } catch (err) {
-        console.error('Error fetching RSS feed:', err);
-        setError(typeof err === 'string' ? err : 'Failed to fetch RSS feed');
+        console.error('Error fetching JSON feed:', err);
+        setError(typeof err === 'string' ? err : 'Failed to fetch JSON feed');
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchRSSFeed();
+    fetchJSONFeed();
   }, [feedUrl, maxPosts, feedTitle]);
 
   if (isLoading) return <Skeleton active />;
@@ -125,6 +151,15 @@ const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/t1BZDo5ufDDD481P.xml', f
                 },
                 created_at: item.pubDate,
                 link: item.link,
+                media: item.mediaUrl
+                  ? [
+                      {
+                        type: 'photo' as const,
+                        url: item.mediaUrl,
+                        preview_image_url: item.mediaUrl,
+                      },
+                    ]
+                  : undefined,
               }}
               compact={true}
             />

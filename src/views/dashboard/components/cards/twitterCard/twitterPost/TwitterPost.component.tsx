@@ -49,8 +49,8 @@ const TwitterPost = ({ post, compact = false }: TwitterPostProps) => {
         <div className={styles.authorInfo}>
           {post.author.profile_image_url && <img src={post.author.profile_image_url} alt={post.author.name} className={styles.avatar} />}
           <div className={styles.authorDetails}>
-            <span className={styles.authorName}>{post.author.name}</span>
-            <span className={styles.authorUsername}>@{post.author.username}</span>
+            {/* <span className={styles.authorName}>{post.author.name}</span> */}
+            <span className={styles.authorName}>@{post.author.username}</span>
           </div>
         </div>
         <span className={styles.timestamp}>{formatTime(post.created_at)}</span>
@@ -59,6 +59,23 @@ const TwitterPost = ({ post, compact = false }: TwitterPostProps) => {
       <div className={styles.content}>
         <p className={styles.text}>{compact ? truncateText(post.text, 120) : post.text}</p>
         {post.content && <p className={styles.description}>{compact ? truncateText(post.content, 150) : post.content}</p>}
+
+        {post.media && post.media.length > 0 && (
+          <div className={styles.mediaContainer}>
+            {post.media.map((media, index) => (
+              <img
+                key={index}
+                src={media.url}
+                alt="Post media"
+                className={styles.mediaImage}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       <div className={styles.actions}>
