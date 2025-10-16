@@ -48,7 +48,7 @@ export default [
   {
     title: 'Latest Updates',
     component: ({ data }: CardComponentProps) => (
-      <TwitterCard feedUrl="https://rss.app/embed/v1/list/t1BZDo5ufDDD481P" feedTitle="Latest Updates" maxPosts={10} useTwitterIcon={true} />
+      <TwitterCard feedUrl="https://rss.app/feeds/t1BZDo5ufDDD481P.xml" feedTitle="Latest Updates" maxPosts={10} useTwitterIcon={true} />
     ),
     gridKey: 'rss-updates',
     order: 3,
