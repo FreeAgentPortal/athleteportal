@@ -14,7 +14,7 @@ interface TwitterCardProps {
   useTwitterIcon?: boolean; // Whether to show Twitter icon instead of RSS icon
 }
 
-const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/_OQlYV7HprFXS1idX.xml', feedTitle = 'RSS Feed', maxPosts = 3, useTwitterIcon = true }: TwitterCardProps) => {
+const TwitterCard = ({ feedUrl = 'https://rss.app/feeds/t1BZDo5ufDDD481P.xml', feedTitle = 'RSS Feed', maxPosts = 3, useTwitterIcon = true }: TwitterCardProps) => {
   const [feedData, setFeedData] = useState<RSSFeedData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
