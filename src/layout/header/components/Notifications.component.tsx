@@ -8,21 +8,16 @@ import NotificationItem from '@/components/notificationItem/NotificationItem.com
 import NotificationType from '@/types/NotificationType';
 import useApiHook from '@/hooks/useApi';
 import { useUser } from '@/state/auth';
+import useNotifications from '@/hooks/useNotifications';
 
-const Notifications = () => {
+const Notifications = () => { 
   const [isOpen, setIsOpen] = useState<any>();
-  const { data: user } = useUser();
-  const { data } = useApiHook({
-    url: `/notification`,
-    key: 'notifications',
-    method: 'GET',
-    enabled: !!user?._id,
-    filter: `userTo;${user?._id}`
-  });
+  const { notifications } = useNotifications();
+
   return (
     <div className={styles.container}>
       <Tooltip title="Notifications">
-        <Badge count={data?.payload.filter((n: any) => !n.opened).length}>
+        <Badge count={notifications.filter((n: any) => !n.opened).length}>
           <Button type="text" onClick={() => setIsOpen(!isOpen)} className={styles.button}>
             <IoIosNotifications />
           </Button>
@@ -32,16 +27,11 @@ const Notifications = () => {
       <div className={`${styles.notifications} ${isOpen ? styles.open : ''}`}>
         <div className={styles.header}>
           <p>Notifications</p>
-          <Badge
-            count={
-              data?.payload.filter((n: any) => !n.opened).length
-            }
-            size="small"
-          />
+          <Badge count={notifications.filter((n: any) => !n.opened).length} size="small" />
         </div>
 
-        {data?.payload.length > 0 ? (
-          data?.payload.slice(0, data?.payload.length > 3 ? 3 : data?.payload.length).map((notification: NotificationType) => {
+        {notifications.length > 0 ? (
+          notifications.slice(0, notifications.length > 3 ? 3 : notifications.length).map((notification: NotificationType) => {
             return <NotificationItem notification={notification} key={notification._id} small={true} />;
           })
         ) : (

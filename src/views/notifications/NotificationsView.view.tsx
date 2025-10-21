@@ -1,33 +1,14 @@
 'use client';
 import Container from '@/layout/container/Container.layout';
 import styles from './NotificationsView.module.scss';
-import Link from 'next/link';
-import { Badge, Button, Empty, Skeleton } from 'antd';
-import { AiFillDelete, AiFillExclamationCircle } from 'react-icons/ai';
-import { FiExternalLink } from 'react-icons/fi';
-import Error from '@/components/error/Error.component';
-import { useState } from 'react';
-import getNotificationLink from '@/utils/getNotificationLink';
+import { Button, Empty } from 'antd';
 import NotificationItem from '@/components/notificationItem/NotificationItem.component';
 import NotificationType from '@/types/NotificationType';
-import useApiHook from '@/hooks/useApi';
-import { useUser } from '@/state/auth';
+import useNotifications from '@/hooks/useNotifications';
 
 const NotificationsView = () => {
-  const { data: user } = useUser();
-  const { data } = useApiHook({
-    url: `/notification`,
-    key: 'notifications',
-    method: 'GET',
-    enabled: !!user?._id,
-    filter: `userTo;${user?._id}`
-  });
+  const { notifications, markAllAsRead } = useNotifications();
 
-  const { mutate: updateNotification } = useApiHook({
-    queriesToInvalidate: ['notifications'],
-    key: 'notifications',
-    method: 'POST',
-  }) as any;
   return (
     <Container
       title={
@@ -41,15 +22,15 @@ const NotificationsView = () => {
           >
             Notifications
           </span>
-          <Button type="primary" onClick={() => updateNotification({ url: '' })}>
+          <Button type="primary" onClick={markAllAsRead}>
             Mark all Read
           </Button>
         </div>
       }
     >
       <div className={styles.notifications}>
-        {data?.payload?.length > 0 ? (
-          data?.payload.map((notification: NotificationType) => {
+        {notifications?.length > 0 ? (
+          notifications.map((notification: NotificationType) => {
             return <NotificationItem notification={notification} key={notification.entityId} />;
           })
         ) : (
