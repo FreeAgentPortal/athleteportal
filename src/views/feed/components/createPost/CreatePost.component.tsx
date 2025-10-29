@@ -7,6 +7,7 @@ import { Media, Visibility } from '@/types/ISocialPost';
 import { useSelectedProfile } from '@/hooks/useSelectedProfile';
 import { useUser } from '@/state/auth';
 import MediaUploadModal from '../../modals/mediaUploadModal/MediaUploadModal.component';
+import YouTubeLinkModal from '../../modals/youtubeLinkModal/YouTubeLinkModal.component';
 import useApiHook from '@/hooks/useApi';
 import { useInterfaceStore } from '@/state/interface';
 
@@ -30,6 +31,7 @@ const CreatePost = () => {
   const [allowComments, setAllowComments] = useState(true);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [showMediaModal, setShowMediaModal] = useState(false);
+  const [showYouTubeModal, setShowYouTubeModal] = useState(false);
   const [tempFileList, setTempFileList] = useState<UploadFile[]>([]);
   const [tempMedia, setTempMedia] = useState<Media[]>([]);
 
@@ -85,6 +87,47 @@ const CreatePost = () => {
     const newMedia = media.filter((_, i) => i !== index);
     setFileList(newFileList);
     setMedia(newMedia);
+  };
+
+  const handleOpenYouTubeModal = () => {
+    setShowYouTubeModal(true);
+  };
+
+  const handleCloseYouTubeModal = () => {
+    setShowYouTubeModal(false);
+  };
+
+  const handleAddYouTube = (embedUrls: string[]) => {
+    const newVideos: Media[] = [];
+    const newFiles: UploadFile[] = [];
+
+    embedUrls.forEach((embedUrl) => {
+      // Extract video ID from embed URL for thumbnail
+      const videoId = embedUrl.split('/').pop()?.split('?')[0];
+      const thumbnailUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+      // Add video to media array
+      const newVideo: Media = {
+        kind: 'video',
+        url: embedUrl,
+        thumbUrl: thumbnailUrl,
+      };
+
+      // Create a fake UploadFile for display purposes
+      const newFile: UploadFile = {
+        uid: `youtube-${Date.now()}-${Math.random()}`,
+        name: 'YouTube Video',
+        status: 'done',
+        url: embedUrl,
+        thumbUrl: thumbnailUrl,
+      };
+
+      newVideos.push(newVideo);
+      newFiles.push(newFile);
+    });
+
+    setMedia([...media, ...newVideos]);
+    setFileList([...fileList, ...newFiles]);
   };
 
   const handlePost = async () => {
@@ -190,7 +233,7 @@ const CreatePost = () => {
               <button className={styles.mediaButton} type="button" onClick={handleOpenMediaModal}>
                 📷 Photo
               </button>
-              <button className={styles.mediaButton} type="button" disabled>
+              <button className={styles.mediaButton} type="button" onClick={handleOpenYouTubeModal}>
                 🎥 Video
               </button>
             </div>
@@ -230,6 +273,9 @@ const CreatePost = () => {
         onClose={handleCloseMediaModal}
         onDone={handleDoneMediaModal}
       />
+
+      {/* YouTube Link Modal */}
+      <YouTubeLinkModal visible={showYouTubeModal} onClose={handleCloseYouTubeModal} onAdd={handleAddYouTube} />
     </div>
   );
 };

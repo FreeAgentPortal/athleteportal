@@ -12,10 +12,48 @@ interface MediaOnlyCardProps {
 const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
   const mediaItems = post.media || [];
-  const imageUrls = mediaItems.map((media) => media.url);
+  const imageUrls = mediaItems.filter((m) => m.kind === 'image').map((media) => media.url);
 
   const handleImageClick = (index: number) => {
-    setSelectedImageIndex(index);
+    // Only open viewer for images, not videos
+    const item = mediaItems[index];
+    if (item.kind === 'image') {
+      const imageOnlyIndex = mediaItems.slice(0, index + 1).filter((m) => m.kind === 'image').length - 1;
+      setSelectedImageIndex(imageOnlyIndex);
+    }
+  };
+
+  const renderMediaItem = (media: any, index: number) => {
+    if (media.kind === 'video') {
+      // Extract video ID and create proper embed URL with parameters
+      const videoId = media.url.split('/').pop()?.split('?')[0];
+      const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
+      const thumbnailUrl = media.thumbUrl || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+
+      return (
+        <div className={styles.videoWrapper}>
+          <div
+            className={styles.videoThumbnail}
+            style={{
+              backgroundImage: `url(${thumbnailUrl})`,
+              backgroundColor: '#000',
+              minHeight: '300px',
+            }}
+          >
+            <iframe
+              src={embedUrl}
+              title="YouTube video"
+              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              className={styles.videoIframe}
+              loading="lazy"
+            />
+          </div>
+        </div>
+      );
+    }
+
+    return <Image src={media.url} alt={`Post media ${index + 1}`} width={600} height={400} className={styles.mediaImage} />;
   };
 
   const handleCloseViewer = () => {
@@ -40,7 +78,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
     if (mediaCount === 1) {
       return (
         <div className={styles.singleMedia} onClick={() => handleImageClick(0)}>
-          <Image src={mediaItems[0].url} alt="Post media" width={600} height={400} className={styles.mediaImage} />
+          {renderMediaItem(mediaItems[0], 0)}
         </div>
       );
     }
@@ -50,7 +88,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
         <div className={styles.twoMediaGrid}>
           {mediaItems.map((media, index) => (
             <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index)}>
-              <Image src={media.url} alt={`Post media ${index + 1}`} width={300} height={300} className={styles.mediaImage} />
+              {renderMediaItem(media, index)}
             </div>
           ))}
         </div>
@@ -61,12 +99,12 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
       return (
         <div className={styles.threeMediaGrid}>
           <div className={styles.mainMedia} onClick={() => handleImageClick(0)}>
-            <Image src={mediaItems[0].url} alt="Post media 1" width={400} height={400} className={styles.mediaImage} />
+            {renderMediaItem(mediaItems[0], 0)}
           </div>
           <div className={styles.sideMedia}>
             {mediaItems.slice(1).map((media, index) => (
               <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index + 1)}>
-                <Image src={media.url} alt={`Post media ${index + 2}`} width={200} height={200} className={styles.mediaImage} />
+                {renderMediaItem(media, index + 1)}
               </div>
             ))}
           </div>
@@ -79,7 +117,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
       <div className={styles.multiMediaGrid}>
         {mediaItems.slice(0, 4).map((media, index) => (
           <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index)}>
-            <Image src={media.url} alt={`Post media ${index + 1}`} width={300} height={300} className={styles.mediaImage} />
+            {renderMediaItem(media, index)}
             {index === 3 && mediaCount > 4 && (
               <div className={styles.moreOverlay}>
                 <span>+{mediaCount - 4}</span>
