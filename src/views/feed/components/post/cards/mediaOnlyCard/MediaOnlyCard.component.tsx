@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import { Post } from '@/types/ISocialPost';
 import ImageViewerModal from '@/views/feed/modals/imageViewerModal/ImageViewerModal.component';
+import VideoViewerModal from '@/views/feed/modals/videoViewerModal/VideoViewerModal.component';
 import styles from './MediaOnlyCard.module.scss';
 
 interface MediaOnlyCardProps {
@@ -11,43 +12,39 @@ interface MediaOnlyCardProps {
 
 const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
+  const [selectedVideoIndex, setSelectedVideoIndex] = useState<number | null>(null);
   const mediaItems = post.media || [];
   const imageUrls = mediaItems.filter((m) => m.kind === 'image').map((media) => media.url);
+  const videos = mediaItems.filter((m) => m.kind === 'video').map((media) => ({ url: media.url, thumbUrl: media.thumbUrl }));
 
-  const handleImageClick = (index: number) => {
-    // Only open viewer for images, not videos
+  const handleMediaClick = (index: number) => {
     const item = mediaItems[index];
     if (item.kind === 'image') {
       const imageOnlyIndex = mediaItems.slice(0, index + 1).filter((m) => m.kind === 'image').length - 1;
       setSelectedImageIndex(imageOnlyIndex);
+    } else if (item.kind === 'video') {
+      const videoOnlyIndex = mediaItems.slice(0, index + 1).filter((m) => m.kind === 'video').length - 1;
+      setSelectedVideoIndex(videoOnlyIndex);
     }
   };
 
   const renderMediaItem = (media: any, index: number) => {
     if (media.kind === 'video') {
-      // Extract video ID and create proper embed URL with parameters
+      // Show thumbnail only - clicking will open modal
       const videoId = media.url.split('/').pop()?.split('?')[0];
-      const embedUrl = `https://www.youtube.com/embed/${videoId}?rel=0&modestbranding=1`;
       const thumbnailUrl = media.thumbUrl || `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
 
       return (
-        <div className={styles.videoWrapper}>
-          <div
-            className={styles.videoThumbnail}
-            style={{
-              backgroundImage: `url(${thumbnailUrl})`,
-              backgroundColor: '#000',
-              minHeight: '300px',
-            }}
-          >
-            <iframe
-              src={embedUrl}
-              title="YouTube video"
-              allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-              className={styles.videoIframe}
-              loading="lazy"
-            />
+        <div className={styles.videoThumbnailWrapper}>
+          <img src={thumbnailUrl} alt="Video thumbnail" className={styles.videoThumbnailImage} />
+          <div className={styles.playIcon}>
+            <svg width="68" height="48" viewBox="0 0 68 48" fill="none">
+              <path
+                d="M66.52 7.74c-.78-2.93-2.49-5.41-5.42-6.19C55.79.13 34 0 34 0S12.21.13 6.9 1.55c-2.93.78-4.63 3.26-5.42 6.19C.06 13.05 0 24 0 24s.06 10.95 1.48 16.26c.78 2.93 2.49 5.41 5.42 6.19C12.21 47.87 34 48 34 48s21.79-.13 27.1-1.55c2.93-.78 4.64-3.26 5.42-6.19C67.94 34.95 68 24 68 24s-.06-10.95-1.48-16.26z"
+                fill="red"
+              />
+              <path d="M45 24L27 14v20" fill="white" />
+            </svg>
           </div>
         </div>
       );
@@ -56,19 +53,35 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
     return <Image src={media.url} alt={`Post media ${index + 1}`} width={600} height={400} className={styles.mediaImage} />;
   };
 
-  const handleCloseViewer = () => {
+  const handleCloseImageViewer = () => {
     setSelectedImageIndex(null);
   };
 
-  const handleNext = () => {
+  const handleCloseVideoViewer = () => {
+    setSelectedVideoIndex(null);
+  };
+
+  const handleNextImage = () => {
     if (selectedImageIndex !== null && selectedImageIndex < imageUrls.length - 1) {
       setSelectedImageIndex(selectedImageIndex + 1);
     }
   };
 
-  const handlePrevious = () => {
+  const handlePreviousImage = () => {
     if (selectedImageIndex !== null && selectedImageIndex > 0) {
       setSelectedImageIndex(selectedImageIndex - 1);
+    }
+  };
+
+  const handleNextVideo = () => {
+    if (selectedVideoIndex !== null && selectedVideoIndex < videos.length - 1) {
+      setSelectedVideoIndex(selectedVideoIndex + 1);
+    }
+  };
+
+  const handlePreviousVideo = () => {
+    if (selectedVideoIndex !== null && selectedVideoIndex > 0) {
+      setSelectedVideoIndex(selectedVideoIndex - 1);
     }
   };
 
@@ -77,7 +90,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
 
     if (mediaCount === 1) {
       return (
-        <div className={styles.singleMedia} onClick={() => handleImageClick(0)}>
+        <div className={styles.singleMedia} onClick={() => handleMediaClick(0)}>
           {renderMediaItem(mediaItems[0], 0)}
         </div>
       );
@@ -87,7 +100,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
       return (
         <div className={styles.twoMediaGrid}>
           {mediaItems.map((media, index) => (
-            <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index)}>
+            <div key={index} className={styles.mediaItem} onClick={() => handleMediaClick(index)}>
               {renderMediaItem(media, index)}
             </div>
           ))}
@@ -98,12 +111,12 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
     if (mediaCount === 3) {
       return (
         <div className={styles.threeMediaGrid}>
-          <div className={styles.mainMedia} onClick={() => handleImageClick(0)}>
+          <div className={styles.mainMedia} onClick={() => handleMediaClick(0)}>
             {renderMediaItem(mediaItems[0], 0)}
           </div>
           <div className={styles.sideMedia}>
             {mediaItems.slice(1).map((media, index) => (
-              <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index + 1)}>
+              <div key={index} className={styles.mediaItem} onClick={() => handleMediaClick(index + 1)}>
                 {renderMediaItem(media, index + 1)}
               </div>
             ))}
@@ -116,7 +129,7 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
     return (
       <div className={styles.multiMediaGrid}>
         {mediaItems.slice(0, 4).map((media, index) => (
-          <div key={index} className={styles.mediaItem} onClick={() => handleImageClick(index)}>
+          <div key={index} className={styles.mediaItem} onClick={() => handleMediaClick(index)}>
             {renderMediaItem(media, index)}
             {index === 3 && mediaCount > 4 && (
               <div className={styles.moreOverlay}>
@@ -136,9 +149,17 @@ const MediaOnlyCard = ({ post }: MediaOnlyCardProps) => {
         visible={selectedImageIndex !== null}
         images={imageUrls}
         currentIndex={selectedImageIndex ?? 0}
-        onClose={handleCloseViewer}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
+        onClose={handleCloseImageViewer}
+        onNext={handleNextImage}
+        onPrevious={handlePreviousImage}
+      />
+      <VideoViewerModal
+        visible={selectedVideoIndex !== null}
+        videos={videos}
+        currentIndex={selectedVideoIndex ?? 0}
+        onClose={handleCloseVideoViewer}
+        onNext={handleNextVideo}
+        onPrevious={handlePreviousVideo}
       />
     </div>
   );
