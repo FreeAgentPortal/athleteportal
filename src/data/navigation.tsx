@@ -16,11 +16,12 @@ export const navigation = (options?: any) => {
           link: '/',
           icon: <RiHome2Fill />,
         },
-        // feed: {
-        //   title: 'Feed',
-        //   link: '/feed',
-        //   icon: <BsBroadcastPin />,
-        // },
+        feed: {
+          title: 'Feed',
+          link: '/feed',
+          icon: <BsBroadcastPin />,
+          hidden: options?.user?.profileRefs['admin'] ? false : true,
+        },
         notifications: {
           title: 'Notifications',
           link: '/notifications',
@@ -103,6 +104,24 @@ export const navigation = (options?: any) => {
         },
       },
       hidden: options?.user ? true : false,
+    }, // error and 404 boundary, always hidden but something for the page layout to point to
+    error_boundary: {
+      title: 'Error Boundary',
+      links: {
+        not_found: {
+          key: 'error_boundary.not_found',
+          title: 'Not Found',
+          link: '/404',
+          icon: <BsBroadcastPin />,
+        },
+        error: {
+          key: 'error_boundary.error',
+          title: 'Error',
+          link: '/error',
+          icon: <BsBroadcastPin />,
+        },
+      },
+      hidden: true,
     },
   };
 };

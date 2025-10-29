@@ -1,0 +1,17 @@
+/* Image Viewer Modal Overrides */
+.image-viewer-modal .ant-modal-content {
+  background: rgba(0, 0, 0, 0.95);
+  padding: 0;
+}
+
+.image-viewer-modal .ant-modal-body {
+  padding: 20px;
+}
+
+.image-viewer-modal .ant-modal-close {
+  color: white;
+}
+
+.image-viewer-modal .ant-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}

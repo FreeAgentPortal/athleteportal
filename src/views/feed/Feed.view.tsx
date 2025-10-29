@@ -1,15 +1,52 @@
+'use client';
 import React from 'react';
 import styles from './Feed.module.scss';
+import { useFeed } from './useFeed';
+import CreatePost from './components/createPost/CreatePost.component';
+import Post from './components/post/Post.component';
 
 const Feed = () => {
-  return <div className={styles.container}>
-    <h1 className={styles.title}>Feed</h1>
-    <p className={styles.description}>This is the feed section where you can see updates and posts.</p>
-    {/* No content to display yet*/}
-    <div className={styles.content}>
-      <p>Content will be added here soon!</p>
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useFeed();
+
+  // Flatten all pages of posts into a single array
+  const posts = data?.pages.flatMap((page) => page.data) || [];
+
+  return (
+    <div className={styles.container}>
+      {/* Post Creation Section */}
+      <div className={styles.createPostContainer}>
+        <CreatePost />
+      </div>
+
+      {/* Feed Content Section */}
+      <div className={styles.feedContainer}>
+        {isLoading ? (
+          <div className={styles.loadingState}>
+            <p>Loading feed...</p>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className={styles.emptyState}>
+            <p>No posts yet. Be the first to share something!</p>
+          </div>
+        ) : (
+          <>
+            {posts.map((post: any, index: number) => (
+              <Post key={post._id || index} post={post} />
+            ))}
+
+            {/* Load More Button */}
+            {hasNextPage && (
+              <div className={styles.loadMoreContainer}>
+                <button className={styles.loadMoreButton} onClick={() => fetchNextPage()} disabled={isFetchingNextPage}>
+                  {isFetchingNextPage ? 'Loading more...' : 'Load More Posts'}
+                </button>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
-  </div>;
+  );
 };
 
 export default Feed;
