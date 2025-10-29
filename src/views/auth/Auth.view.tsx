@@ -14,20 +14,16 @@ const Auth = () => {
   const { data: loggedInData, isLoading: isLoggedInLoading } = useUser();
   useEffect(() => {
     const origin = window.location.origin;
-    const token = window.localStorage.getItem('token');
 
     setRedirectUrl(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
 
-    if (loggedInData || isLoggedInLoading) {
-      setIsAuthenticated(true);
-    } else if (token) {
-      // If token exists, we assume the user is authenticated
+    // Only disable button if we have valid user data or are actively loading
+    if (loggedInData) {
       setIsAuthenticated(true);
     } else {
       setIsAuthenticated(false);
-      // redirect(`${process.env.AUTH_URL}?redirect=${origin + pathname}`);
     }
-  }, [pathname]);
+  }, [pathname, loggedInData]);
 
   return (
     <div className={styles.wrapper}>

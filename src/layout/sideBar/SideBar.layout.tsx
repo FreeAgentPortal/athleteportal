@@ -6,19 +6,18 @@ import { useUser } from '@/state/auth';
 import { useLayoutStore } from '@/state/layout';
 import { useQueryClient } from '@tanstack/react-query';
 import { RxHamburgerMenu } from 'react-icons/rx';
+import { useSelectedProfile } from '@/hooks/useSelectedProfile';
 
 //make a type with children as a prop
 type Props = {
   page: { title: string };
   large?: boolean;
 };
-const SideBar = (props: Props) => {
-  const queryClient = useQueryClient();
+const SideBar = (props: Props) => { 
   const sideBarOpen = useLayoutStore((state) => state.sideBarOpen);
   const toggleSideBar = useLayoutStore((state) => state.toggleSideBar);
   const { data: loggedInData } = useUser();
-  // get query client for selectedProfile
-  const selectedProfile = queryClient.getQueryData(['profile', 'team']) as any;
+  const { selectedProfile } = useSelectedProfile();
 
   return (
     <div className={`${styles.container} ${props.large ? '' : styles.small}`}>
@@ -35,7 +34,7 @@ const SideBar = (props: Props) => {
             </div>
           )}
           <Image
-            src={selectedProfile?.payload?.logos[0]?.href || selectedProfile?.payload?.logoUrl || '/images/logo.png'}
+            src={selectedProfile?.profileImageUrl || '/images/logo.png'}
             width={30}
             height={50}
             className={styles.logo + ' ' + styles.saltLogo}
@@ -53,6 +52,7 @@ const SideBar = (props: Props) => {
         {Object.values(
           navigation({
             user: loggedInData,
+            profile: selectedProfile,
           })
         )
           .filter((i: any) => !i.hidden)
