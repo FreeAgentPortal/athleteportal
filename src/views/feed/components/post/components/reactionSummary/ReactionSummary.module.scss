@@ -3,15 +3,27 @@
 .container {
   display: flex;
   align-items: center;
-  gap: 6px;
+  justify-content: space-between;
   padding: 8px 16px;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.reactions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .reactionIcons {
   display: flex;
   align-items: center;
   margin-right: 4px;
+}
+
+.views {
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .reactionIcon {
@@ -71,4 +83,14 @@
     color: #0066cc;
     text-decoration: underline;
   }
+}
+
+.viewIcon {
+  color: #999;
+}
+
+.viewCount {
+  font-size: 13px;
+  color: #999;
+  font-weight: 400;
 }

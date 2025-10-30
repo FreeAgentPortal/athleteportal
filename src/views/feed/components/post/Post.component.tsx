@@ -10,6 +10,7 @@ import TextWithMediaCard from './cards/textWithMediaCard/TextWithMediaCard.compo
 import EventCard from './cards/eventCard/EventCard.component';
 import ReactionButton from './components/reactionButton/ReactionButton.component';
 import ReactionSummary from './components/reactionSummary/ReactionSummary.component';
+import { usePostView } from './hooks/usePostView';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
@@ -21,6 +22,9 @@ interface PostProps {
 const Post = ({ post }: PostProps) => {
   dayjs.extend(relativeTime);
   const postType = determinePostType(post);
+
+  // Track post views - returns a callback ref
+  const containerRef = usePostView({ postId: post._id, threshold: 5000 });
 
   // Get interaction data from backend
   const interactions = (post as any)?.interactions;
@@ -46,7 +50,7 @@ const Post = ({ post }: PostProps) => {
   const authorName = profile?.fullName;
 
   return (
-    <div className={styles.container}>
+    <div ref={containerRef} className={styles.container}>
       {/* Post Header */}
       <div className={styles.header}>
         <div className={styles.authorInfo}>
@@ -72,7 +76,7 @@ const Post = ({ post }: PostProps) => {
       <div className={styles.content}>{renderPostContent(post.objectDetails as any)}</div>
 
       {/* Reaction Summary */}
-      <ReactionSummary reactionBreakdown={interactions?.reactionBreakdown} totalReactions={interactions?.counts?.reactions || 0} />
+      <ReactionSummary reactionBreakdown={interactions?.reactionBreakdown} totalReactions={interactions?.counts?.reactions || 0} viewCount={interactions?.counts?.views || 0} />
 
       {/* Post Footer */}
       <div className={styles.footer}>
