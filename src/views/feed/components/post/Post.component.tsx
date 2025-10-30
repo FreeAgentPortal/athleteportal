@@ -1,31 +1,40 @@
 'use client';
 import React from 'react';
 import Image from 'next/image';
-import { AiOutlineLike } from 'react-icons/ai';
 import { BiComment } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { Post as PostType } from '@/types/ISocialPost';
 import { determinePostType } from './utils/determinePostType';
 import TextOnlyCard from './cards/textOnlyCard/TextOnlyCard.component';
-import MediaOnlyCard from './cards/mediaOnlyCard/MediaOnlyCard.component';
 import TextWithMediaCard from './cards/textWithMediaCard/TextWithMediaCard.component';
+import EventCard from './cards/eventCard/EventCard.component';
+import ReactionButton from './components/reactionButton/ReactionButton.component';
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
 
 interface PostProps {
   post: PostType;
 }
 
-const Post = ({ post }: PostProps) => { 
-  const postType = determinePostType(post.objectDetails);
+const Post = ({ post }: PostProps) => {
+  dayjs.extend(relativeTime);
+  const postType = determinePostType(post);
+
+  // Get interaction data from backend
+  const interactions = (post as any)?.interactions;
 
   const renderPostContent = (postDetails: PostType) => {
     switch (postType) {
       case 'text-only':
         return <TextOnlyCard post={postDetails} />;
       case 'media-only':
-        return <MediaOnlyCard post={postDetails} />;
       case 'text-with-media':
+        // TextWithMediaCard now handles both cases - with or without body text
         return <TextWithMediaCard post={postDetails} />;
+      case 'event':
+        // EventCard displays event posts from teams
+        return <EventCard event={postDetails as any} />;
       default:
         return <TextOnlyCard post={postDetails} />;
     }
@@ -33,7 +42,7 @@ const Post = ({ post }: PostProps) => {
 
   const profile = (post?.objectDetails as any)?.profile;
   const profileImageUrl = profile?.profileImageUrl;
-  const authorName = profile?.email?.split('@')[0] || 'Unknown User';
+  const authorName = profile?.fullName;
 
   return (
     <div className={styles.container}>
@@ -49,7 +58,7 @@ const Post = ({ post }: PostProps) => {
           </div>
           <div className={styles.authorDetails}>
             <span className={styles.authorName}>{authorName}</span>
-            <span className={styles.timestamp}>{new Date(post?.createdAt).toLocaleDateString()}</span>
+            <span className={styles.timestamp}>{dayjs(post?.createdAt).fromNow()}</span>
           </div>
         </div>
         <div className={styles.actions}>
@@ -63,20 +72,22 @@ const Post = ({ post }: PostProps) => {
 
       {/* Post Footer */}
       <div className={styles.footer}>
-        <button className={styles.interactionButton}>
-          <AiOutlineLike size={18} />
-          <span>Like</span>
-          {post?.counts?.reactions > 0 && <span className={styles.count}>({post.counts.reactions})</span>}
-        </button>
+        <ReactionButton
+          postId={post._id}
+          reactionCount={interactions?.counts?.reactions || 0}
+          hasReacted={interactions?.userInteraction?.hasReacted || false}
+          userReactionType={interactions?.userInteraction?.reactionType}
+          reactionBreakdown={interactions?.reactionBreakdown}
+        />
         <button className={styles.interactionButton}>
           <BiComment size={18} />
           <span>Comment</span>
-          {post?.counts?.comments > 0 && <span className={styles.count}>({post.counts.comments})</span>}
+          {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
         </button>
         <button className={styles.interactionButton}>
           <RiShareForwardLine size={18} />
           <span>Share</span>
-          {post?.counts?.shares > 0 && <span className={styles.count}>({post.counts.shares})</span>}
+          {interactions?.counts?.shares > 0 && <span className={styles.count}>({interactions.counts.shares})</span>}
         </button>
       </div>
     </div>

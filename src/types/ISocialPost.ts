@@ -27,6 +27,10 @@ export type Visibility = 'public' | 'followers' | 'private';
 
 export interface Post {
   objectDetails: any;
+  object: {
+    collection: 'posts' | 'events' | 'other';
+    id: string;
+  };
   _id: string;
   userId: string;
   profile: {
