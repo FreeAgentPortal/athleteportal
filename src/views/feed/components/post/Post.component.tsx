@@ -9,6 +9,7 @@ import TextOnlyCard from './cards/textOnlyCard/TextOnlyCard.component';
 import TextWithMediaCard from './cards/textWithMediaCard/TextWithMediaCard.component';
 import EventCard from './cards/eventCard/EventCard.component';
 import ReactionButton from './components/reactionButton/ReactionButton.component';
+import ReactionSummary from './components/reactionSummary/ReactionSummary.component';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
@@ -69,6 +70,9 @@ const Post = ({ post }: PostProps) => {
 
       {/* Post Content - Dynamic based on type */}
       <div className={styles.content}>{renderPostContent(post.objectDetails as any)}</div>
+
+      {/* Reaction Summary */}
+      <ReactionSummary reactionBreakdown={interactions?.reactionBreakdown} totalReactions={interactions?.counts?.reactions || 0} />
 
       {/* Post Footer */}
       <div className={styles.footer}>
