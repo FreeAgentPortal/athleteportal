@@ -68,7 +68,7 @@ const Post = ({ post }: PostProps) => {
         </div>
         <div className={styles.actions}>
           {/* TODO: Add post menu (edit, delete, etc.) */}
-          <button className={styles.menuButton}>⋯</button>
+          {/* <button className={styles.menuButton}>⋯</button> */}
         </div>
       </div>
 
@@ -87,12 +87,12 @@ const Post = ({ post }: PostProps) => {
           userReactionType={interactions?.userInteraction?.reactionType}
           reactionBreakdown={interactions?.reactionBreakdown}
         />
-        <button className={styles.interactionButton}>
+        <button className={styles.interactionButton} disabled>
           <BiComment size={18} />
           <span>Comment</span>
           {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
         </button>
-        <button className={styles.interactionButton}>
+        <button className={styles.interactionButton} disabled>
           <RiShareForwardLine size={18} />
           <span>Share</span>
           {interactions?.counts?.shares > 0 && <span className={styles.count}>({interactions.counts.shares})</span>}
