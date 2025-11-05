@@ -1,7 +1,10 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import useApiHook from '@/hooks/useApi';
+import { useQueryClient } from '@tanstack/react-query';
 import styles from './CommentInput.module.scss';
+import { useSelectedProfile } from '@/hooks/useSelectedProfile';
 
 interface CommentInputProps {
   postId: string;
@@ -11,23 +14,27 @@ interface CommentInputProps {
 
 const CommentInput = ({ postId, profileImageUrl, authorName }: CommentInputProps) => {
   const [comment, setComment] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const queryClient = useQueryClient();
+  const { selectedProfile } = useSelectedProfile();
+
+  const { mutate: submitComment, isPending: isSubmitting } = useApiHook({
+    method: 'POST',
+    key: ['submit-comment', postId],
+    onSuccessCallback: () => {
+      // Invalidate comments query to refetch with new comment
+      queryClient.invalidateQueries({ queryKey: ['comments', postId] });
+      // Reset input
+      setComment('');
+    },
+  }) as any;
 
   const handleSubmit = async () => {
     if (!comment.trim() || isSubmitting) return;
 
-    setIsSubmitting(true);
-    try {
-      // TODO: Implement API call to post comment
-      console.log('Posting comment:', { postId, comment });
-
-      // Reset after successful post
-      setComment('');
-    } catch (error) {
-      console.error('Failed to post comment:', error);
-    } finally {
-      setIsSubmitting(false);
-    }
+    submitComment({
+      url: `/feed/post/${postId}/comments`,
+      formData: { content: comment, profileId: selectedProfile?._id, profileType: 'AthleteProfile' },
+    });
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

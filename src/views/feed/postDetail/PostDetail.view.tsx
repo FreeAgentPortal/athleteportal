@@ -15,6 +15,10 @@ import ReactionSummary from '@/views/feed/components/post/components/reactionSum
 import CommentInput from './components/commentInput/CommentInput.component';
 import CommentsList from './components/commentList/CommentsList.component';
 import { usePostView } from '@/views/feed/components/post/hooks/usePostView';
+import { determinePostType } from '@/views/feed/components/post/utils/determinePostType';
+import EventDetailCard from '@/views/feed/components/post/cards/eventCard/EventDetailCard.component';
+import TextOnlyCard from '@/views/feed/components/post/cards/textOnlyCard/TextOnlyCard.component';
+import TextWithMediaCard from '@/views/feed/components/post/cards/textWithMediaCard/TextWithMediaCard.component';
 import styles from './PostDetail.module.scss';
 import useApiHook from '@/hooks/useApi';
 
@@ -36,6 +40,8 @@ const PostDetail = ({ postId }: PostDetailProps) => {
     method: 'GET',
     url: `/feed/activity/${postId}`,
     showErrorAlert: false,
+    // 30 seconds
+    refetchInterval: 30000,
   }) as any;
 
   // Track post views - returns a callback ref
@@ -48,6 +54,7 @@ const PostDetail = ({ postId }: PostDetailProps) => {
   const post: PostType | null = postData?.payload || null;
   const profile = post ? (post?.objectDetails as any)?.profile : null;
   const interactions = post ? (post as any)?.interactions : null;
+  const postType = post ? determinePostType(post) : null;
 
   // Update document title based on post summary
   useEffect(() => {
@@ -60,6 +67,21 @@ const PostDetail = ({ postId }: PostDetailProps) => {
       document.title = 'Free Agent Portal';
     };
   }, [post?.body]);
+
+  // Render post content based on type
+  const renderPostContent = (postDetails: PostType) => {
+    switch (postType) {
+      case 'text-only':
+        return <TextOnlyCard post={postDetails} />;
+      case 'media-only':
+      case 'text-with-media':
+        return <TextWithMediaCard post={postDetails} />;
+      case 'event':
+        return <EventDetailCard event={postDetails as any} />;
+      default:
+        return <TextOnlyCard post={postDetails} />;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -116,10 +138,18 @@ const PostDetail = ({ postId }: PostDetailProps) => {
               </div>
             </div>
 
-            {/* Post Content - Placeholder for now */}
-            <div className={styles.postContent}>
-              <p className={styles.contentPlaceholder}>Post content will be rendered here based on post type (text, media, event, etc.)</p>
-            </div>
+            {/* Post Content - Dynamic based on type */}
+            <div className={styles.postContent}>{renderPostContent(post.objectDetails as any)}</div>
+          </div>
+        </div>
+
+        {/* Right Column - Comments Section */}
+        <div className={styles.commentsColumn}>
+          <div className={styles.commentsSection}>
+            <h3 className={styles.commentsTitle}>Comments ({interactions?.counts?.comments || 0})</h3>
+
+            {/* Comment Input */}
+            <CommentInput postId={post._id} profileImageUrl={profileImageUrl} authorName={authorName} />
 
             {/* Engagement Bar */}
             <div className={styles.engagementBar}>
@@ -129,7 +159,6 @@ const PostDetail = ({ postId }: PostDetailProps) => {
                 viewCount={interactions?.counts?.views || 0}
               />
             </div>
-
             {/* Action Buttons */}
             <div className={styles.actionButtons}>
               <ReactionButton
@@ -144,16 +173,6 @@ const PostDetail = ({ postId }: PostDetailProps) => {
                 <span>Share</span>
               </button>
             </div>
-          </div>
-        </div>
-
-        {/* Right Column - Comments Section */}
-        <div className={styles.commentsColumn}>
-          <div className={styles.commentsSection}>
-            <h3 className={styles.commentsTitle}>Comments ({interactions?.counts?.comments || 0})</h3>
-
-            {/* Comment Input */}
-            <CommentInput postId={post._id} profileImageUrl={profileImageUrl} authorName={authorName} />
 
             {/* Comments List */}
             <CommentsList postId={post._id} />
