@@ -1,71 +1,25 @@
 'use client';
 import React from 'react';
+import Link from 'next/link';
 import { EventDocument } from '@/types/IEventType';
 import { IoCalendarOutline, IoLocationOutline, IoTimeOutline, IoPeopleOutline } from 'react-icons/io5';
 import { MdSportsSoccer } from 'react-icons/md';
+import { formatDate, getDateDisplay, getTimeDisplay, getEventTypeLabel, getStatusColor, getLocationDisplay, isMultiDayEvent } from './utils/eventCardHelpers';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {
   event: EventDocument;
+  postId: string;
 }
 
-const EventCard = ({ event }: EventCardProps) => {
-  const formatDate = (date: Date) => {
-    return new Date(date).toLocaleDateString('en-US', {
-      weekday: 'long',
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
-
-  const formatTime = (date: Date) => {
-    return new Date(date).toLocaleTimeString('en-US', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-    });
-  };
-
-  const getEventTypeLabel = (type: string) => {
-    return type.charAt(0).toUpperCase() + type.slice(1);
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'scheduled':
-        return styles.statusScheduled;
-      case 'active':
-        return styles.statusActive;
-      case 'completed':
-        return styles.statusCompleted;
-      case 'canceled':
-        return styles.statusCanceled;
-      case 'postponed':
-        return styles.statusPostponed;
-      default:
-        return '';
-    }
-  };
-
-  const getLocationDisplay = () => {
-    if (event.location.kind === 'virtual') {
-      return event.location.virtual?.platform || 'Virtual Event';
-    }
-    if (event.location.physical) {
-      const parts = [event.location.physical.venueName, event.location.physical.city, event.location.physical.state].filter(Boolean);
-      return parts.join(', ') || 'Physical Location';
-    }
-    return 'Location TBD';
-  };
-
+const EventCard = ({ event, postId }: EventCardProps) => {
   return (
     <div className={styles.container}>
       {/* Event Header */}
       <div className={styles.header}>
         <div className={styles.typeAndStatus}>
           <span className={styles.eventType}>{getEventTypeLabel(event.type)}</span>
-          <span className={`${styles.status} ${getStatusColor(event.status)}`}>{event.status.toUpperCase()}</span>
+          <span className={`${styles.status} ${getStatusColor(event.status, styles)}`}>{event.status.toUpperCase()}</span>
         </div>
         {event.sport && (
           <div className={styles.sport}>
@@ -87,8 +41,8 @@ const EventCard = ({ event }: EventCardProps) => {
         <div className={styles.detailItem}>
           <IoCalendarOutline size={20} className={styles.icon} />
           <div className={styles.detailContent}>
-            <span className={styles.detailLabel}>Date</span>
-            <span className={styles.detailValue}>{formatDate(event.startsAt)}</span>
+            <span className={styles.detailLabel}>{isMultiDayEvent(event.startsAt, event.endsAt) ? 'Dates' : 'Date'}</span>
+            <span className={styles.detailValue}>{getDateDisplay(event.startsAt, event.endsAt)}</span>
           </div>
         </div>
 
@@ -96,7 +50,7 @@ const EventCard = ({ event }: EventCardProps) => {
           <IoTimeOutline size={20} className={styles.icon} />
           <div className={styles.detailContent}>
             <span className={styles.detailLabel}>Time</span>
-            <span className={styles.detailValue}>{event.allDay ? 'All Day' : `${formatTime(event.startsAt)} - ${formatTime(event.endsAt)}`}</span>
+            <span className={styles.detailValue}>{getTimeDisplay(event.startsAt, event.endsAt, event.allDay || false)}</span>
           </div>
         </div>
 
@@ -105,7 +59,7 @@ const EventCard = ({ event }: EventCardProps) => {
           <IoLocationOutline size={20} className={styles.icon} />
           <div className={styles.detailContent}>
             <span className={styles.detailLabel}>Location</span>
-            <span className={styles.detailValue}>{getLocationDisplay()}</span>
+            <span className={styles.detailValue}>{getLocationDisplay(event)}</span>
           </div>
         </div>
 
@@ -165,10 +119,27 @@ const EventCard = ({ event }: EventCardProps) => {
         </div>
       )}
 
-      {/* Action Button */}
+      {/* Action Buttons */}
       <div className={styles.actions}>
-        <button className={styles.primaryButton}>{event.registration?.required ? 'Register Now' : 'View Details'}</button>
-        {event.location.kind === 'virtual' && event.location.virtual?.meetingUrl && <button className={styles.secondaryButton}>Join Virtual Event</button>}
+        {event.registration?.required ? (
+          <>
+            <Link href={`/feed/${postId}?action=register`} className={styles.primaryButton}>
+              Register Now
+            </Link>
+            <Link href={`/feed/${postId}`} className={styles.secondaryButton}>
+              View Details
+            </Link>
+          </>
+        ) : (
+          <Link href={`/feed/${postId}`} className={styles.primaryButton}>
+            View Details
+          </Link>
+        )}
+        {event.location.kind === 'virtual' && event.location.virtual?.meetingUrl && (
+          <a href={event.location.virtual.meetingUrl} target="_blank" rel="noopener noreferrer" className={styles.virtualButton}>
+            Join Virtual Event
+          </a>
+        )}
       </div>
     </div>
   );

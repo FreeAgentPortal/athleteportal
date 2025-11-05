@@ -39,7 +39,7 @@ const Post = ({ post }: PostProps) => {
         return <TextWithMediaCard post={postDetails} />;
       case 'event':
         // EventCard displays event posts from teams
-        return <EventCard event={postDetails as any} />;
+        return <EventCard event={postDetails as any} postId={post._id} />;
       default:
         return <TextOnlyCard post={postDetails} />;
     }

@@ -121,6 +121,11 @@
   &:active {
     background: #e0e0e0;
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 .count {

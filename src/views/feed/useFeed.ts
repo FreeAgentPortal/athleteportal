@@ -21,7 +21,8 @@ const fetchFeedPosts = async ({ pageParam = 1 }: { pageParam: number }) => {
   return {
     data: data.payload,
     nextPage: data.metadata.nextPage,
-    hasMore: data.metadata.hasMore,
+    // we need to dynamically check if there's a hasMore based on page, and total pages
+    hasMore: data.metadata.page < data.metadata.pages,
   }; // Ensure your API returns { data: posts, nextPage: pageNumber, hasMore: boolean }
 };
 
