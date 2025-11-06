@@ -8,8 +8,8 @@ export const determinePostType = (post: Post): PostCardType => {
     return 'event';
   }
   post = post.objectDetails as Post;
-  const hasBody = post.body && post.body.trim().length > 0;
-  const hasMedia = post.media && post.media.length > 0;
+  const hasBody = post?.body && post?.body?.trim().length > 0;
+  const hasMedia = post?.media && post?.media?.length > 0;
 
   if (!hasBody && hasMedia) {
     return 'media-only';

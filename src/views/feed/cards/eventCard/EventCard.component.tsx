@@ -4,7 +4,17 @@ import Link from 'next/link';
 import { EventDocument } from '@/types/IEventType';
 import { IoCalendarOutline, IoLocationOutline, IoTimeOutline, IoPeopleOutline } from 'react-icons/io5';
 import { MdSportsSoccer } from 'react-icons/md';
-import { formatDate, getDateDisplay, getTimeDisplay, getEventTypeLabel, getStatusColor, getLocationDisplay, isMultiDayEvent } from './utils/eventCardHelpers';
+import {
+  formatDate,
+  getDateDisplay,
+  getTimeDisplay,
+  getEventTypeLabel,
+  getStatusColor,
+  getLocationDisplay,
+  isMultiDayEvent,
+  isRegistrationOpen,
+  getRegistrationStatus,
+} from './utils/eventCardHelpers';
 import styles from './EventCard.module.scss';
 
 interface EventCardProps {
@@ -13,13 +23,16 @@ interface EventCardProps {
 }
 
 const EventCard = ({ event, postId }: EventCardProps) => {
+  const registrationOpen = isRegistrationOpen(event);
+  const registrationStatusMessage = getRegistrationStatus(event);
+
   return (
     <div className={styles.container}>
       {/* Event Header */}
       <div className={styles.header}>
         <div className={styles.typeAndStatus}>
-          <span className={styles.eventType}>{getEventTypeLabel(event.type)}</span>
-          <span className={`${styles.status} ${getStatusColor(event.status, styles)}`}>{event.status.toUpperCase()}</span>
+          <span className={styles.eventType}>{getEventTypeLabel(event?.type)}</span>
+          <span className={`${styles.status} ${getStatusColor(event?.status, styles)}`}>{event?.status?.toUpperCase()}</span>
         </div>
         {event.sport && (
           <div className={styles.sport}>
@@ -31,8 +44,8 @@ const EventCard = ({ event, postId }: EventCardProps) => {
 
       {/* Event Title & Description */}
       <div className={styles.eventInfo}>
-        <h3 className={styles.title}>{event.title}</h3>
-        {event.description && <p className={styles.description}>{event.description}</p>}
+        <h3 className={styles.title}>{event?.title}</h3>
+        {event?.description && <p className={styles.description}>{event?.description}</p>}
       </div>
 
       {/* Event Details Grid */}
@@ -41,8 +54,8 @@ const EventCard = ({ event, postId }: EventCardProps) => {
         <div className={styles.detailItem}>
           <IoCalendarOutline size={20} className={styles.icon} />
           <div className={styles.detailContent}>
-            <span className={styles.detailLabel}>{isMultiDayEvent(event.startsAt, event.endsAt) ? 'Dates' : 'Date'}</span>
-            <span className={styles.detailValue}>{getDateDisplay(event.startsAt, event.endsAt)}</span>
+            <span className={styles.detailLabel}>{isMultiDayEvent(event?.startsAt, event?.endsAt) ? 'Dates' : 'Date'}</span>
+            <span className={styles.detailValue}>{getDateDisplay(event?.startsAt, event?.endsAt)}</span>
           </div>
         </div>
 
@@ -50,7 +63,7 @@ const EventCard = ({ event, postId }: EventCardProps) => {
           <IoTimeOutline size={20} className={styles.icon} />
           <div className={styles.detailContent}>
             <span className={styles.detailLabel}>Time</span>
-            <span className={styles.detailValue}>{getTimeDisplay(event.startsAt, event.endsAt, event.allDay || false)}</span>
+            <span className={styles.detailValue}>{getTimeDisplay(event?.startsAt, event?.endsAt, event?.allDay || false)}</span>
           </div>
         </div>
 
@@ -78,16 +91,16 @@ const EventCard = ({ event, postId }: EventCardProps) => {
         <div className={styles.registrationInfo}>
           <div className={styles.registrationHeader}>
             <span className={styles.registrationLabel}>Registration Required</span>
-            {event.registration.capacity && <span className={styles.capacity}>Capacity: {event.registration.capacity}</span>}
+            {event.registration.capacity && <span className={styles.capacity}>Capacity: {event?.registration.capacity}</span>}
           </div>
           {event.registration.opensAt && event.registration.closesAt && (
             <p className={styles.registrationDates}>
-              Opens: {formatDate(event.registration.opensAt)} | Closes: {formatDate(event.registration.closesAt)}
+              Opens: {formatDate(event?.registration.opensAt)} | Closes: {formatDate(event?.registration.closesAt)}
             </p>
           )}
           {event.registration.price && (
             <p className={styles.price}>
-              Price: ${event.registration.price} {event.registration.currency || 'USD'}
+              Price: ${event?.registration.price} {event?.registration.currency || 'USD'}
             </p>
           )}
         </div>
@@ -98,11 +111,11 @@ const EventCard = ({ event, postId }: EventCardProps) => {
         <div className={styles.eligibility}>
           <span className={styles.eligibilityLabel}>Eligibility:</span>
           {event.eligibility.positions && event.eligibility.positions.length > 0 && (
-            <span className={styles.eligibilityItem}>Positions: {event.eligibility.positions.join(', ')}</span>
+            <span className={styles.eligibilityItem}>Positions: {event?.eligibility.positions.join(', ')}</span>
           )}
           {event.eligibility.ageRange && (
             <span className={styles.eligibilityItem}>
-              Age: {event.eligibility.ageRange.min || '?'} - {event.eligibility.ageRange.max || '?'}
+              Age: {event?.eligibility.ageRange.min || '?'} - {event?.eligibility.ageRange.max || '?'}
             </span>
           )}
         </div>
@@ -123,9 +136,15 @@ const EventCard = ({ event, postId }: EventCardProps) => {
       <div className={styles.actions}>
         {event.registration?.required ? (
           <>
-            <Link href={`/feed/${postId}?action=register`} className={styles.primaryButton}>
-              Register Now
-            </Link>
+            {registrationOpen ? (
+              <Link href={`/feed/${postId}?action=register`} className={styles.primaryButton}>
+                Register Now
+              </Link>
+            ) : (
+              <button className={styles.primaryButton} disabled>
+                {registrationStatusMessage || 'Registration Closed'}
+              </button>
+            )}
             <Link href={`/feed/${postId}`} className={styles.secondaryButton}>
               View Details
             </Link>
@@ -136,7 +155,7 @@ const EventCard = ({ event, postId }: EventCardProps) => {
           </Link>
         )}
         {event.location.kind === 'virtual' && event.location.virtual?.meetingUrl && (
-          <a href={event.location.virtual.meetingUrl} target="_blank" rel="noopener noreferrer" className={styles.virtualButton}>
+          <a href={event?.location.virtual.meetingUrl} target="_blank" rel="noopener noreferrer" className={styles.virtualButton}>
             Join Virtual Event
           </a>
         )}

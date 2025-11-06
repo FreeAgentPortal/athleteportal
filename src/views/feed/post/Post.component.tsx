@@ -4,14 +4,11 @@ import Image from 'next/image';
 import { BiComment } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { Post as PostType } from '@/types/ISocialPost';
-import { determinePostType } from '../utils/determinePostType';
-import TextOnlyCard from '../cards/textOnlyCard/TextOnlyCard.component';
+import { renderPostContent } from '../utils/renderPostContent';
 import { usePostView } from '../hooks/usePostView';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
-import TextWithMediaCard from '../cards/textWithMediaCard/TextWithMediaCard.component';
-import EventCard from '../cards/eventCard/EventCard.component';
 import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
 import ReactionButton from '../components/reactionButton/ReactionButton.component';
 
@@ -21,29 +18,12 @@ interface PostProps {
 
 const Post = ({ post }: PostProps) => {
   dayjs.extend(relativeTime);
-  const postType = determinePostType(post);
 
   // Track post views - returns a callback ref
   const containerRef = usePostView({ postId: post._id, threshold: 5000 });
 
   // Get interaction data from backend
   const interactions = (post as any)?.interactions;
-
-  const renderPostContent = (postDetails: PostType) => {
-    switch (postType) {
-      case 'text-only':
-        return <TextOnlyCard post={postDetails} />;
-      case 'media-only':
-      case 'text-with-media':
-        // TextWithMediaCard now handles both cases - with or without body text
-        return <TextWithMediaCard post={postDetails} />;
-      case 'event':
-        // EventCard displays event posts from teams
-        return <EventCard event={postDetails as any} postId={post._id} />;
-      default:
-        return <TextOnlyCard post={postDetails} />;
-    }
-  };
 
   const profile = (post?.objectDetails as any)?.profile;
   const profileImageUrl = profile?.profileImageUrl;
@@ -73,7 +53,7 @@ const Post = ({ post }: PostProps) => {
       </div>
 
       {/* Post Content - Dynamic based on type */}
-      <div className={styles.content}>{renderPostContent(post.objectDetails as any)}</div>
+      <div className={styles.content}>{renderPostContent({ post: post as any, mode: 'feed', postId: post._id })}</div>
 
       {/* Reaction Summary */}
       <ReactionSummary reactionBreakdown={interactions?.reactionBreakdown} totalReactions={interactions?.counts?.reactions || 0} viewCount={interactions?.counts?.views || 0} />

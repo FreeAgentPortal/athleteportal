@@ -10,14 +10,11 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import CommentInput from '../components/commentInput/CommentInput.component';
 import CommentsList from '../components/commentList/CommentsList.component';
 import { usePostView } from '@/views/feed/hooks/usePostView';
-import { determinePostType } from '@/views/feed/utils/determinePostType'; 
+import { renderPostContent } from '@/views/feed/utils/renderPostContent';
 import styles from './PostDetail.module.scss';
-import useApiHook from '@/hooks/useApi'; 
+import useApiHook from '@/hooks/useApi';
 import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
 import ReactionButton from '../components/reactionButton/ReactionButton.component';
-import TextOnlyCard from '../cards/textOnlyCard/TextOnlyCard.component';
-import TextWithMediaCard from '../cards/textWithMediaCard/TextWithMediaCard.component';
-import EventDetailCard from '../cards/eventCard/EventDetailCard.component';
 
 dayjs.extend(relativeTime);
 
@@ -51,7 +48,6 @@ const PostDetail = ({ postId }: PostDetailProps) => {
   const post: PostType | null = postData?.payload || null;
   const profile = post ? (post?.objectDetails as any)?.profile : null;
   const interactions = post ? (post as any)?.interactions : null;
-  const postType = post ? determinePostType(post) : null;
 
   // Update document title based on post summary
   useEffect(() => {
@@ -64,21 +60,6 @@ const PostDetail = ({ postId }: PostDetailProps) => {
       document.title = 'Free Agent Portal';
     };
   }, [post?.body]);
-
-  // Render post content based on type
-  const renderPostContent = (postDetails: PostType) => {
-    switch (postType) {
-      case 'text-only':
-        return <TextOnlyCard post={postDetails} />;
-      case 'media-only':
-      case 'text-with-media':
-        return <TextWithMediaCard post={postDetails} />;
-      case 'event':
-        return <EventDetailCard event={postDetails as any} />;
-      default:
-        return <TextOnlyCard post={postDetails} />;
-    }
-  };
 
   if (isLoading) {
     return (
@@ -136,7 +117,7 @@ const PostDetail = ({ postId }: PostDetailProps) => {
             </div>
 
             {/* Post Content - Dynamic based on type */}
-            <div className={styles.postContent}>{renderPostContent(post.objectDetails as any)}</div>
+            <div className={styles.postContent}>{renderPostContent({ post: post as any, mode: 'detail' })}</div>
           </div>
         </div>
 

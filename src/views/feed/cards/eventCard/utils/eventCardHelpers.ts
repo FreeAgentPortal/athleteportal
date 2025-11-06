@@ -73,7 +73,7 @@ export const getTimeDisplay = (startsAt: Date, endsAt: Date, allDay: boolean) =>
  * Capitalizes event type
  */
 export const getEventTypeLabel = (type: string) => {
-  return type.charAt(0).toUpperCase() + type.slice(1);
+  return type?.charAt(0)?.toUpperCase() + type?.slice(1);
 };
 
 /**
@@ -108,4 +108,66 @@ export const getLocationDisplay = (event: EventDocument) => {
     return parts.join(', ') || 'Physical Location';
   }
   return 'Location TBD';
+};
+
+/**
+ * Checks if registration is currently open
+ * Registration is open if:
+ * 1. Current date is after opensAt (if defined)
+ * 2. Current date is before closesAt (if defined)
+ * 3. Event hasn't started yet (before startsAt)
+ */
+export const isRegistrationOpen = (event: EventDocument): boolean => {
+  if (!event.registration?.required) {
+    return false;
+  }
+
+  const now = new Date();
+  const { opensAt, closesAt } = event.registration;
+
+  // Check if registration has opened
+  if (opensAt && new Date(opensAt) > now) {
+    return false; // Registration hasn't opened yet
+  }
+
+  // Check if registration has closed
+  if (closesAt && new Date(closesAt) < now) {
+    return false; // Registration is closed
+  }
+
+  // Check if event has already started
+  if (event.startsAt && new Date(event.startsAt) < now) {
+    return false; // Event has already started
+  }
+
+  return true;
+};
+
+/**
+ * Gets the registration status message
+ */
+export const getRegistrationStatus = (event: EventDocument): string | null => {
+  if (!event.registration?.required) {
+    return null;
+  }
+
+  const now = new Date();
+  const { opensAt, closesAt } = event.registration;
+
+  // Check if registration hasn't opened yet
+  if (opensAt && new Date(opensAt) > now) {
+    return `Registration opens ${formatDate(opensAt)}`;
+  }
+
+  // Check if registration has closed
+  if (closesAt && new Date(closesAt) < now) {
+    return 'Registration closed';
+  }
+
+  // Check if event has already started
+  if (event.startsAt && new Date(event.startsAt) < now) {
+    return 'Event has started';
+  }
+
+  return null;
 };
