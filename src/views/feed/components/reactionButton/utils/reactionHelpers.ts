@@ -1,12 +1,14 @@
 import { AiOutlineLike, AiFillHeart, AiFillFire } from 'react-icons/ai';
 import { FaTrophy } from 'react-icons/fa';
+import { FaHandsClapping } from 'react-icons/fa6';
+
 import { HiHandThumbUp } from 'react-icons/hi2';
 
 export const reactionOptions = [
   { type: 'like' as const, icon: AiOutlineLike, label: 'Like' },
   { type: 'love' as const, icon: AiFillHeart, label: 'Love' },
   { type: 'fire' as const, icon: AiFillFire, label: 'Fire' },
-  { type: 'clap' as const, icon: HiHandThumbUp, label: 'Clap' },
+  { type: 'clap' as const, icon: FaHandsClapping, label: 'Clap' },
   { type: 'trophy' as const, icon: FaTrophy, label: 'Trophy' },
 ];
 
