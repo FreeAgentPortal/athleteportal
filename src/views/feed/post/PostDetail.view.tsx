@@ -10,14 +10,14 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import CommentInput from '../components/commentInput/CommentInput.component';
 import CommentsList from '../components/commentList/CommentsList.component';
 import { usePostView } from '@/views/feed/hooks/usePostView';
-import { determinePostType } from '@/views/feed/utils/determinePostType';
-import TextOnlyCard from '@/views/feed/components/cards/textOnlyCard/TextOnlyCard.component';
+import { determinePostType } from '@/views/feed/utils/determinePostType'; 
 import styles from './PostDetail.module.scss';
-import useApiHook from '@/hooks/useApi';
-import TextWithMediaCard from '../components/cards/textWithMediaCard/TextWithMediaCard.component';
-import EventDetailCard from '../components/cards/eventCard/EventDetailCard.component';
+import useApiHook from '@/hooks/useApi'; 
 import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
 import ReactionButton from '../components/reactionButton/ReactionButton.component';
+import TextOnlyCard from '../cards/textOnlyCard/TextOnlyCard.component';
+import TextWithMediaCard from '../cards/textWithMediaCard/TextWithMediaCard.component';
+import EventDetailCard from '../cards/eventCard/EventDetailCard.component';
 
 dayjs.extend(relativeTime);
 
