@@ -3,8 +3,7 @@ import PostDetail from '@/views/feed/post/PostDetail.view';
 import PageLayout from '@/layout/page/Page.layout';
 import { navigation } from '@/data/navigation';
 
-export default async function PostDetailPage({ params }: { params: { id: string } }) {
-  // await params
+export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   return (
     <PageLayout pages={[navigation().home.links.feed]} largeSideBar>

@@ -73,7 +73,7 @@ const PostDetail = ({ postId }: PostDetailProps) => {
       <div className={styles.container}>
         <div className={styles.error}>
           <h2>Post not found</h2>
-          <p>The post you're looking for doesn't exist or has been removed.</p>
+          <p>The post you&apos;re looking for doesn&apos;t exist or has been removed.</p>
           <button onClick={handleBack} className={styles.backButton}>
             Go Back
           </button>
