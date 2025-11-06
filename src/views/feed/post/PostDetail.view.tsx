@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import { Post as PostType } from '@/types/ISocialPost';
 import Image from 'next/image';
 import { IoArrowBack } from 'react-icons/io5';
-import { RiShareForwardLine } from 'react-icons/ri';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
@@ -146,10 +145,6 @@ const PostDetail = ({ postId }: PostDetailProps) => {
                 userReactionType={interactions?.userInteraction?.reactionType}
                 reactionBreakdown={interactions?.reactionBreakdown}
               />
-              <button className={styles.actionButton}>
-                <RiShareForwardLine size={20} />
-                <span>Share</span>
-              </button>
             </div>
 
             {/* Comments List */}

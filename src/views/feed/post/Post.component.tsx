@@ -2,7 +2,6 @@
 import React from 'react';
 import Image from 'next/image';
 import { BiComment } from 'react-icons/bi';
-import { RiShareForwardLine } from 'react-icons/ri';
 import { Post as PostType } from '@/types/ISocialPost';
 import { renderPostContent } from '../utils/renderPostContent';
 import { usePostView } from '../hooks/usePostView';
@@ -71,11 +70,6 @@ const Post = ({ post }: PostProps) => {
           <BiComment size={18} />
           <span>Comment</span>
           {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
-        </button>
-        <button className={styles.interactionButton} disabled>
-          <RiShareForwardLine size={18} />
-          <span>Share</span>
-          {interactions?.counts?.shares > 0 && <span className={styles.count}>({interactions.counts.shares})</span>}
         </button>
       </div>
     </div>
