@@ -1,5 +1,5 @@
 import React from 'react';
-import PostDetail from '@/views/feed/postDetail/PostDetail.view';
+import PostDetail from '@/views/feed/post/PostDetail.view';
 import PageLayout from '@/layout/page/Page.layout';
 import { navigation } from '@/data/navigation';
 

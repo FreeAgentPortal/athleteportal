@@ -42,7 +42,7 @@ const useNotifications = (): UseNotificationsReturn => {
 
   const { mutate: updateNotification } = useApiHook({
     queriesToInvalidate: ['notifications'],
-    key: 'notification-update',
+    key: 'notification-update', 
     method: 'POST',
   }) as any;
 

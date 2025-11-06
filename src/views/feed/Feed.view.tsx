@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './Feed.module.scss';
 import { useFeed } from './useFeed';
 import CreatePost from './components/createPost/CreatePost.component';
-import Post from './components/post/Post.component';
+import Post from './post/Post.component';
 
 const Feed = () => {
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useFeed();

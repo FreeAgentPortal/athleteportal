@@ -4,16 +4,16 @@ import Image from 'next/image';
 import { BiComment } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { Post as PostType } from '@/types/ISocialPost';
-import { determinePostType } from './utils/determinePostType';
-import TextOnlyCard from './cards/textOnlyCard/TextOnlyCard.component';
-import TextWithMediaCard from './cards/textWithMediaCard/TextWithMediaCard.component';
-import EventCard from './cards/eventCard/EventCard.component';
-import ReactionButton from './components/reactionButton/ReactionButton.component';
-import ReactionSummary from './components/reactionSummary/ReactionSummary.component';
-import { usePostView } from './hooks/usePostView';
+import { determinePostType } from '../utils/determinePostType';
+import TextOnlyCard from '../components/cards/textOnlyCard/TextOnlyCard.component';
+import { usePostView } from '../hooks/usePostView';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
+import TextWithMediaCard from '../components/cards/textWithMediaCard/TextWithMediaCard.component';
+import EventCard from '../components/cards/eventCard/EventCard.component';
+import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
+import ReactionButton from '../components/reactionButton/ReactionButton.component';
 
 interface PostProps {
   post: PostType;

@@ -1,26 +1,23 @@
 'use client';
 import React, { useEffect } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import axios from '@/utils/axios';
 import { Post as PostType } from '@/types/ISocialPost';
 import Image from 'next/image';
 import { IoArrowBack } from 'react-icons/io5';
-import { BiComment } from 'react-icons/bi';
 import { RiShareForwardLine } from 'react-icons/ri';
 import { useRouter } from 'next/navigation';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
-import ReactionButton from '@/views/feed/components/post/components/reactionButton/ReactionButton.component';
-import ReactionSummary from '@/views/feed/components/post/components/reactionSummary/ReactionSummary.component';
-import CommentInput from './components/commentInput/CommentInput.component';
-import CommentsList from './components/commentList/CommentsList.component';
-import { usePostView } from '@/views/feed/components/post/hooks/usePostView';
-import { determinePostType } from '@/views/feed/components/post/utils/determinePostType';
-import EventDetailCard from '@/views/feed/components/post/cards/eventCard/EventDetailCard.component';
-import TextOnlyCard from '@/views/feed/components/post/cards/textOnlyCard/TextOnlyCard.component';
-import TextWithMediaCard from '@/views/feed/components/post/cards/textWithMediaCard/TextWithMediaCard.component';
+import CommentInput from '../components/commentInput/CommentInput.component';
+import CommentsList from '../components/commentList/CommentsList.component';
+import { usePostView } from '@/views/feed/hooks/usePostView';
+import { determinePostType } from '@/views/feed/utils/determinePostType';
+import TextOnlyCard from '@/views/feed/components/cards/textOnlyCard/TextOnlyCard.component';
 import styles from './PostDetail.module.scss';
 import useApiHook from '@/hooks/useApi';
+import TextWithMediaCard from '../components/cards/textWithMediaCard/TextWithMediaCard.component';
+import EventDetailCard from '../components/cards/eventCard/EventDetailCard.component';
+import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
+import ReactionButton from '../components/reactionButton/ReactionButton.component';
 
 dayjs.extend(relativeTime);
 
