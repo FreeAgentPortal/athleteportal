@@ -115,7 +115,7 @@ export const getLocationDisplay = (event: EventDocument) => {
  * Registration is open if:
  * 1. Current date is after opensAt (if defined)
  * 2. Current date is before closesAt (if defined)
- * 3. Event hasn't started yet (before startsAt)
+ * Note: Event start time doesn't matter - registration window is independent
  */
 export const isRegistrationOpen = (event: EventDocument): boolean => {
   if (!event.registration?.required) {
@@ -133,11 +133,6 @@ export const isRegistrationOpen = (event: EventDocument): boolean => {
   // Check if registration has closed
   if (closesAt && new Date(closesAt) < now) {
     return false; // Registration is closed
-  }
-
-  // Check if event has already started
-  if (event.startsAt && new Date(event.startsAt) < now) {
-    return false; // Event has already started
   }
 
   return true;

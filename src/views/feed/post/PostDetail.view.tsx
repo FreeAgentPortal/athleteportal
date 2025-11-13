@@ -49,16 +49,16 @@ const PostDetail = ({ postId }: PostDetailProps) => {
   const interactions = post ? (post as any)?.interactions : null;
 
   // Update document title based on post summary
-  useEffect(() => {
-    if (post?.body) {
-      // Use first 60 characters of body as summary for title
-      const summary = post.body.substring(0, 60) + (post.body.length > 60 ? '...' : '');
+  useEffect(() => { 
+    if (post?.objectDetails?.title) {
+      // Use first 60 characters of title as summary for title
+      const summary = post.objectDetails.title.substring(0, 60) + (post.objectDetails.title.length > 60 ? '...' : '');
       document.title = `${summary} | Free Agent Portal`;
     }
     return () => {
       document.title = 'Free Agent Portal';
     };
-  }, [post?.body]);
+  }, [post]);
 
   if (isLoading) {
     return (

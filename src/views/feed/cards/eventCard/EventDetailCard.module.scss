@@ -98,6 +98,30 @@
   margin: 0;
 }
 
+// Registration Button
+.registrationButton {
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+
+  // :global {
+  //   .ant-btn {
+  //     height: 48px;
+  //     padding: 0 48px;
+  //     font-size: 16px;
+  //     font-weight: 600;
+  //     border-radius: 8px;
+  //     box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2);
+  //     transition: all 0.3s ease;
+
+  //     &:hover {
+  //       transform: translateY(-2px);
+  //       box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+  //     }
+  //   }
+  // }
+}
+
 .tabLabel {
   display: flex;
   align-items: center;
