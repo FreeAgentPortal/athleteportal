@@ -10,6 +10,7 @@ import BillingSetup from '../billingSetup/BillingSetup.layout';
 import { navigation } from '@/data/navigation';
 import useApiHook from '@/hooks/useApi';
 import PolicyCheckWrapper from '../policyCheckWrapper/PolicyCheckWrapper.layout';
+import SmsOptInWrapper from '../smsOptInWrapper/SmsOptInWrapper.layout';
 
 type Props = {
   children: React.ReactNode;
@@ -69,7 +70,9 @@ const AppWrapper = (props: Props) => {
         </PageLayout>
       ) : (
         <>
-          <PolicyCheckWrapper>{props.children}</PolicyCheckWrapper>
+          <SmsOptInWrapper>
+            <PolicyCheckWrapper>{props.children}</PolicyCheckWrapper>
+          </SmsOptInWrapper>
         </>
       )}
     </>

@@ -51,9 +51,11 @@ const AccountDetails = () => {
         email: userData.payload.email,
         phoneNumber: userData.payload.phoneNumber,
         profileImageUrl: userData.payload.profileImageUrl,
-        emailNotifications: userData.payload?.notificationSettings?.emailNotifications,
-        smsNotifications: userData.payload?.notificationSettings?.smsNotifications,
-        pushNotifications: userData.payload?.notificationSettings?.pushNotifications,
+        notificationSettings: {
+          emailNotifications: userData.payload?.notificationSettings?.emailNotifications,
+          smsNotifications: userData.payload?.notificationSettings?.smsNotifications,
+          pushNotifications: userData.payload?.notificationSettings?.pushNotifications,
+        },
       });
       setDataLoaded(true);
     }
