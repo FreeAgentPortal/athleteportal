@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Masonry from 'react-masonry-css';
 import styles from './Feed.module.scss';
 import { useFeed } from './useFeed';
 import CreatePost from './components/createPost/CreatePost.component';
@@ -10,6 +11,13 @@ const Feed = () => {
 
   // Flatten all pages of posts into a single array
   const posts = data?.pages.flatMap((page) => page.data) || [];
+
+  // Masonry breakpoint columns
+  const breakpointColumnsObj = {
+    default: 3,
+    1100: 2,
+    700: 1,
+  };
 
   return (
     <div className={styles.container}>
@@ -30,9 +38,11 @@ const Feed = () => {
           </div>
         ) : (
           <>
-            {posts.map((post: any, index: number) => (
-              <Post key={post._id || index} post={post} />
-            ))}
+            <Masonry breakpointCols={breakpointColumnsObj} className={styles.masonryGrid} columnClassName={styles.masonryGridColumn}>
+              {posts.map((post: any, index: number) => (
+                <Post key={post._id || index} post={post} />
+              ))}
+            </Masonry>
 
             {/* Load More Button */}
             {hasNextPage && (

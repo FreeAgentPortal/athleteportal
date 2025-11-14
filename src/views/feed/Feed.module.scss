@@ -36,6 +36,21 @@
   gap: 16px;
 }
 
+.masonryGrid {
+  display: flex;
+  margin-left: -16px; /* gutter size offset */
+  width: auto;
+}
+
+.masonryGridColumn {
+  padding-left: 16px; /* gutter size */
+  background-clip: padding-box;
+
+  > div {
+    margin-bottom: 16px;
+  }
+}
+
 .loadingState,
 .emptyState {
   width: 100%;

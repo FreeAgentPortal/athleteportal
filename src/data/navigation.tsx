@@ -22,6 +22,11 @@ export const navigation = (options?: any) => {
           icon: <BsBroadcastPin />,
           hidden: options?.user?.profileRefs['admin'] ? false : true,
         },
+        my_posts: {
+          title: 'My Posts',
+          link: '/feed/me',
+          icon: <BsBroadcastPin />,
+        },
         notifications: {
           title: 'Notifications',
           link: '/notifications',

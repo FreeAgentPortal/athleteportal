@@ -34,13 +34,12 @@ const CreatePost = () => {
   const [showYouTubeModal, setShowYouTubeModal] = useState(false);
   const [tempFileList, setTempFileList] = useState<UploadFile[]>([]);
   const [tempMedia, setTempMedia] = useState<Media[]>([]);
-
   const { addAlert } = useInterfaceStore((state) => state);
 
   const { mutate: createPost } = useApiHook({
     method: 'POST',
     key: 'post.create',
-    queriesToInvalidate: ['feed'],
+    queriesToInvalidate: ['feed', `myPosts,${selectedProfile?._id}`],
   }) as any;
 
   // Get user display information from profile or fallback to auth data
