@@ -1,6 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { BiComment } from 'react-icons/bi';
 import { Dropdown } from 'antd';
 import { MoreOutlined, DeleteOutlined } from '@ant-design/icons';
@@ -102,11 +103,13 @@ const Post = ({ post }: PostProps) => {
           userReactionType={interactions?.userInteraction?.reactionType}
           reactionBreakdown={interactions?.reactionBreakdown}
         />
-        <button className={styles.interactionButton} disabled>
-          <BiComment size={18} />
-          <span>Comment</span>
-          {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
-        </button>
+        <Link href={`/feed/${post._id}`} className={styles.interactionButtonLink}>
+          <button className={styles.interactionButton}>
+            <BiComment size={18} />
+            <span>Comment</span>
+            {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
+          </button>
+        </Link>
       </div>
 
       {/* Delete Post Modal */}

@@ -97,8 +97,13 @@
   gap: 8px;
 }
 
-.interactionButton {
+.interactionButtonLink {
   flex: 1;
+  text-decoration: none;
+}
+
+.interactionButton {
+  width: 100%;
   padding: 6px 8px;
   background: none;
   border: none;
