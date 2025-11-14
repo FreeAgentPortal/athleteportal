@@ -1,15 +1,19 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import { BiComment } from 'react-icons/bi';
+import { Dropdown } from 'antd';
+import { MoreOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Post as PostType } from '@/types/ISocialPost';
 import { renderPostContent } from '../utils/renderPostContent';
 import { usePostView } from '../hooks/usePostView';
+import { useSelectedProfile } from '@/hooks/useSelectedProfile';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import styles from './Post.module.scss';
 import ReactionSummary from '../components/reactionSummary/ReactionSummary.component';
 import ReactionButton from '../components/reactionButton/ReactionButton.component';
+import DeletePostModal from '../modals/deletePostModal/DeletePostModal.component';
 
 interface PostProps {
   post: PostType;
@@ -17,6 +21,8 @@ interface PostProps {
 
 const Post = ({ post }: PostProps) => {
   dayjs.extend(relativeTime);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const { selectedProfile } = useSelectedProfile();
 
   // Track post views - returns a callback ref
   const containerRef = usePostView({ postId: post._id, threshold: 5000 });
@@ -26,7 +32,32 @@ const Post = ({ post }: PostProps) => {
 
   const profile = (post?.objectDetails as any)?.profile;
   const profileImageUrl = profile?.profileImageUrl;
-  const authorName = profile?.fullName;
+  const authorName = profile?.fullName; 
+
+  // Check if current user is the post owner
+  // Parse authorId format: "user:688025c6746c88cf383f61e0;profile:689de192258d32dd996d6726"
+  const getProfileIdFromAuthorId = (authorId: string): string | null => {
+    const profilePart = authorId.split(';').find(part => part.startsWith('profile:'));
+    return profilePart ? profilePart.replace('profile:', '') : null;
+  };
+
+  const postProfileId = post.actorId ? getProfileIdFromAuthorId(post.actorId) : null;
+  const currentUserProfileId = selectedProfile?._id;
+  const isOwner = postProfileId && currentUserProfileId && postProfileId === currentUserProfileId;
+
+  const handleDeleteClick = () => {
+    setDeleteModalOpen(true);
+  };
+
+  const menuItems = [
+    {
+      key: 'delete',
+      label: 'Remove Post',
+      icon: <DeleteOutlined />,
+      danger: true,
+      onClick: handleDeleteClick,
+    },
+  ];
 
   return (
     <div ref={containerRef} className={styles.container}>
@@ -37,7 +68,7 @@ const Post = ({ post }: PostProps) => {
             {profileImageUrl ? (
               <Image src={profileImageUrl} alt={authorName} width={40} height={40} className={styles.avatarImage} />
             ) : (
-              <div className={styles.avatarPlaceholder}>{authorName.charAt(0).toUpperCase()}</div>
+              <div className={styles.avatarPlaceholder}>{authorName?.charAt(0).toUpperCase()}</div>
             )}
           </div>
           <div className={styles.authorDetails}>
@@ -46,8 +77,13 @@ const Post = ({ post }: PostProps) => {
           </div>
         </div>
         <div className={styles.actions}>
-          {/* TODO: Add post menu (edit, delete, etc.) */}
-          {/* <button className={styles.menuButton}>⋯</button> */}
+          {isOwner && (
+            <Dropdown menu={{ items: menuItems }} trigger={['click']} placement="bottomRight">
+              <button className={styles.menuButton}>
+                <MoreOutlined style={{ fontSize: '20px' }} />
+              </button>
+            </Dropdown>
+          )}
         </div>
       </div>
 
@@ -72,6 +108,9 @@ const Post = ({ post }: PostProps) => {
           {interactions?.counts?.comments > 0 && <span className={styles.count}>({interactions.counts.comments})</span>}
         </button>
       </div>
+
+      {/* Delete Post Modal */}
+      <DeletePostModal postId={post._id} open={deleteModalOpen} onClose={() => setDeleteModalOpen(false)} />
     </div>
   );
 };

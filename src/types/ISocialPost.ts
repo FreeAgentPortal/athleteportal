@@ -32,12 +32,12 @@ export interface Post {
     id: string;
   };
   _id: string;
-  userId: string;
+
   profile: {
     type: 'athleteprofile' | 'teamprofile';
     id: string;
   };
-  authorId: ActorId; // "user:..." or "team:..."
+  actorId: ActorId; // "user:..." or "team:..."
   body?: string; // markdown-lite / plain text
   sport?: string; // e.g., "football" for easy filtering
   hashtags?: string[]; // ["QB","combine"]
