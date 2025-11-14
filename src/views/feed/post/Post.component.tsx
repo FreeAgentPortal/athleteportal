@@ -32,12 +32,12 @@ const Post = ({ post }: PostProps) => {
 
   const profile = (post?.objectDetails as any)?.profile;
   const profileImageUrl = profile?.profileImageUrl;
-  const authorName = profile?.fullName; 
+  const authorName = profile?.fullName;
 
   // Check if current user is the post owner
   // Parse authorId format: "user:688025c6746c88cf383f61e0;profile:689de192258d32dd996d6726"
   const getProfileIdFromAuthorId = (authorId: string): string | null => {
-    const profilePart = authorId.split(';').find(part => part.startsWith('profile:'));
+    const profilePart = authorId.split(';').find((part) => part.startsWith('profile:'));
     return profilePart ? profilePart.replace('profile:', '') : null;
   };
 
