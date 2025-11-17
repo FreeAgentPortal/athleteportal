@@ -20,13 +20,11 @@ export const navigation = (options?: any) => {
           title: 'Feed',
           link: '/feed',
           icon: <BsBroadcastPin />,
-          hidden: options?.user?.profileRefs['admin'] ? false : true,
         },
         my_posts: {
           title: 'My Posts',
           link: '/feed/me',
           icon: <BsBroadcastPin />,
-          hidden: options?.user?.profileRefs['admin'] ? false : true,
         },
         notifications: {
           title: 'Notifications',
