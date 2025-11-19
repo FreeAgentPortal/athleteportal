@@ -7,13 +7,14 @@ import { useLayoutStore } from '@/state/layout';
 import { useQueryClient } from '@tanstack/react-query';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { useSelectedProfile } from '@/hooks/useSelectedProfile';
+import SidebarTour from './components/sidebarTour/SidebarTour.component';
 
 //make a type with children as a prop
 type Props = {
   page: { title: string };
   large?: boolean;
 };
-const SideBar = (props: Props) => { 
+const SideBar = (props: Props) => {
   const sideBarOpen = useLayoutStore((state) => state.sideBarOpen);
   const toggleSideBar = useLayoutStore((state) => state.toggleSideBar);
   const { data: loggedInData } = useUser();
@@ -62,12 +63,13 @@ const SideBar = (props: Props) => {
                 <h2 className={styles.header}>{item.title}</h2>
                 <div className={styles.links}>
                   {item.links &&
-                    Object.values(item.links)
-                      .filter((i: any) => !i.hidden)
-                      .map((subItem: any, indx: number) => {
+                    Object.entries(item.links)
+                      .filter(([key, link]: [string, any]) => !link.hidden)
+                      .map(([key, subItem]: [string, any], indx: number) => {
                         return (
                           <Link
                             key={indx + subItem.title}
+                            id={`sidebar-link-${key}`}
                             href={subItem.link}
                             className={`${styles.link} ${props.page.title === subItem.title && styles.active} ${subItem.pulse && styles.pulse}`}
                             onClick={() => toggleSideBar()}
@@ -86,6 +88,9 @@ const SideBar = (props: Props) => {
         <p className={styles.fapText}>The Free Agent Portal</p>
         <p className={styles.versionText}>v{process.env.APP_VERSION}</p>
       </div>
+
+      {/* Sidebar Tour */}
+      <SidebarTour />
     </div>
   );
 };

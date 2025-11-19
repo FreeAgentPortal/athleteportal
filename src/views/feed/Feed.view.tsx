@@ -1,12 +1,14 @@
 'use client';
-import React from 'react';
+import React, { useRef } from 'react';
 import Masonry from 'react-masonry-css';
 import styles from './Feed.module.scss';
 import { useFeed } from './useFeed';
 import CreatePost from './components/createPost/CreatePost.component';
 import Post from './post/Post.component';
+import FeedTour from './components/feedTour/FeedTour.component';
 
 const Feed = () => {
+  const createPostRef = useRef<HTMLDivElement>(null);
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading } = useFeed();
 
   // Flatten all pages of posts into a single array
@@ -22,7 +24,7 @@ const Feed = () => {
   return (
     <div className={styles.container}>
       {/* Post Creation Section */}
-      <div className={styles.createPostContainer}>
+      <div ref={createPostRef} className={styles.createPostContainer}>
         <CreatePost />
       </div>
 
@@ -55,6 +57,9 @@ const Feed = () => {
           </>
         )}
       </div>
+
+      {/* Feed Tour */}
+      <FeedTour createPostRef={createPostRef} />
     </div>
   );
 };
