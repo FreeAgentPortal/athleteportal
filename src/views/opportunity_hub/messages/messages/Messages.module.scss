@@ -83,18 +83,40 @@ $input-bg: #f7f9fa;
     border-radius: 20px;
     position: relative;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 8px;
+    flex-direction: column;
+    gap: 4px;
 
     .messageContent {
       margin: 0;
       word-wrap: break-word;
     }
 
+    .messageFooter {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: flex-end;
+    }
+
     .timestamp {
       font-size: 0.75rem;
+      opacity: 0.7;
+      margin: 0;
+    }
+
+    .readIndicator,
+    .sentIndicator {
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin: 0;
+      line-height: 1;
+    }
+
+    .readIndicator {
+      color: #4fc3f7;
+    }
+
+    .sentIndicator {
       opacity: 0.7;
     }
   }
