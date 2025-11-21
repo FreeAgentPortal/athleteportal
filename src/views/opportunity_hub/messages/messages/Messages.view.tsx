@@ -30,7 +30,7 @@ const MessagesView = (props: Props) => {
   const { mutate: markAsRead } = useApiHook({
     method: 'PUT',
     key: ['markMessageRead'],
-    queriesToInvalidate: ['messages', props.id],
+    queriesToInvalidate: [`messages,${props.id}`],
   }) as any;
 
   useEffect(() => {
