@@ -10,8 +10,9 @@ type Props = {
   id: string;
 };
 const MessagesView = (props: Props) => {
-  const lastMessageRef = useRef<HTMLDivElement>(null);
+  const messageRefsMap = useRef<Map<string, HTMLDivElement>>(new Map());
   const observerRef = useRef<IntersectionObserver | null>(null);
+  const markedAsReadRef = useRef<Set<string>>(new Set());
 
   const { data, isLoading: isLoadingMessages } = useApiHook({
     url: '/messaging/' + props.id + '/messages?role=athlete',
@@ -34,17 +35,19 @@ const MessagesView = (props: Props) => {
   }) as any;
 
   useEffect(() => {
-    // Set up Intersection Observer for the last message
+    // Set up Intersection Observer for all incoming messages
     observerRef.current = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Last message is in view, mark as read
-            const lastMessage = data?.payload?.messages[data.payload.messages.length - 1];
-            if (lastMessage && lastMessage.sender.role !== 'athlete') {
-              // Only mark as read if the last message is from the team (not sent by the athlete)
+            const messageId = entry.target.getAttribute('data-message-id');
+            const messageRead = entry.target.getAttribute('data-message-read') === 'true';
+
+            // Only mark as read if not already read and not already marked in this session
+            if (messageId && !messageRead && !markedAsReadRef.current.has(messageId)) {
+              markedAsReadRef.current.add(messageId);
               markAsRead({
-                url: `/messaging/admin/message/${lastMessage._id}`,
+                url: `/messaging/admin/message/${messageId}`,
                 formData: { read: true },
               });
             }
@@ -57,10 +60,12 @@ const MessagesView = (props: Props) => {
       }
     );
 
-    // Observe the last message element
-    if (lastMessageRef.current) {
-      observerRef.current.observe(lastMessageRef.current);
-    }
+    // Observe all incoming message elements
+    messageRefsMap.current.forEach((element) => {
+      if (element && observerRef.current) {
+        observerRef.current.observe(element);
+      }
+    });
 
     // Cleanup observer on unmount
     return () => {
@@ -68,7 +73,7 @@ const MessagesView = (props: Props) => {
         observerRef.current.disconnect();
       }
     };
-  }, [markAsRead]);
+  }, [data?.payload?.messages, markAsRead]);
 
   if (isLoadingMessages || isLoadingSend || !data?.payload) {
     return (
@@ -117,20 +122,32 @@ const MessagesView = (props: Props) => {
       <div className={styles.messagesContainer}>
         {messages.map((message: any, index: number) => {
           const isOutgoing = message.sender.role === 'athlete';
-          const isLastMessage = index === messages.length - 1;
+          const isIncoming = message.sender.role !== 'athlete';
 
           return (
-            <div key={message._id} ref={isLastMessage ? lastMessageRef : null} className={`${styles.messageWrapper} ${isOutgoing ? styles.outgoing : styles.incoming}`}>
+            <div
+              key={message._id}
+              ref={(el) => {
+                if (el && isIncoming) {
+                  messageRefsMap.current.set(message._id, el);
+                }
+              }}
+              data-message-id={message._id}
+              data-message-read={message.read}
+              className={`${styles.messageWrapper} ${isOutgoing ? styles.outgoing : styles.incoming}`}
+            >
               <div className={styles.messageBubble}>
-                <p className={styles.messageContent}>{message.content}</p>
+                <p className={styles.messageContent}>
+                  {message.content}
+                </p>
                 <div className={styles.messageFooter}>
                   <p className={styles.timestamp}>{formatTime(message.createdAt)}</p>
-                  {!isOutgoing && message.read && (
+                  {message.read && (
                     <span className={styles.readIndicator} title="Read">
                       ✓✓
                     </span>
                   )}
-                  {isOutgoing && !message.read && (
+                  {!message.read && (
                     <span className={styles.sentIndicator} title="Sent">
                       ✓
                     </span>
