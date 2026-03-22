@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { Form, Input, Button, Card, Space, Divider, Switch, Tooltip } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, SaveOutlined, BellOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Card, Space, Divider, Switch, Tooltip, Typography } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, PhoneOutlined, SaveOutlined, BellOutlined, WarningOutlined } from '@ant-design/icons';
 import styles from './AccountDetails.module.scss';
 import formStyles from '@/styles/Form.module.scss';
 import useApiHook from '@/hooks/useApi';
@@ -12,6 +12,7 @@ import { useInterfaceStore } from '@/state/interface';
 import useBilling from '@/hooks/useBilling';
 import { hasFeature, FEATURES } from '@/utils/hasFeature';
 import SmsOptInModal from './components/SmsOptInModal.component';
+import CancelAccountModal from './components/CancelAccountModal.component';
 
 const AccountDetails = () => {
   const { data: loggedInUser, refetch: refetchUser } = useUser();
@@ -19,6 +20,7 @@ const AccountDetails = () => {
   const [form] = Form.useForm();
   const [isEditing, setIsEditing] = useState(false);
   const [showSmsOptInModal, setShowSmsOptInModal] = useState(false);
+  const [showCancelAccountModal, setShowCancelAccountModal] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const { addAlert } = useInterfaceStore((state) => state);
   const { data: billingData } = useBilling();
@@ -103,6 +105,11 @@ const AccountDetails = () => {
       // Force re-render to update the switch display
       setDataLoaded((prev) => !prev);
     }
+  };
+
+  const handleCancelAccountConfirm = () => {
+    // TODO: fire off cancel account API request once route is available
+    setShowCancelAccountModal(false);
   };
 
   const handleBasicInfoSubmit = (values: any) => {
@@ -332,11 +339,32 @@ const AccountDetails = () => {
               </Form>
             </div>
           </Card>
+
+          {/* Danger Zone */}
+          <Card
+            title={
+              <Space>
+                <WarningOutlined style={{ color: '#ff4d4f' }} />
+                <Typography.Text style={{ color: '#ff4d4f' }}>Danger Zone</Typography.Text>
+              </Space>
+            }
+            style={{ borderColor: '#ff4d4f' }}
+          >
+            <Space direction="vertical" size="small">
+              <Typography.Text type="secondary">Once you cancel your account, all of your data will be permanently deleted and cannot be recovered.</Typography.Text>
+              <Button danger onClick={() => setShowCancelAccountModal(true)}>
+                Cancel Account
+              </Button>
+            </Space>
+          </Card>
         </Space>
       </div>
 
       {/* SMS Opt-In Modal */}
       <SmsOptInModal isVisible={showSmsOptInModal} onConfirm={handleSmsOptInConfirm} onCancel={handleSmsOptInCancel} businessName="FreeAgentPortal" messagesPerMonth={30} />
+
+      {/* Cancel Account Modal */}
+      <CancelAccountModal isVisible={showCancelAccountModal} onConfirm={handleCancelAccountConfirm} onCancel={() => setShowCancelAccountModal(false)} />
     </div>
   );
 };
