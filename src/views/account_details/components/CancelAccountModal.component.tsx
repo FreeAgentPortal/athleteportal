@@ -35,13 +35,13 @@ const CancelAccountModal: React.FC<CancelAccountModalProps> = ({ isVisible, onCo
     >
       <Space direction="vertical" size="middle" style={{ width: '100%' }}>
         <Title level={5} style={{ color: '#ff4d4f', margin: 0 }}>
-          This action cannot be undone
+          Are you sure you want to cancel your account?
         </Title>
         <Text style={{ fontSize: '14px', color: '#333' }}>
-          Are you sure you want to cancel your account? All of your data, including your profile, posts, and billing information, will be permanently deleted.
+          Your account will be cancelled at the end of your current billing period. Until then, you will retain access to all features.
         </Text>
         <Text type="secondary" style={{ fontSize: '13px' }}>
-          If you have an active subscription, it will be cancelled immediately and you will lose access to all premium features.
+          Once the billing period ends, your profile will no longer be discoverable by teams and agents. Your account will not be permanently deleted.
         </Text>
       </Space>
     </Modal>

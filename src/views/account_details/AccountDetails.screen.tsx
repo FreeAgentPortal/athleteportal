@@ -107,9 +107,35 @@ const AccountDetails = () => {
     }
   };
 
+  // Cancel account
+  const { mutate: cancelAccount, isLoading: isCancellingAccount } = useApiHook({
+    method: 'DELETE',
+    url: `/payment/${loggedInUser?._id}`,
+    key: 'cancel-account',
+  }) as any;
+
   const handleCancelAccountConfirm = () => {
-    // TODO: fire off cancel account API request once route is available
-    setShowCancelAccountModal(false);
+    cancelAccount(
+      {},
+      {
+        onSuccess: () => {
+          setShowCancelAccountModal(false);
+          addAlert({
+            type: 'success',
+            message: 'Your account has been cancelled. You will retain access until the end of your billing period.',
+            duration: 6000,
+          });
+        },
+        onError: (error: any) => {
+          setShowCancelAccountModal(false);
+          addAlert({
+            type: 'error',
+            message: error?.response?.data?.message || 'Failed to cancel account. Please try again.',
+            duration: 5000,
+          });
+        },
+      }
+    );
   };
 
   const handleBasicInfoSubmit = (values: any) => {
@@ -351,7 +377,7 @@ const AccountDetails = () => {
             style={{ borderColor: '#ff4d4f' }}
           >
             <Space direction="vertical" size="small">
-              <Typography.Text type="secondary">Once you cancel your account, all of your data will be permanently deleted and cannot be recovered.</Typography.Text>
+              <Typography.Text type="secondary">Your account will be cancelled at the end of your current billing period. You will no longer be discoverable by teams and agents after cancellation.</Typography.Text>
               <Button danger onClick={() => setShowCancelAccountModal(true)}>
                 Cancel Account
               </Button>
@@ -364,7 +390,7 @@ const AccountDetails = () => {
       <SmsOptInModal isVisible={showSmsOptInModal} onConfirm={handleSmsOptInConfirm} onCancel={handleSmsOptInCancel} businessName="FreeAgentPortal" messagesPerMonth={30} />
 
       {/* Cancel Account Modal */}
-      <CancelAccountModal isVisible={showCancelAccountModal} onConfirm={handleCancelAccountConfirm} onCancel={() => setShowCancelAccountModal(false)} />
+      <CancelAccountModal isVisible={showCancelAccountModal} onConfirm={handleCancelAccountConfirm} onCancel={() => setShowCancelAccountModal(false)} isLoading={isCancellingAccount} />
     </div>
   );
 };
