@@ -129,7 +129,7 @@ const EventDetailsModal = ({ event, isOpen, onClose }: EventDetailsModalProps) =
                   <div className={styles.registrationItem}>
                     <span className={styles.registrationLabel}>Price</span>
                     <span className={styles.registrationValue}>
-                      {event.registration.price === 0 ? 'Free' : `$${event.registration.price} ${event.registration.currency || 'USD'}`}
+                      {event.registration.price === 0 ? 'Introduction' : `$${event.registration.price} ${event.registration.currency || 'USD'}`}
                     </span>
                   </div>
                 )}
